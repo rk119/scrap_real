@@ -4,13 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
 import 'package:scrap_real/login.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class WelcomePage extends StatefulWidget {
+  const WelcomePage({Key? key}) : super(key: key);
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
