@@ -78,17 +78,20 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                    child: Stack(
-                      children: const <Widget>[
-                        TextField(
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Username',
-                              hintText: 'Enter Your Username'),
-                        ),
-                      ],
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Username',
+                          hintText: 'Enter Your Username'),
                     ),
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Password',
+                        hintText: 'Enter Your Password'),
                   ),
 //   decoration:  BoxDecoration (
 //     borderRadius:  BorderRadius.circular(6),
