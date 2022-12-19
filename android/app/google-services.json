@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "531821408651",
+    "project_id": "scrapreal",
+    "storage_bucket": "scrapreal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531821408651:android:956bc05fda2b17e11dbf8e",
+        "android_client_info": {
+          "package_name": "com.example.scrap_real"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "531821408651-slvjbaq01q2cdasnbqhilhpt17ks2e6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGyGjoCVI6UJhIQljfX3akTDY06bZiyqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531821408651-slvjbaq01q2cdasnbqhilhpt17ks2e6j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

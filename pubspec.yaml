@@ -37,6 +37,10 @@ dependencies:
   google_fonts: ^3.0.1
   flutter_svg: ^1.1.6
   drop_shadow: ^0.0.1+4
+  firebase_core: ^2.4.0
+  firebase_auth: ^4.2.1
+  cloud_firestore: ^4.2.0
+  firebase_analytics: ^10.0.7
 
 dev_dependencies:
   flutter_test:
