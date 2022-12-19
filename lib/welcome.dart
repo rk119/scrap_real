@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
 import 'package:scrap_real/login.dart';
+import 'package:scrap_real/register.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -86,7 +87,13 @@ class _WelcomePageState extends State<WelcomePage> {
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 0, 23),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterPage()),
+                  );
+                },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                 ),
@@ -122,7 +129,6 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
             ),
             TextButton(
-              // loginSgL (1:400)
               onPressed: () {
                 Navigator.push(
                   context,

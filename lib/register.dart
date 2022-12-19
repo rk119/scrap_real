@@ -4,10 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/welcome.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
 Widget buildBackBtn(BuildContext context) {
@@ -34,9 +34,9 @@ Widget buildBackBtn(BuildContext context) {
   );
 }
 
-Text textLogin() {
+Text textRegister() {
   return Text(
-    'Login',
+    'Register',
     textAlign: TextAlign.center,
     style: GoogleFonts.poppins(
       fontSize: 30,
@@ -47,9 +47,9 @@ Text textLogin() {
   );
 }
 
-Text textSignIn() {
+Text textCreate() {
   return Text(
-    'Sign in to your account',
+    'Create a new account',
     textAlign: TextAlign.center,
     style: GoogleFonts.poppins(
       fontSize: 20,
@@ -74,105 +74,65 @@ Widget buildUsername() {
       ),
       const SizedBox(height: 10),
       Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-            color: const Color(0xffFEFCFC),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                  color: Colors.black26, blurRadius: 4, offset: Offset(0, 1))
-            ]),
-        height: 60,
-        child: const TextField(
-          keyboardType: TextInputType.emailAddress,
-          style: TextStyle(color: Colors.black87),
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(14),
-              hintText: 'Enter Username',
-              hintStyle: TextStyle(color: Colors.black38)),
-        ),
-      ),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+              color: const Color(0xffFEFCFC),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.black26, blurRadius: 4, offset: Offset(0, 1))
+              ]),
+          height: 60,
+          child: const TextField(
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(color: Colors.black87),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(14),
+                hintText: 'Enter Username',
+                hintStyle: TextStyle(color: Colors.black38)),
+          ))
     ],
   );
 }
 
-Widget buildForgotPassword() {
-  return Container(
-    alignment: Alignment.centerRight,
-    child: TextButton(
-      onPressed: () => print("Forgot Password pressed"),
-      child: Text(
-        'Forgot Password?',
-        style: GoogleFonts.poppins(
-          fontSize: 17,
-          color: const Color(0xff918ef4),
-          fontWeight: FontWeight.w600,
+Widget buildEmail() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      const Text(
+        'Email',
+        style: TextStyle(
+          color: Color(0xff141b41),
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
         ),
       ),
-    ),
-  );
-}
-
-Widget buildAltLogin() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
+      const SizedBox(height: 10),
       Container(
-        alignment: Alignment.centerLeft,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: SizedBox(
-            width: 35,
-            height: 35,
-            child: SvgPicture.asset(
-              'assets/icons/googlelogo.svg',
-            ),
-          ),
-        ),
-      ),
-      const SizedBox(width: 40),
-      Container(
-        alignment: Alignment.centerLeft,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: SizedBox(
-            width: 35,
-            height: 35,
-            child: SvgPicture.asset(
-              'assets/icons/facebooklogo.svg',
-            ),
-          ),
-        ),
-      ),
-      const SizedBox(width: 40),
-      Container(
-        alignment: Alignment.centerLeft,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: SizedBox(
-            width: 35,
-            height: 35,
-            child: SvgPicture.asset(
-              'assets/icons/twitterlogo.svg',
-            ),
-          ),
-        ),
-      ),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+              color: const Color(0xffFEFCFC),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.black26, blurRadius: 4, offset: Offset(0, 1))
+              ]),
+          height: 60,
+          child: const TextField(
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(color: Colors.black87),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(14),
+                hintText: 'Enter Email',
+                hintStyle: TextStyle(color: Colors.black38)),
+          ))
     ],
   );
 }
 
-Widget buildLogin() {
+Widget buildRegister() {
   return Container(
     width: double.infinity,
     height: 50,
@@ -188,7 +148,7 @@ Widget buildLogin() {
     ),
     child: Center(
       child: Text(
-        'Login',
+        'Register',
         textAlign: TextAlign.center,
         style: GoogleFonts.poppins(
           fontSize: 18,
@@ -201,8 +161,9 @@ Widget buildLogin() {
   );
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool obscureText = true;
+class _RegisterPageState extends State<RegisterPage> {
+  bool obscurePText = true;
+  bool obscureCPText = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,11 +180,13 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 buildBackBtn(context),
-                textLogin(),
+                textRegister(),
                 const SizedBox(height: 15),
-                textSignIn(),
+                textCreate(),
                 const SizedBox(height: 50),
                 buildUsername(),
+                const SizedBox(height: 30),
+                buildEmail(),
                 const SizedBox(height: 30),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       height: 60,
                       child: TextField(
-                        obscureText: obscureText,
+                        obscureText: obscurePText,
                         style: const TextStyle(color: Colors.black87),
                         decoration: InputDecoration(
                             border: InputBorder.none,
@@ -261,12 +224,12 @@ class _LoginPageState extends State<LoginPage> {
                               onTap: () {
                                 setState(
                                   () {
-                                    obscureText = !obscureText;
+                                    obscurePText = !obscurePText;
                                   },
                                 );
                               },
                               child: Icon(
-                                obscureText
+                                obscurePText
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                                 color: const Color(0xffc4c4c4),
@@ -278,11 +241,62 @@ class _LoginPageState extends State<LoginPage> {
                     )
                   ],
                 ),
-                buildForgotPassword(),
-                const SizedBox(height: 45),
-                buildAltLogin(),
-                const SizedBox(height: 55),
-                buildLogin(),
+                const SizedBox(height: 30),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      'Confirm Password',
+                      style: TextStyle(
+                        color: Color(0xff141b41),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: const Color(0xffFEFCFC),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(0, 1),
+                          )
+                        ],
+                      ),
+                      height: 60,
+                      child: TextField(
+                        obscureText: obscureCPText,
+                        style: const TextStyle(color: Colors.black87),
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(14),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    obscureCPText = !obscureCPText;
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                obscureCPText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: const Color(0xffc4c4c4),
+                              ),
+                            ),
+                            hintText: 'Retype Password',
+                            hintStyle: const TextStyle(color: Colors.black38)),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 60),
+                buildRegister(),
               ],
             ),
           ),
