@@ -14,6 +14,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // prevents pixel overflow
       body: Container(
         padding: const EdgeInsets.fromLTRB(30, 80, 30, 0),
         width: double.infinity,
