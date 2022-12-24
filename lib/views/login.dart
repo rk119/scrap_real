@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scrap_real/welcome.dart';
+import 'package:scrap_real/views/welcome.dart';
+
+import '../firebase_options.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,7 +15,7 @@ class LoginPage extends StatefulWidget {
 
 Widget buildBackBtn(BuildContext context) {
   return Container(
-    alignment: Alignment.centerLeft,
+    alignment: const Alignment(-1.15, 0),
     child: TextButton(
       onPressed: () {
         Navigator.push(
@@ -206,88 +209,95 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-              vertical: 25,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                buildBackBtn(context),
-                textLogin(),
-                const SizedBox(height: 15),
-                textSignIn(),
-                const SizedBox(height: 50),
-                buildUsername(),
-                const SizedBox(height: 30),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      'Password',
-                      style: TextStyle(
-                        color: Color(0xff141b41),
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: const Color(0xffFEFCFC),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 4,
-                            offset: Offset(0, 1),
+      body: FutureBuilder(
+          future: Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          ),
+          builder: (context, snapshot) {
+            return AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle.light,
+              child: GestureDetector(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 50,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      buildBackBtn(context),
+                      textLogin(),
+                      const SizedBox(height: 15),
+                      textSignIn(),
+                      const SizedBox(height: 137),
+                      buildUsername(),
+                      const SizedBox(height: 30),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                            'Password',
+                            style: TextStyle(
+                              color: Color(0xff141b41),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffFEFCFC),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 1),
+                                )
+                              ],
+                            ),
+                            height: 60,
+                            child: TextField(
+                              obscureText: obscureText,
+                              style: const TextStyle(color: Colors.black87),
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.all(14),
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(
+                                        () {
+                                          obscureText = !obscureText;
+                                        },
+                                      );
+                                    },
+                                    child: Icon(
+                                      obscureText
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: const Color(0xffc4c4c4),
+                                    ),
+                                  ),
+                                  hintText: 'Enter Password',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black38)),
+                            ),
                           )
                         ],
                       ),
-                      height: 60,
-                      child: TextField(
-                        obscureText: obscureText,
-                        style: const TextStyle(color: Colors.black87),
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(14),
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(
-                                  () {
-                                    obscureText = !obscureText;
-                                  },
-                                );
-                              },
-                              child: Icon(
-                                obscureText
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: const Color(0xffc4c4c4),
-                              ),
-                            ),
-                            hintText: 'Enter Password',
-                            hintStyle: const TextStyle(color: Colors.black38)),
-                      ),
-                    )
-                  ],
+                      buildForgotPassword(),
+                      const SizedBox(height: 45),
+                      buildAltLogin(),
+                      const SizedBox(height: 55),
+                      buildLogin(),
+                    ],
+                  ),
                 ),
-                buildForgotPassword(),
-                const SizedBox(height: 45),
-                buildAltLogin(),
-                const SizedBox(height: 55),
-                buildLogin(),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 }

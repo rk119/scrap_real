@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
-import 'package:scrap_real/login.dart';
-import 'package:scrap_real/register.dart';
+import 'package:scrap_real/views/login.dart';
+import 'package:scrap_real/views/register.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -15,9 +15,9 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // prevents pixel overflow
+      resizeToAvoidBottomInset: false,
       body: Container(
-        padding: const EdgeInsets.fromLTRB(30, 80, 30, 0),
+        padding: const EdgeInsets.fromLTRB(30, 120, 30, 0),
         width: double.infinity,
         decoration: const BoxDecoration(
           color: Color(0xffffffff),
@@ -40,7 +40,6 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
             ),
             Container(
-              // welcometoscraprealjCG (1:391)
               margin: const EdgeInsets.fromLTRB(0, 30, 0, 30),
               child: RichText(
                 textAlign: TextAlign.center,
