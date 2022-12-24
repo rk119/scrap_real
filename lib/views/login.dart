@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/views/welcome.dart';
-
+import 'package:scrap_real/views/forgot_pass.dart';
 import '../firebase_options.dart';
 
 class LoginPage extends StatefulWidget {
@@ -111,11 +111,16 @@ Widget buildUsername() {
   );
 }
 
-Widget buildForgotPassword() {
+Widget buildForgotPassword(BuildContext context) {
   return Container(
     alignment: Alignment.centerRight,
     child: TextButton(
-      onPressed: () => print("Forgot Password pressed"),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ForgotPassPage()),
+        );
+      },
       child: Text(
         'Forgot Password?',
         style: GoogleFonts.poppins(
@@ -248,7 +253,7 @@ class _LoginPageState extends State<LoginPage> {
                           )
                         ],
                       ),
-                      buildForgotPassword(),
+                      buildForgotPassword(context),
                       const SizedBox(height: 136),
                       buildLogin(),
                     ],
