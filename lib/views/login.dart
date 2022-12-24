@@ -85,7 +85,10 @@ Widget buildUsername() {
             borderRadius: BorderRadius.circular(6),
             boxShadow: const [
               BoxShadow(
-                  color: Color(0x3f000000), blurRadius: 2, offset: Offset(0, 1))
+                color: Color(0x3f000000),
+                blurRadius: 2,
+                offset: Offset(1, 2),
+              )
             ]),
         height: 60,
         child: TextField(
@@ -99,7 +102,7 @@ Widget buildUsername() {
               fontSize: 16,
               fontWeight: FontWeight.w500,
               height: 1.5,
-              color: const Color(0xffc4c4c4),
+              color: const Color.fromARGB(255, 193, 193, 193),
             ),
           ),
         ),
@@ -206,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                                 BoxShadow(
                                   color: Color(0x3f000000),
                                   blurRadius: 2,
-                                  offset: Offset(0, 1),
+                                  offset: Offset(1, 1.8),
                                 )
                               ],
                             ),
@@ -237,7 +240,8 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   height: 1.5,
-                                  color: const Color(0xffc4c4c4),
+                                  color:
+                                      const Color.fromARGB(255, 193, 193, 193),
                                 ),
                               ),
                             ),
