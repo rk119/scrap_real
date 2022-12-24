@@ -67,33 +67,41 @@ Widget buildUsername() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
-      const Text(
+      Text(
         'Username',
-        style: TextStyle(
-          color: Color(0xff141b41),
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(
           fontSize: 18,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
+          height: 1.5,
+          color: const Color(0xff141b41),
         ),
       ),
       const SizedBox(height: 10),
       Container(
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
-            color: const Color(0xffFEFCFC),
-            borderRadius: BorderRadius.circular(10),
+            color: const Color(0xfffdfbfb),
+            borderRadius: BorderRadius.circular(6),
             boxShadow: const [
               BoxShadow(
-                  color: Colors.black26, blurRadius: 4, offset: Offset(0, 1))
+                  color: Color(0x3f000000), blurRadius: 2, offset: Offset(0, 1))
             ]),
         height: 60,
-        child: const TextField(
+        child: TextField(
           keyboardType: TextInputType.emailAddress,
-          style: TextStyle(color: Colors.black87),
+          style: const TextStyle(color: Colors.black87),
           decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(14),
-              hintText: 'Enter Username',
-              hintStyle: TextStyle(color: Colors.black38)),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.all(10),
+            hintText: 'Enter Username',
+            hintStyle: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+              color: const Color(0xffc4c4c4),
+            ),
+          ),
         ),
       ),
     ],
@@ -114,64 +122,6 @@ Widget buildForgotPassword() {
         ),
       ),
     ),
-  );
-}
-
-Widget buildAltLogin() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        alignment: Alignment.centerLeft,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: SizedBox(
-            width: 35,
-            height: 35,
-            child: SvgPicture.asset(
-              'assets/icons/googlelogo.svg',
-            ),
-          ),
-        ),
-      ),
-      const SizedBox(width: 40),
-      Container(
-        alignment: Alignment.centerLeft,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: SizedBox(
-            width: 35,
-            height: 35,
-            child: SvgPicture.asset(
-              'assets/icons/facebooklogo.svg',
-            ),
-          ),
-        ),
-      ),
-      const SizedBox(width: 40),
-      Container(
-        alignment: Alignment.centerLeft,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: SizedBox(
-            width: 35,
-            height: 35,
-            child: SvgPicture.asset(
-              'assets/icons/twitterlogo.svg',
-            ),
-          ),
-        ),
-      ),
-    ],
   );
 }
 
@@ -236,24 +186,26 @@ class _LoginPageState extends State<LoginPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          const Text(
+                          Text(
                             'Password',
-                            style: TextStyle(
-                              color: Color(0xff141b41),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              color: const Color(0xff141b41),
                             ),
                           ),
                           const SizedBox(height: 10),
                           Container(
                             alignment: Alignment.centerLeft,
                             decoration: BoxDecoration(
-                              color: const Color(0xffFEFCFC),
-                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xfffdfbfb),
+                              borderRadius: BorderRadius.circular(6),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 4,
+                                  color: Color(0x3f000000),
+                                  blurRadius: 2,
                                   offset: Offset(0, 1),
                                 )
                               ],
@@ -263,34 +215,37 @@ class _LoginPageState extends State<LoginPage> {
                               obscureText: obscureText,
                               style: const TextStyle(color: Colors.black87),
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(14),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          obscureText = !obscureText;
-                                        },
-                                      );
-                                    },
-                                    child: Icon(
-                                      obscureText
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: const Color(0xffc4c4c4),
-                                    ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.all(10),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(
+                                      () {
+                                        obscureText = !obscureText;
+                                      },
+                                    );
+                                  },
+                                  child: Icon(
+                                    obscureText
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: const Color(0xffc4c4c4),
                                   ),
-                                  hintText: 'Enter Password',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black38)),
+                                ),
+                                hintText: 'Enter Password',
+                                hintStyle: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.5,
+                                  color: const Color(0xffc4c4c4),
+                                ),
+                              ),
                             ),
                           )
                         ],
                       ),
                       buildForgotPassword(),
-                      const SizedBox(height: 45),
-                      buildAltLogin(),
-                      const SizedBox(height: 55),
+                      const SizedBox(height: 136),
                       buildLogin(),
                     ],
                   ),
