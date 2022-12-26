@@ -133,29 +133,32 @@ Widget buildForgotPassword(BuildContext context) {
   );
 }
 
-Widget buildLogin() {
-  return Container(
-    width: double.infinity,
-    height: 50,
-    decoration: BoxDecoration(
-      color: const Color(0xff7be5e7),
-      borderRadius: BorderRadius.circular(30),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x19000000),
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Center(
-      child: Text(
-        'Login',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Colors.black,
+Widget buildLogin(context) {
+  return TextButton(
+    onPressed: () {},
+    child: Container(
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xff7be5e7),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x19000000),
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          'Login',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            height: 1.5,
+            color: Colors.black,
+          ),
         ),
       ),
     ),
@@ -255,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       buildForgotPassword(context),
                       const SizedBox(height: 136),
-                      buildLogin(),
+                      buildLogin(context),
                     ],
                   ),
                 ),

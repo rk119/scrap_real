@@ -156,29 +156,32 @@ Widget buildEmail() {
   );
 }
 
-Widget buildRegister() {
-  return Container(
-    width: double.infinity,
-    height: 50,
-    decoration: BoxDecoration(
-      color: const Color(0xff7be5e7),
-      borderRadius: BorderRadius.circular(30),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x19000000),
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Center(
-      child: Text(
-        'Register',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Colors.black,
+Widget buildRegister(context) {
+  return TextButton(
+    onPressed: () {},
+    child: Container(
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xff7be5e7),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x19000000),
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          'Register',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            height: 1.5,
+            color: Colors.black,
+          ),
         ),
       ),
     ),
@@ -343,7 +346,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: 44),
-                      buildRegister(),
+                      buildRegister(context),
                     ],
                   ),
                 ),

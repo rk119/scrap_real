@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/views/login.dart';
+import 'package:scrap_real/views/set_new_pass.dart';
 import '../firebase_options.dart';
 
 class ForgotPassPage extends StatefulWidget {
@@ -110,29 +111,37 @@ Widget textEmail() {
   );
 }
 
-Widget buildForgot() {
-  return Container(
-    width: double.infinity,
-    height: 50,
-    decoration: BoxDecoration(
-      color: const Color(0xff7be5e7),
-      borderRadius: BorderRadius.circular(30),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x19000000),
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Center(
-      child: Text(
-        'Forgot Password',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Colors.black,
+Widget buildForgot(context) {
+  return TextButton(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SetNewPassPage()),
+      );
+    },
+    child: Container(
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xff7be5e7),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x19000000),
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          'Forgot Password',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            height: 1.5,
+            color: Colors.black,
+          ),
         ),
       ),
     ),
@@ -168,7 +177,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       const SizedBox(height: 137),
                       textEmail(),
                       const SizedBox(height: 280),
-                      buildForgot(),
+                      buildForgot(context),
                     ],
                   ),
                 ),
