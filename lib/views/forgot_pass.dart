@@ -134,7 +134,7 @@ Widget buildForgot(context) {
       ),
       child: Center(
         child: Text(
-          'Forgot Password',
+          'Verify Email',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             fontSize: 18,
