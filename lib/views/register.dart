@@ -257,9 +257,20 @@ class _RegisterPageState extends State<RegisterPage> {
     } catch (e) {
       // ignore: avoid_print
       print(e);
-      Utils.showSnackBar(e.);
+      final regex = RegExp(r'^\[(.*)\]\s(.*)$');
+      final match = regex.firstMatch(e.toString());
+      showSnackBar(match?.group(2));
     }
     // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
+  showSnackBar(String? message) {
+    if (message == null) return;
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: const Color(0xffBC2D21),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

@@ -11,11 +11,13 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        FirebaseAuth.instance.signOut();
-      },
-      child: const Text('Logout'),
+    return Center(
+      child: TextButton(
+        onPressed: () {
+          FirebaseAuth.instance.signOut();
+        },
+        child: const Text('Logout'),
+      ),
     );
   }
 }
