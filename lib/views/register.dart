@@ -8,6 +8,7 @@ import 'package:scrap_real/views/send_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
+import 'package:email_validator/email_validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
   bool obscurePText = true;
   bool obscureCPText = true;
 
@@ -122,10 +124,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   )
                 ]),
             height: 60,
-            child: TextField(
+            child: TextFormField(
               controller: _username,
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.black87),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => (value != null && value.length > 10)
+                  ? 'Username can be max of 10 characters'
+                  : null,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(10),
@@ -170,10 +176,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   )
                 ]),
             height: 60,
-            child: TextField(
+            child: TextFormField(
               controller: _email,
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.black87),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (email) =>
+                  email != null && !EmailValidator.validate(email)
+                      ? 'Enter an email'
+                      : null,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(10),
@@ -223,6 +234,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future registerUser() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) return;
     // showDialog(
     //   context: context,
     //   barrierDismissible: false,
@@ -232,6 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
     //     ),
     //   ),
     // );
+
     try {
       final userInfo = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -262,155 +276,168 @@ class _RegisterPageState extends State<RegisterPage> {
               horizontal: 30,
               vertical: 50,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                buildBackBtn(context),
-                textRegister(),
-                const SizedBox(height: 15),
-                textCreate(),
-                const SizedBox(height: 30),
-                buildUsername(),
-                const SizedBox(height: 28),
-                buildEmail(),
-                const SizedBox(height: 28),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Password',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
-                        color: const Color(0xff141b41),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: const Color(0xfffdfbfb),
-                        borderRadius: BorderRadius.circular(6),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x3f000000),
-                            blurRadius: 2,
-                            offset: Offset(1, 1.8),
-                          )
-                        ],
-                      ),
-                      height: 60,
-                      child: TextField(
-                        controller: _password,
-                        obscureText: obscurePText,
-                        style: const TextStyle(color: Colors.black87),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(10),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(
-                                () {
-                                  obscurePText = !obscurePText;
-                                },
-                              );
-                            },
-                            child: Icon(
-                              obscurePText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: const Color(0xffc4c4c4),
-                            ),
-                          ),
-                          hintText: 'Enter Password',
-                          hintStyle: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: const Color.fromARGB(255, 193, 193, 193),
-                          ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  buildBackBtn(context),
+                  textRegister(),
+                  const SizedBox(height: 15),
+                  textCreate(),
+                  const SizedBox(height: 30),
+                  buildUsername(),
+                  const SizedBox(height: 28),
+                  buildEmail(),
+                  const SizedBox(height: 28),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Password',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: const Color(0xff141b41),
                         ),
                       ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 28),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Confirm Password',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
-                        color: const Color(0xff141b41),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: const Color(0xfffdfbfb),
-                        borderRadius: BorderRadius.circular(6),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x3f000000),
-                            blurRadius: 2,
-                            offset: Offset(1, 1.8),
-                          )
-                        ],
-                      ),
-                      height: 60,
-                      child: TextField(
-                        obscureText: obscureCPText,
-                        style: const TextStyle(color: Colors.black87),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(10),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(
-                                () {
-                                  obscureCPText = !obscureCPText;
-                                },
-                              );
-                            },
-                            child: Icon(
-                              obscureCPText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: const Color(0xffc4c4c4),
+                      const SizedBox(height: 10),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfffdfbfb),
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x3f000000),
+                              blurRadius: 2,
+                              offset: Offset(1, 1.8),
+                            )
+                          ],
+                        ),
+                        height: 60,
+                        child: TextFormField(
+                          controller: _password,
+                          obscureText: obscurePText,
+                          style: const TextStyle(color: Colors.black87),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              (value != null && value.length < 6)
+                                  ? 'Enter a min. of 6 characters'
+                                  : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(10),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    obscurePText = !obscurePText;
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                obscurePText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: const Color(0xffc4c4c4),
+                              ),
+                            ),
+                            hintText: 'Enter Password',
+                            hintStyle: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              color: const Color.fromARGB(255, 193, 193, 193),
                             ),
                           ),
-                          hintText: 'Retype Password',
-                          hintStyle: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: const Color.fromARGB(255, 193, 193, 193),
-                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Confirm Password',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: const Color(0xff141b41),
                         ),
                       ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 44),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SetProfilePage()),
-                    );
-                  },
-                  child: const Text('Set Profile'),
-                ),
-                buildRegister(),
-              ],
+                      const SizedBox(height: 10),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfffdfbfb),
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x3f000000),
+                              blurRadius: 2,
+                              offset: Offset(1, 1.8),
+                            )
+                          ],
+                        ),
+                        height: 60,
+                        child: TextFormField(
+                          obscureText: obscureCPText,
+                          style: const TextStyle(color: Colors.black87),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) =>
+                              (value != null && value != _password.text)
+                                  ? 'Passwords do not match'
+                                  : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(10),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    obscureCPText = !obscureCPText;
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                obscureCPText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: const Color(0xffc4c4c4),
+                              ),
+                            ),
+                            hintText: 'Retype Password',
+                            hintStyle: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              color: const Color.fromARGB(255, 193, 193, 193),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 44),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SetProfilePage()),
+                      );
+                    },
+                    child: const Text('Set Profile'),
+                  ),
+                  buildRegister(),
+                ],
+              ),
             ),
           ),
         ),
