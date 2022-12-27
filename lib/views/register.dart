@@ -257,9 +257,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } catch (e) {
       // ignore: avoid_print
       print(e);
-      _username.text = "";
-      _email.text = "";
-      _password.text = "";
+      Utils.showSnackBar(e.);
     }
     // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
