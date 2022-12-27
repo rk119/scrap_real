@@ -116,9 +116,9 @@ class _SetProfilePageState extends State<SetProfilePage> {
                       ],
                       borderRadius: BorderRadius.circular(100),
                     ),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   )
-                : SizedBox(),
+                : const SizedBox(),
             // profile image
             ClipRRect(
               borderRadius: BorderRadius.circular(75.0), // add border radius
@@ -146,9 +146,9 @@ class _SetProfilePageState extends State<SetProfilePage> {
                       ),
                       borderRadius: BorderRadius.circular(100),
                     ),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
@@ -216,6 +216,7 @@ class _SetProfilePageState extends State<SetProfilePage> {
       final imageTmp = File(image.path);
       setState(() => this.image = imageTmp);
     } on PlatformException catch (e) {
+      // ignore: avoid_print
       print('Failed to pick image: $e');
     }
   }

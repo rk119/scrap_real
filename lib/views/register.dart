@@ -236,10 +236,12 @@ class _RegisterPageState extends State<RegisterPage> {
       final userInfo = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _email.text, password: _password.text);
+      // ignore: avoid_print
       print(userInfo);
       addToFirestore(_email.text, _username.text);
       return const SendVerificationPage();
     } catch (e) {
+      // ignore: avoid_print
       print(e);
       _username.text = "";
       _email.text = "";
