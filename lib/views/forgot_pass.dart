@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scrap_real/router/route_constants.dart';
 import 'package:scrap_real/views/login.dart';
 import 'package:scrap_real/views/set_new_pass.dart';
 import '../firebase_options.dart';
@@ -18,10 +20,7 @@ Widget buildBackBtn(BuildContext context) {
     alignment: const Alignment(-1.15, 0),
     child: TextButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        context.pushReplacementNamed(RouteConstants.login);
       },
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,

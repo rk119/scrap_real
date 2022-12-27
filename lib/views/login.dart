@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scrap_real/router/route_constants.dart';
 import 'package:scrap_real/views/welcome.dart';
 import 'package:scrap_real/views/forgot_pass.dart';
 import '../firebase_options.dart';
@@ -38,10 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: const Alignment(-1.15, 0),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WelcomePage()),
-          );
+          context.pushReplacementNamed(RouteConstants.welcome);
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -136,10 +135,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ForgotPassPage()),
-          );
+          context.pushNamed(RouteConstants.forgotPass);
         },
         child: Text(
           'Forgot Password?',

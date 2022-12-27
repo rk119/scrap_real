@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
+import 'package:scrap_real/router/route_constants.dart';
 import 'package:scrap_real/views/login.dart';
 import 'package:scrap_real/views/register.dart';
 
@@ -87,11 +89,7 @@ class _WelcomePageState extends State<WelcomePage> {
               margin: const EdgeInsets.fromLTRB(0, 0, 0, 23),
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterPage()),
-                  );
+                  context.pushNamed(RouteConstants.register);
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
@@ -129,10 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
+                context.pushNamed(RouteConstants.login);
               },
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
