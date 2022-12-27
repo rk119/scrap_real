@@ -152,37 +152,31 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 50,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                buildBackBtn(context),
+                textForgotPass(),
+                const SizedBox(height: 15),
+                textForgot(),
+                const SizedBox(height: 137),
+                textEmail(),
+                const SizedBox(height: 280),
+                buildForgot(context),
+              ],
+            ),
           ),
-          builder: (context, snapshot) {
-            return AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: GestureDetector(
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 50,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buildBackBtn(context),
-                      textForgotPass(),
-                      const SizedBox(height: 15),
-                      textForgot(),
-                      const SizedBox(height: 137),
-                      textEmail(),
-                      const SizedBox(height: 280),
-                      buildForgot(context),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
+        ),
+      ),
     );
   }
 }

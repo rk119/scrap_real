@@ -1,11 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scrap_real/firebase_options.dart';
 import 'package:scrap_real/router/route_constants.dart';
-import 'package:scrap_real/views/welcome.dart';
+import 'package:scrap_real/views/set_profile.dart';
+import 'package:scrap_real/views/send_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
@@ -206,20 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
       child: TextButton(
-        onPressed: () async {
-          try {
-            final userInfo = await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(
-                    email: _email.text, password: _password.text);
-            print(userInfo);
-            addToFirestore(_email.text, _username.text);
-          } catch (e) {
-            print(e);
-            _username.text = "";
-            _email.text = "";
-            _password.text = "";
-          }
-        },
+        onPressed: registerUser,
         child: Center(
           child: Text(
             'Register',
@@ -236,169 +222,197 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Future registerUser() async {
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Center(
+    //     child: CircularProgressIndicator(
+    //       color: Color(0xff918ef4),
+    //     ),
+    //   ),
+    // );
+    try {
+      final userInfo = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _email.text, password: _password.text);
+      print(userInfo);
+      addToFirestore(_email.text, _username.text);
+      return const SendVerificationPage();
+    } catch (e) {
+      print(e);
+      _username.text = "";
+      _email.text = "";
+      _password.text = "";
+    }
+    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            return AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: GestureDetector(
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 50,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buildBackBtn(context),
-                      textRegister(),
-                      const SizedBox(height: 15),
-                      textCreate(),
-                      const SizedBox(height: 30),
-                      buildUsername(),
-                      const SizedBox(height: 28),
-                      buildEmail(),
-                      const SizedBox(height: 28),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Password',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5,
-                              color: const Color(0xff141b41),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              color: const Color(0xfffdfbfb),
-                              borderRadius: BorderRadius.circular(6),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x3f000000),
-                                  blurRadius: 2,
-                                  offset: Offset(1, 1.8),
-                                )
-                              ],
-                            ),
-                            height: 60,
-                            child: TextField(
-                              controller: _password,
-                              obscureText: obscurePText,
-                              style: const TextStyle(color: Colors.black87),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.all(10),
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    setState(
-                                      () {
-                                        obscurePText = !obscurePText;
-                                      },
-                                    );
-                                  },
-                                  child: Icon(
-                                    obscurePText
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: const Color(0xffc4c4c4),
-                                  ),
-                                ),
-                                hintText: 'Enter Password',
-                                hintStyle: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.5,
-                                  color:
-                                      const Color.fromARGB(255, 193, 193, 193),
-                                ),
-                              ),
-                            ),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 50,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                buildBackBtn(context),
+                textRegister(),
+                const SizedBox(height: 15),
+                textCreate(),
+                const SizedBox(height: 30),
+                buildUsername(),
+                const SizedBox(height: 28),
+                buildEmail(),
+                const SizedBox(height: 28),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Password',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                        color: const Color(0xff141b41),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: const Color(0xfffdfbfb),
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x3f000000),
+                            blurRadius: 2,
+                            offset: Offset(1, 1.8),
                           )
                         ],
                       ),
-                      const SizedBox(height: 28),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Confirm Password',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5,
-                              color: const Color(0xff141b41),
+                      height: 60,
+                      child: TextField(
+                        controller: _password,
+                        obscureText: obscurePText,
+                        style: const TextStyle(color: Colors.black87),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(10),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(
+                                () {
+                                  obscurePText = !obscurePText;
+                                },
+                              );
+                            },
+                            child: Icon(
+                              obscurePText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: const Color(0xffc4c4c4),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              color: const Color(0xfffdfbfb),
-                              borderRadius: BorderRadius.circular(6),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x3f000000),
-                                  blurRadius: 2,
-                                  offset: Offset(1, 1.8),
-                                )
-                              ],
-                            ),
-                            height: 60,
-                            child: TextField(
-                              obscureText: obscureCPText,
-                              style: const TextStyle(color: Colors.black87),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.all(10),
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    setState(
-                                      () {
-                                        obscureCPText = !obscureCPText;
-                                      },
-                                    );
-                                  },
-                                  child: Icon(
-                                    obscureCPText
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: const Color(0xffc4c4c4),
-                                  ),
-                                ),
-                                hintText: 'Retype Password',
-                                hintStyle: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.5,
-                                  color:
-                                      const Color.fromARGB(255, 193, 193, 193),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+                          hintText: 'Enter Password',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                            color: const Color.fromARGB(255, 193, 193, 193),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 44),
-                      buildRegister(),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-              ),
-            );
-          }),
+                const SizedBox(height: 28),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Confirm Password',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                        color: const Color(0xff141b41),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: const Color(0xfffdfbfb),
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x3f000000),
+                            blurRadius: 2,
+                            offset: Offset(1, 1.8),
+                          )
+                        ],
+                      ),
+                      height: 60,
+                      child: TextField(
+                        obscureText: obscureCPText,
+                        style: const TextStyle(color: Colors.black87),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(10),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(
+                                () {
+                                  obscureCPText = !obscureCPText;
+                                },
+                              );
+                            },
+                            child: Icon(
+                              obscureCPText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: const Color(0xffc4c4c4),
+                            ),
+                          ),
+                          hintText: 'Retype Password',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                            color: const Color.fromARGB(255, 193, 193, 193),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 44),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SetProfilePage()),
+                    );
+                  },
+                  child: const Text('Set Profile'),
+                ),
+                buildRegister(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
