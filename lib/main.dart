@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrap_real/router/routing.dart';
 import 'package:scrap_real/views/welcome.dart';
 
 void main() {
@@ -11,8 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: WelcomePage(),
+    return MaterialApp.router(
+      routeInformationParser: Routing().routing.routeInformationParser,
+      routerDelegate: Routing().routing.routerDelegate,
     );
   }
 }

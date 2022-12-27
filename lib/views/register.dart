@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/firebase_options.dart';
+import 'package:scrap_real/router/route_constants.dart';
 import 'package:scrap_real/views/welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -51,10 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
       alignment: const Alignment(-1.15, 0),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WelcomePage()),
-          );
+          context.pushReplacementNamed(RouteConstants.welcome);
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
