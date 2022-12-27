@@ -13,130 +13,148 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-Widget buildBackBtn(BuildContext context) {
-  return Container(
-    alignment: const Alignment(-1.15, 0),
-    child: TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const WelcomePage()),
-        );
-      },
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.zero,
-      ),
-      child: SizedBox(
-        width: 20,
-        height: 20,
-        child: SvgPicture.asset(
-          'assets/back.svg',
+class _LoginPageState extends State<LoginPage> {
+  bool obscureText = true;
+
+  late final TextEditingController _username;
+  late final TextEditingController _password;
+
+  @override
+  void initState() {
+    _username = TextEditingController();
+    _password = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _username.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  Widget buildBackBtn(BuildContext context) {
+    return Container(
+      alignment: const Alignment(-1.15, 0),
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const WelcomePage()),
+          );
+        },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
         ),
-      ),
-    ),
-  );
-}
-
-Text textLogin() {
-  return Text(
-    'Login',
-    textAlign: TextAlign.center,
-    style: GoogleFonts.poppins(
-      fontSize: 30,
-      fontWeight: FontWeight.w600,
-      height: 1.5,
-      color: const Color(0xff918ef4),
-    ),
-  );
-}
-
-Text textSignIn() {
-  return Text(
-    'Sign in to your account',
-    textAlign: TextAlign.center,
-    style: GoogleFonts.poppins(
-      fontSize: 20,
-      fontWeight: FontWeight.w500,
-      height: 1.5,
-      color: Color(0xffa09f9f),
-    ),
-  );
-}
-
-Widget buildUsername() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        'Username',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          height: 1.5,
-          color: const Color(0xff141b41),
-        ),
-      ),
-      const SizedBox(height: 10),
-      Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-            color: const Color(0xfffdfbfb),
-            borderRadius: BorderRadius.circular(6),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x3f000000),
-                blurRadius: 2,
-                offset: Offset(1, 2),
-              )
-            ]),
-        height: 60,
-        child: TextField(
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(color: Colors.black87),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.all(10),
-            hintText: 'Enter Username',
-            hintStyle: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              height: 1.5,
-              color: const Color.fromARGB(255, 193, 193, 193),
-            ),
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: SvgPicture.asset(
+            'assets/back.svg',
           ),
         ),
       ),
-    ],
-  );
-}
+    );
+  }
 
-Widget buildForgotPassword(BuildContext context) {
-  return Container(
-    alignment: Alignment.centerRight,
-    child: TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ForgotPassPage()),
-        );
-      },
-      child: Text(
-        'Forgot Password?',
-        style: GoogleFonts.poppins(
-          fontSize: 17,
-          color: const Color(0xff918ef4),
-          fontWeight: FontWeight.w600,
+  Text textLogin() {
+    return Text(
+      'Login',
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 30,
+        fontWeight: FontWeight.w600,
+        height: 1.5,
+        color: const Color(0xff918ef4),
+      ),
+    );
+  }
+
+  Text textSignIn() {
+    return Text(
+      'Sign in to your account',
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+        color: const Color(0xffa09f9f),
+      ),
+    );
+  }
+
+  Widget buildUsername() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Username',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            height: 1.5,
+            color: const Color(0xff141b41),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+              color: const Color(0xfffdfbfb),
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x3f000000),
+                  blurRadius: 2,
+                  offset: Offset(1, 2),
+                )
+              ]),
+          height: 60,
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            style: const TextStyle(color: Colors.black87),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.all(10),
+              hintText: 'Enter Username',
+              hintStyle: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 1.5,
+                color: const Color.fromARGB(255, 193, 193, 193),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildForgotPassword(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ForgotPassPage()),
+          );
+        },
+        child: Text(
+          'Forgot Password?',
+          style: GoogleFonts.poppins(
+            fontSize: 17,
+            color: const Color(0xff918ef4),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget buildLogin(context) {
-  return TextButton(
-    onPressed: () {},
-    child: Container(
+  Widget buildLogin() {
+    return Container(
       width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
@@ -161,12 +179,9 @@ Widget buildLogin(context) {
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-class _LoginPageState extends State<LoginPage> {
-  bool obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       buildForgotPassword(context),
                       const SizedBox(height: 136),
-                      buildLogin(context),
+                      buildLogin(),
                     ],
                   ),
                 ),
