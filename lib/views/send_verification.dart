@@ -10,6 +10,16 @@ class SendVerificationPage extends StatefulWidget {
 class _SendVerificationPageState extends State<SendVerificationPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+      child: Column(
+        children: [
+          const Text('Verification Page'),
+          TextButton(
+            onPressed: () {},
+            child: Text('Resend'),
+          ),
+        ],
+      ),
+    );
   }
 }
