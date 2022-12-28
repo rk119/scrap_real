@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
 import 'package:scrap_real/router/route_constants.dart';
+import 'package:scrap_real/router/routing.dart';
 import 'package:scrap_real/views/user_profile.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -95,7 +96,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     margin: const EdgeInsets.fromLTRB(0, 0, 0, 23),
                     child: TextButton(
                       onPressed: () {
-                        context.pushNamed(RouteConstants.register);
+                        // context.pushNamed(RouteConstants.register);
+                        routePush(context, RouteConstants.register);
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
@@ -133,7 +135,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      context.pushNamed(RouteConstants.login);
+                      // context.pushNamed(RouteConstants.login);
+                        routePush(context, RouteConstants.login);
                     },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,

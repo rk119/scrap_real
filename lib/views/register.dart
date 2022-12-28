@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/router/route_constants.dart';
+import 'package:scrap_real/router/routing.dart';
 import 'package:scrap_real/views/set_profile.dart';
 import 'package:scrap_real/views/send_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,7 +55,8 @@ class _RegisterPageState extends State<RegisterPage> {
       alignment: const Alignment(-1.15, 0),
       child: TextButton(
         onPressed: () {
-          context.pushReplacementNamed(RouteConstants.welcome);
+          // context.pushReplacementNamed(RouteConstants.welcome, extra: Offset(-1, 0));
+          routePushReplacement(context, RouteConstants.welcome);
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,

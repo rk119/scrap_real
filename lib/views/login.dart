@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/router/route_constants.dart';
+import 'package:scrap_real/router/routing.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,7 +37,8 @@ class _LoginPageState extends State<LoginPage> {
       alignment: const Alignment(-1.15, 0),
       child: TextButton(
         onPressed: () {
-          context.pushReplacementNamed(RouteConstants.welcome);
+          // context.pushReplacementNamed(RouteConstants.welcome);
+          routePushReplacement(context, RouteConstants.welcome);
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -131,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
-          context.pushNamed(RouteConstants.forgotPass);
+          // context.pushNamed(RouteConstants.forgotPass);
+          routePush(context, RouteConstants.forgotPass);
         },
         child: Text(
           'Forgot Password?',
