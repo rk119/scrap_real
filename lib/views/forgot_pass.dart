@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/router/route_constants.dart';
+import 'package:scrap_real/router/routing.dart';
 
 class ForgotPassPage extends StatefulWidget {
   const ForgotPassPage({Key? key}) : super(key: key);
@@ -35,7 +36,8 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
       alignment: const Alignment(-1.15, 0),
       child: TextButton(
         onPressed: () {
-          context.pushReplacementNamed(RouteConstants.login);
+          // context.pushReplacementNamed(RouteConstants.login);
+          routePushReplacement(context, RouteConstants.login);
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
