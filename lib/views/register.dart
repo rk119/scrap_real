@@ -249,11 +249,14 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       final userInfo = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: _email.text, password: _password.text);
+              email: _email.text.trim(), password: _password.text.trim());
       // ignore: avoid_print
       print(userInfo);
-      addToFirestore(_email.text, _username.text);
-      return const SendVerificationPage();
+      addToFirestore(_email.text.trim(), _username.text.trim());
+
+      MaterialPageRoute(
+        builder: (context) => const SendVerificationPage(),
+      );
     } catch (e) {
       // ignore: avoid_print
       print(e);
@@ -261,7 +264,7 @@ class _RegisterPageState extends State<RegisterPage> {
       final match = regex.firstMatch(e.toString());
       showSnackBar(match?.group(2));
     }
-    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    // navigatorKey.currentState!.popUntil((route) => route.send_v);
   }
 
   showSnackBar(String? message) {
