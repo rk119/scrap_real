@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,22 +17,47 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool obscureText = true;
 
-  late final TextEditingController _username;
   late final TextEditingController _password;
+  late final TextEditingController _email;
 
   @override
   void initState() {
-    _username = TextEditingController();
     _password = TextEditingController();
+    _email = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _username.dispose();
     _password.dispose();
+    _email.dispose();
     super.dispose();
   }
+
+  // Future<Null> getUserFirestore(String userName) async {
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   CollectionReference users = firestore.collection('users');
+  //   String email = "";
+  //   String trimmedUser = userName.trim();
+  //   users
+  //       .where('userName', isEqualTo: trimmedUser)
+  //       .get()
+  //       .then((QuerySnapshot documentSnapshot) {
+  //     if (documentSnapshot.docs.isNotEmpty) {
+  //       print('Document data: ${documentSnapshot.docs[0].data()}');
+  //       Map<String, dynamic> userDocument =
+  //           documentSnapshot.docs[0].data() as Map<String, dynamic>;
+
+  //       //Sumant coding = 💩;
+  //       email = userDocument['email'];
+  //       _email.text = email.toString();
+  //     } else {
+  //       _email.text = email;
+  //       print('Document does not exist on the database');
+  //     }
+  //   });
+  //   return;
+  // }
 
   Widget buildBackBtn(BuildContext context) {
     return Container(
@@ -85,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Username',
+          'Email',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             fontSize: 18,
@@ -109,12 +136,13 @@ class _LoginPageState extends State<LoginPage> {
               ]),
           height: 60,
           child: TextField(
+            controller: _email,
             keyboardType: TextInputType.emailAddress,
             style: const TextStyle(color: Colors.black87),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(10),
-              hintText: 'Enter Username',
+              hintText: 'Enter Email',
               hintStyle: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -162,19 +190,37 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-      child: Center(
-        child: Text(
-          'Login',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.5,
-            color: Colors.black,
+      child: TextButton(
+        onPressed: loginUser,
+        child: Center(
+          child: Text(
+            'Login',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              height: 1.5,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future loginUser() async {
+    try {
+      // getUserFirestore(_username.text);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _email.text, password: _password.text);
+      print(userCredential);
+    } catch (e) {
+      print(e);
+      // _username.text = "";
+      _email.text = "";
+      _password.text = "";
+    }
   }
 
   @override
@@ -228,6 +274,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       height: 60,
                       child: TextField(
+                        controller: _password,
                         obscureText: obscureText,
                         style: const TextStyle(color: Colors.black87),
                         decoration: InputDecoration(
