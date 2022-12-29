@@ -21,14 +21,14 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController _username;
   late final TextEditingController _email;
   late final TextEditingController _password;
-
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late final TextEditingController _rePassword;
 
   @override
   void initState() {
     _username = TextEditingController();
     _email = TextEditingController();
     _password = TextEditingController();
+    _rePassword = TextEditingController();
     super.initState();
   }
 
@@ -37,10 +37,12 @@ class _RegisterPageState extends State<RegisterPage> {
     _username.dispose();
     _email.dispose();
     _password.dispose();
+    _rePassword.dispose();
     super.dispose();
   }
 
   Future<void> addToFirestore(String email, String userName) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection('users');
     users.add({'email': email, 'userName': userName});
     return;
@@ -219,6 +221,7 @@ class _RegisterPageState extends State<RegisterPage> {
             _username.text = "";
             _email.text = "";
             _password.text = "";
+            _rePassword.text = "";
           }
         },
         child: Center(
@@ -359,6 +362,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             height: 60,
                             child: TextField(
+                              controller: _rePassword,
                               obscureText: obscureCPText,
                               style: const TextStyle(color: Colors.black87),
                               decoration: InputDecoration(
