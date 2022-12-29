@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scrap_real/views/welcome.dart';
-import 'package:scrap_real/views/forgot_pass.dart';
-import '../firebase_options.dart';
+import 'package:scrap_real/router/route_constants.dart';
+import 'package:scrap_real/router/routing.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -65,10 +64,8 @@ class _LoginPageState extends State<LoginPage> {
       alignment: const Alignment(-1.15, 0),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WelcomePage()),
-          );
+          // context.pushReplacementNamed(RouteConstants.welcome);
+          routePushReplacement(context, RouteConstants.welcome);
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -164,10 +161,8 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ForgotPassPage()),
-          );
+          // context.pushNamed(RouteConstants.forgotPass);
+          routePush(context, RouteConstants.forgotPass);
         },
         child: Text(
           'Forgot Password?',
@@ -196,27 +191,7 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
       child: TextButton(
-        onPressed: () async {
-          try {
-            // getUserFirestore(_username.text);
-            UserCredential userCredential = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(
-                    email: _email.text, password: _password.text);
-            print(userCredential);
-          } catch (e) {
-            print(e);
-            // _username.text = "";
-            _email.text = "";
-            _password.text = "";
-          }
-          // } on FirebaseAuthException catch (e) {
-          //   if (e.code == 'user-not-found') {
-          //     print('No user found for that email.');
-          //   } else if (e.code == 'wrong-password') {
-          //     print('Wrong password provided for that user.');
-          //   }
-          // }
-        },
+        onPressed: loginUser,
         child: Center(
           child: Text(
             'Login',
@@ -233,105 +208,113 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Future loginUser() async {
+    try {
+      // getUserFirestore(_username.text);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _email.text, password: _password.text);
+      print(userCredential);
+    } catch (e) {
+      print(e);
+      // _username.text = "";
+      _email.text = "";
+      _password.text = "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            return AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: GestureDetector(
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 50,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buildBackBtn(context),
-                      textLogin(),
-                      const SizedBox(height: 15),
-                      textSignIn(),
-                      const SizedBox(height: 137),
-                      buildUsername(),
-                      const SizedBox(height: 30),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Password',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5,
-                              color: const Color(0xff141b41),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              color: const Color(0xfffdfbfb),
-                              borderRadius: BorderRadius.circular(6),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x3f000000),
-                                  blurRadius: 2,
-                                  offset: Offset(1, 1.8),
-                                )
-                              ],
-                            ),
-                            height: 60,
-                            child: TextField(
-                              controller: _password,
-                              obscureText: obscureText,
-                              style: const TextStyle(color: Colors.black87),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.all(10),
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    setState(
-                                      () {
-                                        obscureText = !obscureText;
-                                      },
-                                    );
-                                  },
-                                  child: Icon(
-                                    obscureText
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: const Color(0xffc4c4c4),
-                                  ),
-                                ),
-                                hintText: 'Enter Password',
-                                hintStyle: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.5,
-                                  color:
-                                      const Color.fromARGB(255, 193, 193, 193),
-                                ),
-                              ),
-                            ),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 50,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                buildBackBtn(context),
+                textLogin(),
+                const SizedBox(height: 15),
+                textSignIn(),
+                const SizedBox(height: 137),
+                buildUsername(),
+                const SizedBox(height: 30),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Password',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                        color: const Color(0xff141b41),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: const Color(0xfffdfbfb),
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x3f000000),
+                            blurRadius: 2,
+                            offset: Offset(1, 1.8),
                           )
                         ],
                       ),
-                      buildForgotPassword(context),
-                      const SizedBox(height: 136),
-                      buildLogin(),
-                    ],
-                  ),
+                      height: 60,
+                      child: TextField(
+                        controller: _password,
+                        obscureText: obscureText,
+                        style: const TextStyle(color: Colors.black87),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(10),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(
+                                () {
+                                  obscureText = !obscureText;
+                                },
+                              );
+                            },
+                            child: Icon(
+                              obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: const Color(0xffc4c4c4),
+                            ),
+                          ),
+                          hintText: 'Enter Password',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                            color: const Color.fromARGB(255, 193, 193, 193),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            );
-          }),
+                buildForgotPassword(context),
+                const SizedBox(height: 136),
+                buildLogin(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
