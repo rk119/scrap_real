@@ -1,5 +1,5 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
   bool obscureText = true;
 
   late final TextEditingController _password;
@@ -107,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildUsername() {
+  Widget buildEmail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -135,10 +136,15 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ]),
           height: 60,
-          child: TextField(
+          child: TextFormField(
             controller: _email,
             keyboardType: TextInputType.emailAddress,
             style: const TextStyle(color: Colors.black87),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (email) =>
+                email != null && !EmailValidator.validate(email)
+                    ? 'Invalid email'
+                    : null,
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(10),
@@ -209,18 +215,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future loginUser() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) return;
+
     try {
-      // getUserFirestore(_username.text);
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: _email.text, password: _password.text);
       print(userCredential);
+      // TODO: Navigate to user profile
     } catch (e) {
       print(e);
-      // _username.text = "";
-      _email.text = "";
-      _password.text = "";
+      final regex = RegExp(r'^\[(.*)\]\s(.*)$');
+      final match = regex.firstMatch(e.toString());
+      showSnackBar(match?.group(2));
     }
+  }
+
+  showSnackBar(String? message) {
+    if (message == null) return;
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: const Color(0xffBC2D21),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -235,82 +253,85 @@ class _LoginPageState extends State<LoginPage> {
               horizontal: 30,
               vertical: 50,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                buildBackBtn(context),
-                textLogin(),
-                const SizedBox(height: 15),
-                textSignIn(),
-                const SizedBox(height: 137),
-                buildUsername(),
-                const SizedBox(height: 30),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Password',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
-                        color: const Color(0xff141b41),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: const Color(0xfffdfbfb),
-                        borderRadius: BorderRadius.circular(6),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x3f000000),
-                            blurRadius: 2,
-                            offset: Offset(1, 1.8),
-                          )
-                        ],
-                      ),
-                      height: 60,
-                      child: TextField(
-                        controller: _password,
-                        obscureText: obscureText,
-                        style: const TextStyle(color: Colors.black87),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(10),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(
-                                () {
-                                  obscureText = !obscureText;
-                                },
-                              );
-                            },
-                            child: Icon(
-                              obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: const Color(0xffc4c4c4),
-                            ),
-                          ),
-                          hintText: 'Enter Password',
-                          hintStyle: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: const Color.fromARGB(255, 193, 193, 193),
-                          ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  buildBackBtn(context),
+                  textLogin(),
+                  const SizedBox(height: 15),
+                  textSignIn(),
+                  const SizedBox(height: 137),
+                  buildEmail(),
+                  const SizedBox(height: 30),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Password',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: const Color(0xff141b41),
                         ),
                       ),
-                    )
-                  ],
-                ),
-                buildForgotPassword(context),
-                const SizedBox(height: 136),
-                buildLogin(),
-              ],
+                      const SizedBox(height: 10),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfffdfbfb),
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x3f000000),
+                              blurRadius: 2,
+                              offset: Offset(1, 1.8),
+                            )
+                          ],
+                        ),
+                        height: 60,
+                        child: TextField(
+                          controller: _password,
+                          obscureText: obscureText,
+                          style: const TextStyle(color: Colors.black87),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(10),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    obscureText = !obscureText;
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                obscureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: const Color(0xffc4c4c4),
+                              ),
+                            ),
+                            hintText: 'Enter Password',
+                            hintStyle: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              color: const Color.fromARGB(255, 193, 193, 193),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  buildForgotPassword(context),
+                  const SizedBox(height: 136),
+                  buildLogin(),
+                ],
+              ),
             ),
           ),
         ),
