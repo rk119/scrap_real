@@ -328,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   buildForgotPassword(context),
-                  const SizedBox(height: 136),
+                  const SizedBox(height: 125),
                   buildLogin(),
                 ],
               ),
