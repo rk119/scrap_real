@@ -249,13 +249,22 @@ class _RegisterPageState extends State<RegisterPage> {
     // );
 
     try {
-      final userInfo = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _email.text.trim(), password: _password.text.trim());
-      // ignore: avoid_print
-      print(userInfo);
-      addToFirestore(_email.text.trim(), _username.text.trim());
-
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      CollectionReference users = firestore.collection('users');
+      users.where('userName', isEqualTo: _username.text.trim()).get().then(
+        (QuerySnapshot documentSnapshot) async {
+          if (documentSnapshot.docs.isEmpty) {
+            final userInfo = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                    email: _email.text.trim(), password: _password.text.trim());
+            // ignore: avoid_print
+            print(userInfo);
+            addToFirestore(_email.text.trim(), _username.text.trim());
+          } else {
+            showSnackBar('Username already exists');
+          }
+        },
+      );
       MaterialPageRoute(
         builder: (context) => const SendVerificationPage(),
       );

@@ -13,8 +13,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Center(
       child: TextButton(
-        onPressed: () {
-          FirebaseAuth.instance.signOut();
+        onPressed: () async {
+          await FirebaseAuth.instance.signOut();
         },
         child: const Text('Logout'),
       ),
