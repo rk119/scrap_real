@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +12,7 @@ class CustomPasswordFormField extends StatelessWidget {
     required this.onTapFunction,
     required this.hintingText,
     required this.obscureTextBool,
+    this.textColor = Colors.black,
   }) : super(key: key);
 
   TextEditingController textController;
@@ -18,6 +21,7 @@ class CustomPasswordFormField extends StatelessWidget {
   void Function()? onTapFunction;
   String hintingText;
   bool obscureTextBool;
+  Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class CustomPasswordFormField extends StatelessWidget {
             fontSize: 18,
             fontWeight: FontWeight.w500,
             height: 1.5,
-            color: const Color(0xff141b41),
+            color: textColor,
           ),
         ),
         const SizedBox(height: 10),

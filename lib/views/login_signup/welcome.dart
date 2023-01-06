@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
-import 'package:scrap_real/views/register.dart';
-import 'package:scrap_real/views/user_profile.dart';
-import 'package:scrap_real/views/login.dart';
+import 'package:scrap_real/views/login_signup/register.dart';
+import 'package:scrap_real/views/main_views/user_profile.dart';
+import 'package:scrap_real/views/login_signup/login.dart';
 import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -115,7 +115,6 @@ class _WelcomePageState extends State<WelcomePage> {
                       );
                     },
                     buttonText: "I already have an account",
-                    buttonColor: const Color(0xff7be5e7),
                   ),
                 ],
               ),

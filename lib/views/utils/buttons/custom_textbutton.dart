@@ -1,3 +1,6 @@
+// ignore_for_file: must_be_immutable
+// ignore_for_file: const
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,7 +9,8 @@ class CustomTextButton extends StatelessWidget {
     required this.buttonBorderRadius,
     required this.buttonFunction,
     required this.buttonText,
-    required this.buttonColor,
+    this.buttonColor = const Color(0xff7be5e7),
+    this.buttonTextColor = Colors.black,
     Key? key,
   }) : super(key: key);
 
@@ -14,6 +18,7 @@ class CustomTextButton extends StatelessWidget {
   void Function()? buttonFunction;
   String buttonText;
   Color buttonColor;
+  Color buttonTextColor;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class CustomTextButton extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w600,
               height: 1.5,
-              color: Colors.black,
+              color: buttonTextColor,
             ),
           ),
         ),

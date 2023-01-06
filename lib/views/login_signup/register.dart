@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:scrap_real/views/set_profile.dart';
-// import 'package:scrap_real/views/send_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:scrap_real/views/welcome.dart';
+import 'package:scrap_real/views/login_signup/send_verification.dart';
+import 'package:scrap_real/views/login_signup/welcome.dart';
 import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
 import 'package:scrap_real/views/utils/headers/custom_header.dart';
 import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
@@ -29,6 +28,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController _password1 = TextEditingController();
   late final TextEditingController _password2 = TextEditingController();
 
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void dispose() {
     _username.dispose();
@@ -47,35 +48,35 @@ class _RegisterPageState extends State<RegisterPage> {
   Future registerUser() async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (context) => const Center(
-    //     child: CircularProgressIndicator(
-    //       color: Color(0xff918ef4),
-    //     ),
-    //   ),
-    // );
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xff918ef4),
+        ),
+      ),
+    );
 
     try {
-      final userInfo = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _email.text.trim(), password: _password1.text.trim());
-      // ignore: avoid_print
-      print(userInfo);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email.text.trim(), password: _password1.text.trim());
       addToFirestore(_email.text.trim(), _username.text.trim());
 
-      // MaterialPageRoute(
-      //   builder: (context) => const SendVerificationPage(),
-      // );
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SendVerificationPage()),
+      );
     } catch (e) {
       // ignore: avoid_print
       print(e);
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');
       final match = regex.firstMatch(e.toString());
       showSnackBar(match?.group(2));
+      Navigator.of(context).pop();
     }
-    // navigatorKey.currentState!.popUntil((route) => route.send_v);
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
   showSnackBar(String? message) {
@@ -175,21 +176,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     obscureTextBool: obscureCPText,
                   ),
                   const SizedBox(height: 44),
-                  TextButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => const SetProfilePage()),
-                      // );
-                    },
-                    child: const Text('Set Profile'),
-                  ),
                   CustomTextButton(
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: registerUser,
                     buttonText: "Register",
-                    buttonColor: const Color(0xff7be5e7),
                   ),
                 ],
               ),

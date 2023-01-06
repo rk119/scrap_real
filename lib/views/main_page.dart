@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:scrap_real/views/user_profile.dart';
-import 'package:scrap_real/views/welcome.dart';
+import 'package:scrap_real/views/navigation.dart';
+import 'package:scrap_real/views/login_signup/send_verification.dart';
+import 'package:scrap_real/views/login_signup/welcome.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -13,7 +14,11 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const UserProfilePage();
+            var user = FirebaseAuth.instance.currentUser!;
+            if (user.email != null && user.emailVerified) {
+              return const NavBar();
+            }
+            return const SendVerificationPage();
           } else {
             return const WelcomePage();
           }

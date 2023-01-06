@@ -2,9 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scrap_real/views/login.dart';
+import 'package:scrap_real/views/login_signup/login.dart';
 import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
 import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
+import 'package:scrap_real/views/utils/custom_snackbar.dart';
 import 'package:scrap_real/views/utils/headers/custom_header.dart';
 import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
 import 'package:scrap_real/views/utils/text_fields/custom_textformfield.dart';
@@ -33,23 +34,17 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _email.text.trim());
-      showSnackBar('Password reset email sent');
+      if (!mounted) return;
+      CustomSnackBar.showSnackBar(context, 'Password Reset Email Sent');
       // Wafi: Navigate to login page
     } catch (e) {
+      // ignore: avoid_print
       print(e);
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');
       final match = regex.firstMatch(e.toString());
-      showSnackBar(match?.group(2));
+      if (!mounted) return;
+      CustomSnackBar.showSnackBar(context, match?.group(2));
     }
-  }
-
-  showSnackBar(String? message) {
-    if (message == null) return;
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: const Color(0xffBC2D21),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -98,7 +93,6 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: resetPassword,
                     buttonText: "Reset Password",
-                    buttonColor: const Color(0xff7be5e7),
                   ),
                 ],
               ),

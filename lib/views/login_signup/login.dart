@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scrap_real/views/forgot_pass.dart';
-import 'package:scrap_real/views/user_profile.dart';
-import 'package:scrap_real/views/welcome.dart';
+import 'package:scrap_real/views/login_signup/forgot_pass.dart';
+import 'package:scrap_real/views/navigation.dart';
+import 'package:scrap_real/views/login_signup/welcome.dart';
 import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
 import 'package:scrap_real/views/utils/headers/custom_header.dart';
 import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
@@ -88,6 +88,11 @@ class _LoginPageState extends State<LoginPage> {
         email: _email.text.trim(),
         password: _password.text.trim(),
       );
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const NavBar()),
+      );
     } catch (e) {
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');
       final match = regex.firstMatch(e.toString());
@@ -148,9 +153,10 @@ class _LoginPageState extends State<LoginPage> {
                   CustomPasswordFormField(
                     textController: _password,
                     headingText: "Password",
-                    validatorFunction: (value) {
-                      return null;
-                    },
+                    validatorFunction: (value) =>
+                        (value != null && value.length < 6)
+                            ? 'Enter a min. of 6 characters'
+                            : null,
                     onTapFunction: () {
                       setState(
                         () {
@@ -165,21 +171,8 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 136),
                   CustomTextButton(
                     buttonBorderRadius: BorderRadius.circular(30),
-                    buttonFunction: () {
-                      FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: _email.text, password: _password.text)
-                          .then((_) {
-                        if (!mounted) return;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const UserProfilePage()),
-                        );
-                      });
-                    },
+                    buttonFunction: loginUser,
                     buttonText: "Login",
-                    buttonColor: const Color(0xff7be5e7),
                   ),
                 ],
               ),
