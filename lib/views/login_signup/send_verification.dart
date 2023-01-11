@@ -105,8 +105,8 @@ class _SendVerificationPageState extends State<SendVerificationPage> {
                                 "A link has been sent to your email to verify your account",
                             textSize: 20),
                         const SizedBox(height: 50),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
+                        TextButton(
+                          style: TextButton.styleFrom(
                             backgroundColor: const Color(0xffbc2d21),
                           ),
                           onPressed: canResend
@@ -114,7 +114,8 @@ class _SendVerificationPageState extends State<SendVerificationPage> {
                                   sendVerificationEmail();
                                 }
                               : null,
-                          child: const Text('Resend'),
+                          child: const Text('Resend',
+                              style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
