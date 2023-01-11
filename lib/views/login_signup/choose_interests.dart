@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/login_signup/set_profile.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/cards/custom_interestscard.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/cards/custom_interestscard.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 
+// this page will not be necessary. To-Do: remove later
 class ChooseInterestsPage extends StatefulWidget {
   const ChooseInterestsPage({Key? key}) : super(key: key);
   @override

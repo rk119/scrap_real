@@ -3,14 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/models/user_class.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/login_signup/send_verification.dart';
 import 'package:scrap_real/views/login_signup/welcome.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_textformfield.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_passwordfield.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/text_fields/custom_textformfield.dart';
+import 'package:scrap_real/widgets/text_fields/custom_passwordfield.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+
+import '../../widgets/custom_snackbar.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -48,6 +53,16 @@ class _RegisterPageState extends State<RegisterPage> {
   Future registerUser() async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
+
+    // username exists
+    final docUser = FirebaseFirestore.instance
+        .collection('users')
+        .where('userName', isEqualTo: _username.text.trim());
+    final docUserSnapshot = await docUser.get();
+    if (docUserSnapshot.docs.isNotEmpty) {
+      CustomSnackBar.showSnackBar(context, "Username already exists");
+      return;
+    }
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -61,7 +76,21 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _email.text.trim(), password: _password1.text.trim());
-      addToFirestore(_email.text.trim(), _username.text.trim());
+
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final docUser = FirebaseFirestore.instance.collection('users').doc(uid);
+
+      final userModel = UserModel(
+        uid: docUser.id,
+        email: _email.text.trim(),
+        userName: _username.text.trim(),
+        name: "",
+        bio: "",
+        followers: [],
+        following: [],
+      );
+      final json = userModel.toJson();
+      await docUser.set(json);
 
       if (!mounted) return;
       Navigator.push(
@@ -73,19 +102,10 @@ class _RegisterPageState extends State<RegisterPage> {
       print(e);
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');
       final match = regex.firstMatch(e.toString());
-      showSnackBar(match?.group(2));
+      CustomSnackBar.showSnackBar(context, match?.group(2));
       Navigator.of(context).pop();
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
-  }
-
-  showSnackBar(String? message) {
-    if (message == null) return;
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: const Color(0xffBC2D21),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -141,6 +161,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 28),
                   CustomPasswordFormField(
+                    textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.white
+                        : Colors.black,
                     textController: _password1,
                     headingText: "Password",
                     validatorFunction: (value) =>
@@ -159,6 +183,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 28),
                   CustomPasswordFormField(
+                    textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.white
+                        : Colors.black,
                     textController: _password2,
                     headingText: "Confirm Password",
                     validatorFunction: (value) =>

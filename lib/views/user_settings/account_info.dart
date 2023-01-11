@@ -4,20 +4,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrap_real/views/user_settings/delete_account.dart';
 import 'package:scrap_real/views/user_settings/user_settings.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/cards/custom_namecard.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_passwordfield.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/cards/custom_namecard.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_fields/custom_passwordfield.dart';
 
 class AccountInformationPage extends StatefulWidget {
   const AccountInformationPage({Key? key}) : super(key: key);
 
   @override
-  State<AccountInformationPage> createState() => AccountInformationPageState();
+  State<AccountInformationPage> createState() => _AccountInformationPageState();
 }
 
-class AccountInformationPageState extends State<AccountInformationPage> {
+class _AccountInformationPageState extends State<AccountInformationPage> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _oldpass = TextEditingController();
   final TextEditingController _pass1 = TextEditingController();

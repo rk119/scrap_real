@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/main_views/search.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_scrapbooklarge.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,21 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _value = "Home";
-  // final List<DropdownMenuItem> _items = [
-  //   DropdownMenuItem(
-  //     value: "Home",
-  //     child: Text("Home"),
-  //   ),
-  //   DropdownMenuItem(
-  //     value: "Groups",
-  //     child: Text("Groups"),
-  //   ),
-  //   DropdownMenuItem(
-  //     value: "Nearby Challenges",
-  //     child: Text("Nearby Challenges"),
-  //   ),
-  // ];
-
   final List<DropdownMenuItem> _items = [
     DropdownMenuItem(
       value: "Home",
@@ -83,7 +71,10 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: Icon(
                         Icons.search,
-                        color: Colors.black,
+                        color: Provider.of<ThemeProvider>(context).themeMode ==
+                                ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
                   ],
@@ -105,15 +96,15 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        scrapbookLargeSize("New Scrapbook"),
+        CustomScrapbookLarge(text: "New Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("New Scrapbook"),
+        CustomScrapbookLarge(text: "New Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("New Scrapbook"),
+        CustomScrapbookLarge(text: "New Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("New Scrapbook"),
+        CustomScrapbookLarge(text: "New Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("New Scrapbook"),
+        CustomScrapbookLarge(text: "New Scrapbook"),
       ],
     );
   }
@@ -122,15 +113,15 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        scrapbookLargeSize("Group Scrapbook"),
+        CustomScrapbookLarge(text: "Group Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Group Scrapbook"),
+        CustomScrapbookLarge(text: "Group Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Group Scrapbook"),
+        CustomScrapbookLarge(text: "Group Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Group Scrapbook"),
+        CustomScrapbookLarge(text: "Group Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Group Scrapbook"),
+        CustomScrapbookLarge(text: "Group Scrapbook"),
       ],
     );
   }
@@ -139,47 +130,16 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        scrapbookLargeSize("Challenge Scrapbook"),
+        CustomScrapbookLarge(text: "Challenge Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Challenge Scrapbook"),
+        CustomScrapbookLarge(text: "Challenge Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Challenge Scrapbook"),
+        CustomScrapbookLarge(text: "Challenge Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Challenge Scrapbook"),
+        CustomScrapbookLarge(text: "Challenge Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Challenge Scrapbook"),
+        CustomScrapbookLarge(text: "Challenge Scrapbook"),
       ],
-    );
-  }
-
-  Widget scrapbookLargeSize(String text) {
-    return Container(
-      width: 350,
-      height: 205,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 43, 43, 43),
-        border: Border.all(
-          width: 5,
-          color: Color.fromARGB(255, 69, 69, 69),
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(children: [
-        const SizedBox(height: 40),
-        SizedBox(
-          height: 100,
-          child: Center(
-            child: CustomSubheader(
-              headerText: text, // max 22 char
-              headerColor: Colors.white,
-              headerSize: 23,
-            ),
-          ),
-        ),
-        Container(
-          height: 40,
-        ),
-      ]),
     );
   }
 }

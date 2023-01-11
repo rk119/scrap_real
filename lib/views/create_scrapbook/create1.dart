@@ -1,14 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scrap_real/views/create_scrapbook/create2.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/cards/custom_biocard.dart';
-import 'package:scrap_real/views/utils/cards/custom_namecard.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
+import 'package:scrap_real/views/create_scrapbook/create2.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/cards/custom_biocard.dart';
+import 'package:scrap_real/widgets/cards/custom_namecard.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 
 class CreateScrapbookPage1 extends StatefulWidget {
   const CreateScrapbookPage1({Key? key}) : super(key: key);
@@ -62,13 +64,20 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                       (title != null && title.length < 6)
                           ? 'Enter a min. of 6 characters'
                           : null,
-                  textColor: Colors.black,
+                  textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? Colors.white
+                      : Colors.black,
                 ),
                 const SizedBox(height: 28),
                 CustomBioCard(
                   textController: _caption,
                   cardText: "Caption",
                   cardHintText: "Enter your caption",
+                  textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? Colors.white
+                      : Colors.black,
                 ),
                 const SizedBox(height: 44),
                 CustomTextButton(

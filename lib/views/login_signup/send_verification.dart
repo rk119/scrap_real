@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/login_signup/set_profile.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/custom_snackbar.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/custom_snackbar.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 import 'package:scrap_real/views/login_signup/welcome.dart';
 import 'dart:async';
 
@@ -48,7 +48,9 @@ class _SendVerificationPageState extends State<SendVerificationPage> {
       await Future.delayed(const Duration(seconds: 60));
       setState(() => canResend = true);
     } catch (e) {
-      CustomSnackBar.showSnackBar(context, e.toString());
+      final regex = RegExp(r'^\[(.*)\]\s(.*)$');
+      final match = regex.firstMatch(e.toString());
+      CustomSnackBar.showSnackBar(context, match?.group(2));
 
       timer = Timer.periodic(
         const Duration(seconds: 3),
@@ -98,11 +100,10 @@ class _SendVerificationPageState extends State<SendVerificationPage> {
                         ),
                         CustomHeader(headerText: "Verification"),
                         const SizedBox(height: 150),
-                        CustomSubheader(
-                            headerText:
+                        CustomText(
+                            text:
                                 "A link has been sent to your email to verify your account",
-                            headerSize: 20,
-                            headerColor: Colors.black),
+                            textSize: 20),
                         const SizedBox(height: 50),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(

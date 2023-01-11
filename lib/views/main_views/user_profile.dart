@@ -1,12 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/login_signup/choose_interests.dart';
 import 'package:scrap_real/views/login_signup/welcome.dart';
 import 'package:scrap_real/views/user_settings/user_settings.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
-import 'package:scrap_real/views/utils/selection_widgets/custom_selectiontab3.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_profileinfocard.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_userinfowidget.dart';
+import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab3.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -17,7 +22,41 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
+  var userData = {};
   bool posts = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      // get post lENGTH
+      // var postSnap = await FirebaseFirestore.instance
+      //     .collection('posts')
+      //     .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      //     .get();
+
+      // postLen = postSnap.docs.length;
+      userData = userSnap.data()!;
+      // followers = userSnap.data()!['followers'].length;
+      // following = userSnap.data()!['following'].length;
+      // isFollowing = userSnap
+      //     .data()!['followers']
+      //     .contains(FirebaseAuth.instance.currentUser!.uid);
+      setState(() {});
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +74,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 settingsMenu(),
-                profileCard(),
+                CustomUserInfoWidget(
+                  name: userData['name'] ?? 'loading',
+                  userName: "@${userData['userName'] ?? 'loading'}",
+                ),
                 const SizedBox(height: 15),
-                userInformationCard(),
+                CustomUserProfileInfo(
+                  numOfPosts: "2448",
+                  followers: "4.2M",
+                  following: "745",
+                  bioText: userData['bio'] ?? 'loading',
+                  cardColor: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? const Color.fromARGB(255, 51, 49, 49)
+                      : Colors.white,
+                ),
                 const SizedBox(height: 26),
                 CustomSelectionTab3(
                   selection: posts,
@@ -59,7 +110,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                const Divider(height: 5, thickness: 1, color: Colors.black),
+                Divider(
+                  height: 5,
+                  thickness: 1,
+                  color: MediaQuery.of(context).platformBrightness ==
+                          Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
                 const SizedBox(height: 13),
                 scrapbookContainer(),
                 const SizedBox(height: 20),
@@ -95,109 +153,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
             MaterialPageRoute(builder: (context) => const UserSettingsPage()),
           );
         },
-        child: const Icon(Icons.menu, size: 45, color: Colors.black),
+        child: Icon(
+          Icons.menu,
+          size: 45,
+          color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+              ? Colors.white
+              : Colors.black,
+        ),
       ),
-    );
-  }
-
-  Widget profileCard() {
-    return SizedBox(
-      width: 300,
-      height: 125,
-      child: Row(children: [
-        Container(
-          height: 125,
-          width: 125,
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 5,
-              color: const Color.fromARGB(255, 241, 241, 241),
-            ),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: const SizedBox(),
-        ),
-        const SizedBox(width: 10),
-        SizedBox(
-          height: 75,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomSubheader(
-                headerText: "Hana Khan",
-                headerSize: 20,
-                headerColor: Colors.black,
-              ),
-              CustomSubheader(
-                headerText: "@hana",
-                headerSize: 16,
-                headerColor: const Color(0xff72768d),
-              ),
-            ],
-          ),
-        ),
-      ]),
-    );
-  }
-
-  Widget blueCard(String text1, String text2) {
-    return Container(
-      width: 73,
-      height: 60,
-      decoration: BoxDecoration(
-        color: const Color(0xff8ee8ea),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(
-              color: Color(0x19000000), offset: Offset(2, 4), blurRadius: 2),
-        ],
-      ),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        CustomSubheader(
-            headerText: text1, headerSize: 18, headerColor: Colors.black),
-        CustomSubheader(
-            headerText: text2, headerSize: 13, headerColor: Colors.black),
-      ]),
-    );
-  }
-
-  Widget userInformationCard() {
-    return Container(
-      width: 360,
-      height: 175,
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(35),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x19000000),
-            offset: Offset(2, 4),
-            blurRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(children: [
-        // const SizedBox(height: 22),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            blueCard("2448", "Posts"),
-            const SizedBox(width: 25),
-            blueCard("4.2M", "Followers"),
-            const SizedBox(width: 25),
-            blueCard("745", "Following"),
-          ],
-        ),
-        const SizedBox(height: 15),
-        const SizedBox(
-          width: 300,
-          child: Text(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-            textAlign: TextAlign.left,
-          ),
-        ),
-      ]),
     );
   }
 
@@ -206,7 +169,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
       width: 360,
       height: 375,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+            ? Colors.black
+            : Colors.white,
         borderRadius: BorderRadius.circular(5),
         boxShadow: const [
           BoxShadow(
@@ -234,6 +199,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
               MaterialPageRoute(builder: (context) => const WelcomePage()),
             );
           },
+        ),
+        ElevatedButton(
+          onPressed: () {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              WidgetsBinding.instance.reassembleApplication();
+            });
+          },
+          child: const Text("Hot reload"),
         ),
       ]),
     );

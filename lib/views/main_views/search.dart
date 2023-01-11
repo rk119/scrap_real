@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/cards/custom_usercard.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
-import 'package:scrap_real/views/utils/selection_widgets/custom_selectiontab3.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_searchfield.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/cards/custom_usercard.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_scrapbooklarge.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab3.dart';
+import 'package:scrap_real/widgets/text_fields/custom_searchfield.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -111,47 +112,16 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        scrapbookLargeSize("Scrapbook"),
+        CustomScrapbookLarge(text: "Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Scrapbook"),
+        CustomScrapbookLarge(text: "Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Scrapbook"),
+        CustomScrapbookLarge(text: "Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Scrapbook"),
+        CustomScrapbookLarge(text: "Scrapbook"),
         const SizedBox(height: 20),
-        scrapbookLargeSize("Scrapbook"),
+        CustomScrapbookLarge(text: "Scrapbook"),
       ],
-    );
-  }
-
-  Widget scrapbookLargeSize(String text) {
-    return Container(
-      width: 350,
-      height: 205,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 43, 43, 43),
-        border: Border.all(
-          width: 5,
-          color: Color.fromARGB(255, 69, 69, 69),
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(children: [
-        const SizedBox(height: 40),
-        SizedBox(
-          height: 100,
-          child: Center(
-            child: CustomSubheader(
-              headerText: text, // max 22 char
-              headerColor: Colors.white,
-              headerSize: 23,
-            ),
-          ),
-        ),
-        Container(
-          height: 40,
-        ),
-      ]),
     );
   }
 }

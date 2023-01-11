@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/user_settings/account_info.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_passwordfield.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/text_fields/custom_passwordfield.dart';
 
 class DeleteAccountPage extends StatefulWidget {
   const DeleteAccountPage({Key? key}) : super(key: key);
 
   @override
-  State<DeleteAccountPage> createState() => DeleteAccounttate();
+  State<DeleteAccountPage> createState() => _DeleteAccounttate();
 }
 
-class DeleteAccounttate extends State<DeleteAccountPage> {
+class _DeleteAccounttate extends State<DeleteAccountPage> {
   final TextEditingController _pass1 = TextEditingController();
 
   @override
@@ -60,6 +62,10 @@ class DeleteAccounttate extends State<DeleteAccountPage> {
                   onTapFunction: () {},
                   hintingText: "Enter New Password",
                   obscureTextBool: true,
+                  textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? Colors.white
+                      : Colors.black,
                 ),
                 const SizedBox(height: 30),
                 CustomSubheader(

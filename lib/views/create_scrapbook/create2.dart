@@ -2,13 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/create_scrapbook/create1.dart';
 import 'package:scrap_real/views/create_scrapbook/create3.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/selection_widgets/custom_selectiontab1.dart';
-import 'package:scrap_real/views/utils/selection_widgets/custom_selectiontab2.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
+import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
 
 class CreateScrapbookPage2 extends StatefulWidget {
   const CreateScrapbookPage2({Key? key}) : super(key: key);
@@ -176,7 +178,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
           fontSize: 18,
           fontWeight: FontWeight.w500,
           height: 1.5,
-          color: const Color(0xff141b41),
+          color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+              ? const Color(0xffd1e1ff)
+              : const Color(0xff141b41),
         ),
       ),
     );
@@ -195,7 +199,10 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.60,
                 decoration: BoxDecoration(
-                  color: const Color(0xfffdfbfb),
+                  color: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? Colors.black
+                      : const Color(0xfffdfbfb),
                   borderRadius: BorderRadius.circular(6),
                   boxShadow: const [
                     BoxShadow(
@@ -236,9 +243,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                     _collaborator.clear();
                   });
                 },
-                child: Image.asset(
-                  'assets/images/add.png',
-                ),
+                child: const Icon(Icons.add, color: Colors.black, size: 30),
               ),
             ),
           ],
@@ -253,7 +258,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
         width: MediaQuery.of(context).size.width,
         height: 150,
         decoration: BoxDecoration(
-          color: const Color(0xffFEFCFC),
+          color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+              ? Colors.black
+              : const Color(0xfffdfbfb),
           borderRadius: BorderRadius.circular(6),
           boxShadow: const [
             BoxShadow(
@@ -294,9 +301,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                               _collaborators.remove(collaborator);
                             });
                           },
-                          child: Image.asset(
-                            'assets/images/remove.png',
-                          ),
+                          child: const Icon(Icons.cancel),
                         ),
                       ],
                     ),

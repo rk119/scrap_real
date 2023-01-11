@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/login_signup/register.dart';
 import 'package:scrap_real/views/main_views/user_profile.dart';
 import 'package:scrap_real/views/login_signup/login.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -28,9 +30,9 @@ class _WelcomePageState extends State<WelcomePage> {
             return Container(
               padding: const EdgeInsets.fromLTRB(30, 120, 30, 0),
               width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xffffffff),
-              ),
+              // decoration: const BoxDecoration(
+              //   color: Color(0xffffffff),
+              // ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -57,7 +59,11 @@ class _WelcomePageState extends State<WelcomePage> {
                           fontSize: 30,
                           fontWeight: FontWeight.w400,
                           height: 1.25,
-                          color: const Color(0xff000000),
+                          color:
+                              Provider.of<ThemeProvider>(context).themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         children: [
                           const TextSpan(

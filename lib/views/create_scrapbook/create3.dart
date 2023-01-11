@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/create_scrapbook/create2.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 
 class CreateScrapbookPage3 extends StatefulWidget {
   const CreateScrapbookPage3({Key? key}) : super(key: key);

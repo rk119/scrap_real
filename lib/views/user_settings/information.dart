@@ -3,18 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/user_settings/user_settings.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 
 class InformationPage extends StatefulWidget {
   const InformationPage({Key? key}) : super(key: key);
 
   @override
-  State<InformationPage> createState() => InformationPageState();
+  State<InformationPage> createState() => _InformationPageState();
 }
 
-class InformationPageState extends State<InformationPage> {
+class _InformationPageState extends State<InformationPage> {
   String longString =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eius mod tempor. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
@@ -27,7 +29,7 @@ class InformationPageState extends State<InformationPage> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(
-              horizontal: 30,
+              horizontal: 15,
               vertical: 50,
             ),
             child: Column(
@@ -42,12 +44,14 @@ class InformationPageState extends State<InformationPage> {
                 }),
                 CustomHeader(headerText: "Information"),
                 const SizedBox(height: 30),
-                const SizedBox(height: 30),
                 Container(
                   width: 360,
-                  height: 2400,
+                  height: 2000,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.black
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: const [
                       BoxShadow(

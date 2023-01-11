@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/user_settings/user_settings.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 
 class PrivacyPolicyPage extends StatefulWidget {
   const PrivacyPolicyPage({Key? key}) : super(key: key);
 
   @override
-  State<PrivacyPolicyPage> createState() => PrivacyPolicyPageState();
+  State<PrivacyPolicyPage> createState() => _PrivacyPolicyPageState();
 }
 
-class PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
+class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
   String longString =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eius mod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eius mod tempor. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
@@ -26,7 +28,7 @@ class PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(
-              horizontal: 30,
+              horizontal: 15,
               vertical: 50,
             ),
             child: Column(
@@ -43,9 +45,12 @@ class PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
                 const SizedBox(height: 30),
                 Container(
                   width: 360,
-                  height: 2800,
+                  height: 1900,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.black
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: const [
                       BoxShadow(

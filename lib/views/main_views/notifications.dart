@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scrap_real/views/utils/cards/custom_notifcard.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/widgets/cards/custom_notifcard.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -74,7 +76,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
       width: double.infinity,
       height: 43,
       decoration: BoxDecoration(
-        color: Color(0xffF4F3F3),
+        color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+            ? Color.fromARGB(255, 47, 46, 46)
+            : Color(0xffF4F3F3),
         boxShadow: const [
           BoxShadow(
             color: Color.fromARGB(55, 0, 0, 0),
@@ -83,11 +87,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
         ],
       ),
-      child: CustomSubheader(
-        headerText: text,
-        headerSize: 18,
-        headerAlignment: TextAlign.left,
-        headerColor: Color(0xff545454),
+      child: CustomText(
+        text: text,
+        textSize: 18,
+        textAlignment: TextAlign.left,
       ),
     );
   }

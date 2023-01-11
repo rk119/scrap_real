@@ -2,18 +2,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/user_settings/user_settings.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_scrapbooklarge.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 
 class SavedScrapbooksPage extends StatefulWidget {
   const SavedScrapbooksPage({Key? key}) : super(key: key);
 
   @override
-  State<SavedScrapbooksPage> createState() => SavedScrapbooksPageState();
+  State<SavedScrapbooksPage> createState() => _SavedScrapbooksPageState();
 }
 
-class SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
+class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
   // final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -40,53 +41,20 @@ class SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
                 }),
                 CustomHeader(headerText: "Saved"),
                 const SizedBox(height: 30),
-                scrapbookLargeSize(),
+                CustomScrapbookLarge(text: "Saved Scrapbook"),
                 const SizedBox(height: 20),
-                scrapbookLargeSize(),
+                CustomScrapbookLarge(text: "Saved Scrapbook"),
                 const SizedBox(height: 20),
-                scrapbookLargeSize(),
+                CustomScrapbookLarge(text: "Saved Scrapbook"),
                 const SizedBox(height: 20),
-                scrapbookLargeSize(),
+                CustomScrapbookLarge(text: "Saved Scrapbook"),
                 const SizedBox(height: 20),
-                scrapbookLargeSize(),
+                CustomScrapbookLarge(text: "Saved Scrapbook"),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget scrapbookLargeSize() {
-    return Container(
-      width: 350,
-      height: 205,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 43, 43, 43),
-        border: Border.all(
-          width: 5,
-          color: const Color.fromARGB(255, 241, 241, 241),
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(children: [
-        Container(
-          height: 40,
-        ),
-        SizedBox(
-          height: 100,
-          child: Center(
-            child: CustomSubheader(
-              headerText: "Saved Scrapbook", // max 22 char
-              headerColor: Colors.white,
-              headerSize: 23,
-            ),
-          ),
-        ),
-        Container(
-          height: 40,
-        ),
-      ]),
     );
   }
 }

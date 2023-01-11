@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/user_settings/account_info.dart';
+import 'package:scrap_real/views/user_settings/appearance.dart';
 import 'package:scrap_real/views/user_settings/edit_profile.dart';
 import 'package:scrap_real/views/user_settings/information.dart';
 import 'package:scrap_real/views/user_settings/privacy_policy.dart';
 import 'package:scrap_real/views/user_settings/reported_content.dart';
 import 'package:scrap_real/views/user_settings/saved_scraps.dart';
 import 'package:scrap_real/views/user_settings/support.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_menuitem.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_menuitem.dart';
+import 'package:scrap_real/widgets/buttons/custom_menuitemcolored.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/views/login_signup/welcome.dart';
 
 class UserSettingsPage extends StatefulWidget {
@@ -33,7 +35,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(
-              horizontal: 30,
+              horizontal: 15,
               vertical: 50,
             ),
             child: Column(
@@ -50,7 +52,6 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 CustomMenuItem(
                   svgPath: "assets/edit_profile.svg",
                   text: "Edit Profile",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -59,11 +60,22 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
+                CustomMenuItem(
+                  svgPath: "assets/appearance.svg",
+                  text: "Appearance",
+                  buttonFunction: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AppearancePage()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 5),
                 CustomMenuItem(
                   svgPath: "assets/saved_scraps.svg",
                   text: "Saved",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -72,11 +84,10 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomMenuItem(
                   svgPath: "assets/privacy_policy.svg",
                   text: "Privacy Policy",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -85,11 +96,10 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomMenuItem(
                   svgPath: "assets/account_info.svg",
                   text: "Account Information",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -98,11 +108,10 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomMenuItem(
                   svgPath: "assets/reported_content.svg",
                   text: "Reported Content",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -111,11 +120,10 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomMenuItem(
                   svgPath: "assets/support.svg",
                   text: "Support",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -124,11 +132,10 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomMenuItem(
                   svgPath: "assets/information.svg",
                   text: "Information",
-                  color: Colors.black,
                   buttonFunction: () {
                     Navigator.push(
                       context,
@@ -137,8 +144,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
-                CustomMenuItem(
+                const SizedBox(height: 5),
+                CustomMenuItemColored(
                   svgPath: "assets/logout.svg",
                   text: "Log out",
                   color: const Color(0xffbc2d21),

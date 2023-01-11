@@ -3,15 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/login_signup/forgot_pass.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/login_signup/welcome.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_textformfield.dart';
-import 'package:scrap_real/views/utils/text_fields/custom_passwordfield.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/text_fields/custom_textformfield.dart';
+import 'package:scrap_real/widgets/text_fields/custom_passwordfield.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+
+import '../../widgets/custom_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -96,17 +100,8 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');
       final match = regex.firstMatch(e.toString());
-      showSnackBar(match?.group(2));
+      CustomSnackBar.showSnackBar(context, match?.group(2));
     }
-  }
-
-  showSnackBar(String? message) {
-    if (message == null) return;
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: const Color(0xffBC2D21),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -151,6 +146,10 @@ class _LoginPageState extends State<LoginPage> {
                       hintingText: "Enter Email"),
                   const SizedBox(height: 30),
                   CustomPasswordFormField(
+                    textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.white
+                        : Colors.black,
                     textController: _password,
                     headingText: "Password",
                     validatorFunction: (value) =>

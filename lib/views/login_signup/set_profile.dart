@@ -1,14 +1,19 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scrap_real/views/login_signup/choose_interests.dart';
-import 'package:scrap_real/views/utils/buttons/custom_textbutton.dart';
-import 'package:scrap_real/views/utils/cards/custom_biocard.dart';
-import 'package:scrap_real/views/utils/cards/custom_namecard.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
-import 'package:scrap_real/views/utils/headers/custom_subheader.dart';
-import 'package:scrap_real/views/utils/profile_widgets/custom_profile.dart';
+import 'package:scrap_real/views/utils/custom_snackbar.dart';
+import 'package:scrap_real/widgets/buttons/custom_textbutton.dart';
+import 'package:scrap_real/widgets/cards/custom_biocard.dart';
+import 'package:scrap_real/widgets/cards/custom_namecard.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_profile.dart';
 
 class SetProfilePage extends StatefulWidget {
   const SetProfilePage({Key? key}) : super(key: key);
@@ -17,6 +22,7 @@ class SetProfilePage extends StatefulWidget {
 }
 
 class _SetProfilePageState extends State<SetProfilePage> {
+  final user = FirebaseAuth.instance.currentUser!;
   final TextEditingController _name = TextEditingController();
   final TextEditingController _bio = TextEditingController();
   File? image; // image used as the user's profile
@@ -68,14 +74,37 @@ class _SetProfilePageState extends State<SetProfilePage> {
                   validatorFunction: (value) {
                     return null;
                   },
-                  textColor: Colors.black,
+                  textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? Colors.white
+                      : const Color(0xffa09f9f),
                 ),
                 const SizedBox(height: 28),
-                CustomBioCard(textController: _bio),
+                CustomBioCard(
+                  textController: _bio,
+                  textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                          ThemeMode.dark
+                      ? Colors.white
+                      : const Color(0xffa09f9f),
+                ),
                 const SizedBox(height: 44),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: () {
+                    final docUser = FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user.uid);
+                    if (_name.text.isNotEmpty) {
+                      docUser.update({'name': _name.text});
+                    } else {
+                      CustomSnackBar.showSnackBar(
+                          context, "Please enter a name");
+                      return;
+                    }
+
+                    if (_bio.text.isNotEmpty) {
+                      docUser.update({'bio': _bio.text});
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(

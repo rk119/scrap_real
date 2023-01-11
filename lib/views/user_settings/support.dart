@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/user_settings/user_settings.dart';
-import 'package:scrap_real/views/utils/buttons/custom_backbutton.dart';
-import 'package:scrap_real/views/utils/buttons/custom_menuitem.dart';
-import 'package:scrap_real/views/utils/headers/custom_header.dart';
+import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
+import 'package:scrap_real/widgets/buttons/custom_menuitem.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key? key}) : super(key: key);
 
   @override
-  State<SupportPage> createState() => SupportPageState();
+  State<SupportPage> createState() => _SupportPageState();
 }
 
-class SupportPageState extends State<SupportPage> {
+class _SupportPageState extends State<SupportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +40,6 @@ class SupportPageState extends State<SupportPage> {
                 CustomMenuItem(
                   svgPath: "assets/support.svg",
                   text: "Support",
-                  color: Colors.black,
                   buttonFunction: () {},
                 ),
                 const SizedBox(height: 10),
