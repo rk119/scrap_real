@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
-import 'package:scrap_real/views/create_scrapbook/create_scrapbook.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scrap_real/views/scrapbook_views/create1.dart';
 import 'package:scrap_real/views/main_views/explore.dart';
 import 'package:scrap_real/views/main_views/home.dart';
 import 'package:scrap_real/views/main_views/notifications.dart';
@@ -24,11 +23,14 @@ class _NavBarState extends State<NavBar> {
   }
 
   final List<Widget> _pages = [
-    HomePage(),
-    ExplorePage(),
-    CreateScrapbookPage(),
-    NotificationsPage(),
-    UserProfilePage(),
+    const HomePage(),
+    const ExplorePage(),
+    const CreateScrapbookPage1(),
+    const NotificationsPage(),
+    UserProfilePage(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+      implyLeading: false,
+    ),
   ];
 
   @override
@@ -41,9 +43,9 @@ class _NavBarState extends State<NavBar> {
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: Color(0xff918ef4),
+        selectedItemColor: const Color(0xff918ef4),
         iconSize: 30,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",

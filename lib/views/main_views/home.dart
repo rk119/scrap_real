@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/main_views/search.dart';
-import 'package:scrap_real/widgets/profile_widgets/custom_scrapbooklarge.dart';
-import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbooklarge.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -79,11 +79,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                _value == "Home"
-                    ? homeView()
-                    : _value == "Groups"
-                        ? groupsView()
-                        : challengeView(),
+                scrapbooksView(),
               ],
             ),
           ),
@@ -92,54 +88,39 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget homeView() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "New Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "New Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "New Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "New Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "New Scrapbook"),
-      ],
-    );
-  }
+  Widget scrapbooksView() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('scrapbooks').snapshots(),
+      builder: (context, snapshots) {
+        if (!snapshots.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return (snapshots.connectionState == ConnectionState.waiting)
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshots.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data = snapshots.data!.docs[index].data()
+                      as Map<String, dynamic>;
 
-  Widget groupsView() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Group Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Group Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Group Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Group Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Group Scrapbook"),
-      ],
-    );
-  }
-
-  Widget challengeView() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Challenge Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Challenge Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Challenge Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Challenge Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Challenge Scrapbook"),
-      ],
+                  return Column(
+                    children: [
+                      CustomScrapbookLarge(
+                        scrapbookId: data['scrapbookId'],
+                        title: data['title'],
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  );
+                },
+              );
+      },
     );
   }
 }

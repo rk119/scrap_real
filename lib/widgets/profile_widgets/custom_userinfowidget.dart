@@ -8,11 +8,21 @@ class CustomUserInfoWidget extends StatelessWidget {
   CustomUserInfoWidget({
     Key? key,
     required this.name,
-    required this.userName,
+    required this.username,
+    this.photoUrl,
+    required this.alt,
+    required this.isFollowing,
+    required this.isCurrentUser,
+    required this.onPressedFunc,
   }) : super(key: key);
 
   String name;
-  String userName;
+  String username;
+  String? photoUrl;
+  String alt;
+  bool isFollowing;
+  bool isCurrentUser;
+  Function()? onPressedFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +30,19 @@ class CustomUserInfoWidget extends StatelessWidget {
       width: 300,
       height: 125,
       child: Row(children: [
-        Container(
-          height: 125,
-          width: 125,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              width: 5,
-              color: const Color.fromARGB(255, 241, 241, 241),
-            ),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: const SizedBox(),
-        ),
+        photoUrl == ""
+            ? Image.asset(
+                alt,
+                width: 150,
+                height: 150,
+              )
+            : CircleAvatar(
+                backgroundColor: Colors.grey,
+                backgroundImage: NetworkImage(
+                  photoUrl!,
+                ),
+                radius: 75,
+              ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -43,15 +53,19 @@ class CustomUserInfoWidget extends StatelessWidget {
                 textSize: 20,
               ),
               CustomSubheader(
-                headerText: userName,
+                headerText: username,
                 headerSize: 16,
                 headerColor: const Color(0xff72768d),
               ),
               const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text("follow"),
-              ),
+              isCurrentUser
+                  ? const SizedBox()
+                  : ElevatedButton(
+                      onPressed: onPressedFunc,
+                      child: Text(
+                        isFollowing ? "Unfollow" : "Follow",
+                      ),
+                    ),
             ],
           ),
         ),

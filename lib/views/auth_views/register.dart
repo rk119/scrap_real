@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/utils/auth_methods.dart';
+import 'package:scrap_real/views/auth_views/welcome.dart';
+import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_textformfield.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_passwordfield.dart';
+import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  bool obscurePText = true;
+  bool obscureCPText = true;
+
+  late final TextEditingController _username = TextEditingController();
+  late final TextEditingController _email = TextEditingController();
+  late final TextEditingController _password1 = TextEditingController();
+  late final TextEditingController _password2 = TextEditingController();
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void dispose() {
+    _username.dispose();
+    _email.dispose();
+    _password1.dispose();
+    _password2.dispose();
+    super.dispose();
+  }
+
+  Future registerUser() async {
+    AuthMethods().registerUser(
+      _username.text,
+      _email.text,
+      _password1.text,
+      context,
+      mounted,
+      _formKey,
+      navigatorKey,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var formColor =
+        Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+            ? Colors.white
+            : Colors.black;
+
+    return Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 50,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CustomBackButton(buttonFunction: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WelcomePage()),
+                    );
+                  }),
+                  CustomHeader(headerText: "Register"),
+                  const SizedBox(height: 15),
+                  CustomSubheader(
+                    headerText: "Create a new account",
+                    headerSize: 20,
+                    headerColor: const Color(0xffa09f9f),
+                  ),
+                  const SizedBox(height: 30),
+                  CustomTextFormField(
+                    textController: _username,
+                    headingText: "Username",
+                    validatorFunction: (value) =>
+                        (value != null && value.length > 10)
+                            ? 'Username can be max of 10 characters'
+                            : null,
+                    hintingText: "Enter Username",
+                  ),
+                  const SizedBox(height: 28),
+                  CustomTextFormField(
+                    textController: _email,
+                    headingText: "Email",
+                    validatorFunction: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Invalid email'
+                            : null,
+                    hintingText: "Enter Email",
+                  ),
+                  const SizedBox(height: 28),
+                  CustomPasswordFormField(
+                    textColor: formColor,
+                    textController: _password1,
+                    headingText: "Password",
+                    validatorFunction: (value) =>
+                        (value != null && value.length < 6)
+                            ? 'Enter a min. of 6 characters'
+                            : null,
+                    onTapFunction: () {
+                      setState(
+                        () {
+                          obscurePText = !obscurePText;
+                        },
+                      );
+                    },
+                    hintingText: "Enter Password",
+                    obscureTextBool: obscurePText,
+                  ),
+                  const SizedBox(height: 28),
+                  CustomPasswordFormField(
+                    textColor: formColor,
+                    textController: _password2,
+                    headingText: "Confirm Password",
+                    validatorFunction: (value) =>
+                        (value != null && value != _password1.text)
+                            ? 'Passwords do not match'
+                            : null,
+                    onTapFunction: () {
+                      setState(
+                        () {
+                          obscureCPText = !obscureCPText;
+                        },
+                      );
+                    },
+                    hintingText: "Retype Password",
+                    obscureTextBool: obscureCPText,
+                  ),
+                  const SizedBox(height: 44),
+                  CustomTextButton(
+                    buttonBorderRadius: BorderRadius.circular(30),
+                    buttonFunction: registerUser,
+                    buttonText: "Register",
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

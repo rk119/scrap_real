@@ -2,8 +2,9 @@ class UserModel {
   String uid;
   final String email;
   final String name;
-  final String userName;
+  final String username;
   final String bio;
+  final String photoUrl;
   final List followers;
   final List following;
 
@@ -11,8 +12,9 @@ class UserModel {
     this.uid = '',
     required this.email,
     required this.name,
-    required this.userName,
+    required this.username,
     required this.bio,
+    required this.photoUrl,
     required this.followers,
     required this.following,
   });
@@ -21,8 +23,9 @@ class UserModel {
         'uid': uid,
         'email': email,
         'name': name,
-        'userName': userName,
+        'username': username,
         "bio": "",
+        "photoUrl": "",
         'followers': [],
         'following': [],
       };

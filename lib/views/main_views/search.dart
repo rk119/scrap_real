@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/widgets/buttons/custom_backbutton.dart';
-import 'package:scrap_real/widgets/cards/custom_usercard.dart';
-import 'package:scrap_real/widgets/profile_widgets/custom_scrapbooklarge.dart';
-import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
+import 'package:scrap_real/views/main_views/user_profile.dart';
+import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
+import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
+import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbooklarge.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab3.dart';
-import 'package:scrap_real/widgets/text_fields/custom_searchfield.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_searchfield.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -19,12 +19,12 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   bool users = true;
-  final TextEditingController _searchQuery = TextEditingController();
+  bool search = true;
+  String _searchQuery = "";
 
   @override
   void dispose() {
     super.dispose();
-    _searchQuery.dispose();
   }
 
   @override
@@ -43,19 +43,22 @@ class _SearchPageState extends State<SearchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CustomBackButton(buttonFunction: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NavBar()),
-                  );
+                  Navigator.of(context).pop();
                 }),
                 SizedBox(height: 20),
                 CustomSearchField(
-                    textController: _searchQuery,
-                    validatorFunction: (query) =>
-                        (query != null && query.length < 6)
-                            ? 'Enter a min. of 6 characters'
-                            : null,
-                    hintingText: "Search"),
+                  // validatorFunction: (query) =>
+                  //     (query != null && query.length < 6)
+                  //         ? 'Enter a min. of 6 characters'
+                  //         : null,
+                  hintingText:
+                      users ? "Search for a user" : "Search for a scrapbook",
+                  onChangedFunc: (val) {
+                    setState(() {
+                      _searchQuery = val;
+                    });
+                  },
+                ),
                 SizedBox(height: 20),
                 CustomSelectionTab3(
                   selection: users,
@@ -76,7 +79,9 @@ class _SearchPageState extends State<SearchPage> {
                     }
                   },
                 ),
+                const SizedBox(height: 1),
                 users ? usersView() : scrapbooksView(),
+                // usersView2(),
               ],
             ),
           ),
@@ -86,42 +91,118 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget usersView() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@queen_zuella"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@quail_birb"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@qumanny"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@sumant_bravo"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@fat_fries"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@catboy_nidal"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@bdm.or"),
-        const SizedBox(height: 20),
-        CustomUserCard(username: "@oops_ezzah"),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      builder: (context, snapshots) {
+        if (!snapshots.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return (snapshots.connectionState == ConnectionState.waiting)
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshots.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data = snapshots.data!.docs[index].data()
+                      as Map<String, dynamic>;
+
+                  if (_searchQuery.isEmpty) {
+                    return CustomUserCard(
+                      photoUrl: data['photoUrl'],
+                      alt: "assets/images/profile.png",
+                      username: data['username'],
+                      onTapFunc: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => UserProfilePage(
+                            uid: (snapshots.data! as dynamic).docs[index]
+                                ['uid'],
+                            implyLeading: search,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (data['username']
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(_searchQuery.toLowerCase())) {
+                    return CustomUserCard(
+                      photoUrl: data['photoUrl'],
+                      alt: "assets/images/profile.png",
+                      username: data['username'],
+                      onTapFunc: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => UserProfilePage(
+                            uid: (snapshots.data! as dynamic).docs[index]
+                                ['uid'],
+                            implyLeading: search,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              );
+      },
     );
   }
 
   Widget scrapbooksView() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Scrapbook"),
-        const SizedBox(height: 20),
-        CustomScrapbookLarge(text: "Scrapbook"),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('scrapbooks').snapshots(),
+      builder: (context, snapshots) {
+        if (!snapshots.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return (snapshots.connectionState == ConnectionState.waiting)
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshots.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data = snapshots.data!.docs[index].data()
+                      as Map<String, dynamic>;
+
+                  if (_searchQuery.isEmpty) {
+                    return Column(
+                      children: [
+                        CustomScrapbookLarge(
+                          scrapbookId: data['scrapbookId'],
+                          title: data['title'],
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    );
+                  }
+                  if (data['title']
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(_searchQuery.toLowerCase())) {
+                    return Column(
+                      children: [
+                        CustomScrapbookLarge(
+                          scrapbookId: data['scrapbookId'],
+                          title: data['title'],
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    );
+                  }
+                  return Container();
+                },
+              );
+      },
     );
   }
 }

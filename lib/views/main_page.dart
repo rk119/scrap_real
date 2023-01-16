@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/login_signup/send_verification.dart';
-import 'package:scrap_real/views/login_signup/welcome.dart';
+import 'package:scrap_real/views/auth_views/send_verification.dart';
+import 'package:scrap_real/views/auth_views/welcome.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});

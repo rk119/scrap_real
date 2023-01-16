@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/widgets/cards/custom_notifcard.dart';
+import 'package:scrap_real/widgets/card_widgets/custom_notifcard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 

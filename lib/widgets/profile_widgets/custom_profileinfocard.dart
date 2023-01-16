@@ -41,11 +41,26 @@ class CustomUserProfileInfo extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomBlueUserInfoCard(text1: numOfPosts, text2: "Posts"),
+            Expanded(
+              child: CustomBlueUserInfoCard(
+                text1: numOfPosts,
+                text2: "Posts",
+              ),
+            ),
             const SizedBox(width: 25),
-            CustomBlueUserInfoCard(text1: followers, text2: "Followers"),
+            Expanded(
+              child: CustomBlueUserInfoCard(
+                text1: followers,
+                text2: "Followers",
+              ),
+            ),
             const SizedBox(width: 25),
-            CustomBlueUserInfoCard(text1: following, text2: "Following"),
+            Expanded(
+              child: CustomBlueUserInfoCard(
+                text1: following,
+                text2: "Following",
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 15),
