@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.scrap_real">
-    <!-- <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" /> -->
+    <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="scrap_real"
         android:name="${applicationName}"
@@ -34,8 +35,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data
+        <!-- <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD6EFlwZM0_bMvAnbhpWROgHKiSmF150to" />
+            android:value="AIzaSyD6EFlwZM0_bMvAnbhpWROgHKiSmF150to" /> -->
     </application>
 </manifest>

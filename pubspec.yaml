@@ -42,15 +42,19 @@ dependencies:
   firebase_auth: ^4.2.1
   cloud_firestore: ^4.2.0
   firebase_analytics: ^10.0.7
-  go_router: ^6.0.0
   image_picker: ^0.8.6
   email_validator: ^2.0.1
   provider: ^6.0.5
   uuid: ^3.0.7
   firebase_storage: ^11.0.10
-  google_maps_flutter: ^2.2.3
   geolocator: ^9.0.2
   location: ^4.4.0
+  flutter_map: ^3.1.0
+  flutter_dotenv: ^5.0.2
+  mapbox_gl: ^0.15.0
+  flutter_native_splash: ^2.2.16
+  cached_network_image: ^3.2.3
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +83,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/markers/
+    - assets/config/
   #   - images/a_dot_ham.jpeg
   
   # An image asset can refer to one or more resolution-specific "variants", see
