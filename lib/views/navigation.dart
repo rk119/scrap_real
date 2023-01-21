@@ -36,23 +36,38 @@ class _NavBarState extends State<NavBar> {
     return [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
-        // activeColorPrimary: const Color(0xff918ef4),
+        activeColorPrimary: const Color(0xff918ef4),
+        inactiveColorPrimary: Colors.grey,
+        iconSize: 29,
+        contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.explore),
-        // activeColorPrimary: const Color(0xff918ef4),
+        activeColorPrimary: const Color(0xff918ef4),
+        inactiveColorPrimary: Colors.grey,
+        iconSize: 29,
+        contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.add_circle_outlined),
-        // activeColorPrimary: const Color(0xff918ef4),
+        activeColorPrimary: const Color(0xff918ef4),
+        inactiveColorPrimary: Colors.grey,
+        iconSize: 29,
+        contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.notifications),
-        // activeColorPrimary: const Color(0xff918ef4),
+        activeColorPrimary: const Color(0xff918ef4),
+        inactiveColorPrimary: Colors.grey,
+        iconSize: 29,
+        contentPadding: 0,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.account_circle),
-        // activeColorPrimary: const Color(0xff918ef4),
+        activeColorPrimary: const Color(0xff918ef4),
+        inactiveColorPrimary: Colors.grey,
+        iconSize: 29,
+        contentPadding: 0,
       ),
     ];
   }
@@ -63,18 +78,25 @@ class _NavBarState extends State<NavBar> {
       child: PersistentTabView(
         context,
         controller: _controller,
+        margin: const EdgeInsets.all(0),
+        bottomScreenMargin: 55,
         screens: _NavScreens(),
         items: _navBarsItems(),
         confineInSafeArea: true,
-        backgroundColor: Color.fromARGB(239, 255, 255, 255),
+        backgroundColor: Color.fromARGB(235, 249, 249, 249),
         handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset: true,
         hideNavigationBarWhenKeyboardShows: true,
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+        decoration: const NavBarDecoration(boxShadow: [
+          BoxShadow(
+            color: Color(0x3f000000),
+            blurRadius: 2,
+            offset: Offset(5, 5),
+            blurStyle: BlurStyle.solid,
+          )
+        ]),
         popAllScreensOnTapOfSelectedTab: true,
-        navBarStyle: NavBarStyle.style9,
+        navBarStyle: NavBarStyle.style3,
       ),
     );
     // return Scaffold(
