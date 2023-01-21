@@ -225,7 +225,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    return isLoading || latLng.latitude != 0
         ? Scaffold(
             body: SafeArea(
               child: Stack(
