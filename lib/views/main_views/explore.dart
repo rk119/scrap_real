@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:scrap_real/main.dart';
 import 'package:scrap_real/utils/shared_prefs.dart';
-
-// const kGoogleApiKey = "AIzaSyD6EFlwZM0_bMvAnbhpWROgHKiSmF150to";
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -20,8 +22,8 @@ class ExplorePage extends StatefulWidget {
 //   LatLng? _currentPosition;
 //   BitmapDescriptor currentPositionIcon = BitmapDescriptor.defaultMarker;
 //   final TextEditingController _search = TextEditingController();
-//   List<AutocompletePrediction> placesPredictions = [];
-//   Mode? _mode = Mode.overlay;
+//   // List<AutocompletePrediction> placesPredictions = [];
+//   // Mode? _mode = Mode.overlay;
 //   Timer? debounce;
 
 //   setCustomMarkerIcon() async {
@@ -79,14 +81,24 @@ class ExplorePage extends StatefulWidget {
 //                   ),
 //                   onMapCreated: (GoogleMapController controller) {
 //                     _controller.complete(controller);
+//                     _controller.future.then((value) {
+//                       value.animateCamera(
+//                           CameraUpdate.newLatLngZoom(_currentPosition!, 14));
+//                     });
 //                   },
-//                   markers: {
-//                     Marker(
-//                       markerId: const MarkerId('currentLocation'),
-//                       position: _currentPosition!,
-//                       icon: currentPositionIcon,
-//                     ),
-//                   },
+//                   myLocationEnabled: true,
+//                   // onCameraMove: (CameraPosition position) {
+//                   //   setState(() {
+//                   //     _currentPosition = position.target;
+//                   //   });
+//                   // },
+//                   // markers: {
+//                   //   Marker(
+//                   //     markerId: const MarkerId('currentLocation'),
+//                   //     position: _currentPosition!,
+//                   //     icon: currentPositionIcon,
+//                   //   ),
+//                   // },
 //                 ),
 //                 Center(
 //                   child: Column(
@@ -134,11 +146,11 @@ class ExplorePage extends StatefulWidget {
 //                         ),
 //                       ),
 
-//                       TextButton(
-//                           onPressed: () {
-//                             LocationService().getPlaceId(_search.text);
-//                           },
-//                           child: Text("Dubai")),
+//                       // TextButton(
+//                       //     onPressed: () {
+//                       //       LocationService().getPlaceId(_search.text);
+//                       //     },
+//                       //     child: Text("Dubai")),
 
 //                       //   ElevatedButton(
 //                       //     onPressed: () {
@@ -225,75 +237,67 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading || latLng.latitude != 0
-        ? Scaffold(
-            body: SafeArea(
-              child: Stack(
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            MapboxMap(
+              accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
+              initialCameraPosition: _initialCameraPosition,
+              onMapCreated: _onMapCreated,
+              myLocationEnabled: true,
+              // myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
+              minMaxZoomPreference: const MinMaxZoomPreference(14, 17),
+            ),
+            Center(
+              child: Column(
                 children: [
-                  MapboxMap(
-                    accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
-                    initialCameraPosition: _initialCameraPosition,
-                    onMapCreated: _onMapCreated,
-                    myLocationEnabled: true,
-                    // myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
-                    minMaxZoomPreference: const MinMaxZoomPreference(14, 17),
-                  ),
-                  Center(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          decoration: BoxDecoration(
-                              color: const Color(0xfffdfbfb),
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x3f000000),
-                                  blurRadius: 2,
-                                  offset: Offset(1, 2),
-                                )
-                              ]),
-                          child: TextFormField(
-                            controller: _search,
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              border: InputBorder.none,
-                              hintText: "Search",
-                              hintStyle: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                height: 1.5,
-                                color: const Color.fromARGB(255, 193, 193, 193),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              print(value);
-                            },
-                          ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                        color: const Color(0xfffdfbfb),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x3f000000),
+                            blurRadius: 2,
+                            offset: Offset(1, 2),
+                          )
+                        ]),
+                    child: TextFormField(
+                      controller: _search,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        border: InputBorder.none,
+                        hintText: "Search",
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: const Color.fromARGB(255, 193, 193, 193),
                         ),
-                      ],
+                      ),
+                      onChanged: (value) {
+                        print(value);
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                controller.animateCamera(
-                  CameraUpdate.newCameraPosition(_initialCameraPosition),
-                );
-              },
-              child: const Icon(Icons.my_location),
-            ),
-          )
-        : Container(
-            color: Colors.white,
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.animateCamera(
+            CameraUpdate.newCameraPosition(_initialCameraPosition),
           );
+        },
+        child: const Icon(Icons.my_location),
+      ),
+    );
   }
 }
