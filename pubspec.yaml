@@ -56,7 +56,7 @@ dependencies:
   cached_network_image: ^3.2.3
   shared_preferences: ^2.0.17
   google_maps_flutter: ^2.2.3
-  persistent_bottom_nav_bar: ^5.0.2
+  persistent_bottom_nav_bar_v2: ^4.2.6
 
 dev_dependencies:
   flutter_test:

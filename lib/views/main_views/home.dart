@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/main_views/search.dart';
@@ -63,10 +64,10 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(width: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        pushNewScreen(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const SearchPage()),
+                          screen: SearchPage(),
+                          withNavBar: false,
                         );
                       },
                       child: Icon(

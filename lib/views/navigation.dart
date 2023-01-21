@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:scrap_real/views/main_views/splash.dart';
 import 'package:scrap_real/views/scrapbook_views/create1.dart';
 import 'package:scrap_real/views/main_views/explore.dart';
@@ -96,7 +96,7 @@ class _NavBarState extends State<NavBar> {
           )
         ]),
         popAllScreensOnTapOfSelectedTab: true,
-        navBarStyle: NavBarStyle.style3,
+        navBarStyle: NavBarStyle.style2,
       ),
     );
     // return Scaffold(
