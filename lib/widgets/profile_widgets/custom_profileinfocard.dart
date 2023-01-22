@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/widgets/profile_widgets/custom_bluecard.dart';
 
 class CustomUserProfileInfo extends StatelessWidget {
@@ -28,10 +30,13 @@ class CustomUserProfileInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(35),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x19000000),
-            offset: Offset(2, 4),
+            color:
+                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+                    ? const Color.fromARGB(255, 52, 50, 50)
+                    : const Color.fromARGB(255, 247, 242, 242),
+            offset: const Offset(4, 4),
             blurRadius: 2,
           ),
         ],

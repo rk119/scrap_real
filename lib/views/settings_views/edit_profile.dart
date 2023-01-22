@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,10 +32,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String imgPath = "";
   String? photoUrl;
   bool isLoading = true;
+  PlatformFile? pickedFile;
 
   var userData = {};
-  final user = FirebaseAuth.instance.currentUser!;
-  final docId = FirebaseAuth.instance.currentUser!.uid;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void initState() {
@@ -52,10 +53,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   getData() async {
     try {
-      var userSnap = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      var userSnap =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
       photoUrl = userSnap['photoUrl'];
       userData = userSnap.data()!;
@@ -96,14 +95,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       }),
                       CustomHeader(headerText: "Edit Profile"),
                       CustomProfilePicture2(
-                        // path: imgPath,
+                        pickedFile: pickedFile,
                         context: context,
-                        profileFunction1: () {
-                          takePhoto(ImageSource.camera);
-                        },
-                        profileFunction2: () {
-                          takePhoto(ImageSource.gallery);
-                        },
+                        onTapFunc: selectFile,
                         photoUrl: photoUrl,
                         alt: "assets/images/profile.png",
                       ),
@@ -171,13 +165,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowMultiple: false,
+      allowedExtensions: ['jpg', 'jpeg', 'png'],
+    );
+    if (result == null) {
+      return;
+    }
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
   void updateProfile() {
     FireStoreMethods().updateProfile(
-      docId,
+      uid,
       _username.text,
       _name.text,
       _bio.text,
-      file,
+      pickedFile,
       photoUrl,
       mounted,
       context,

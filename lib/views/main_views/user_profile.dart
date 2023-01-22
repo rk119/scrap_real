@@ -11,7 +11,6 @@ import 'package:scrap_real/widgets/profile_widgets/custom_userinfowidget.dart';
 import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbookmini.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab3.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class UserProfilePage extends StatefulWidget {
   final String uid;
@@ -203,10 +202,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
       alignment: const Alignment(1.07, 0),
       child: TextButton(
         onPressed: () {
-          pushNewScreen(
+          Navigator.push(
             context,
-            screen: const UserSettingsPage(),
-            withNavBar: false,
+            MaterialPageRoute(builder: (context) => const UserSettingsPage()),
           );
         },
         child: Icon(

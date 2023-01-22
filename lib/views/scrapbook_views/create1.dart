@@ -12,7 +12,6 @@ import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_biocard.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_namecard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class CreateScrapbookPage1 extends StatefulWidget {
   const CreateScrapbookPage1({Key? key}) : super(key: key);
@@ -47,6 +46,12 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                CustomBackButton(buttonFunction: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NavBar()),
+                  );
+                }),
                 CustomHeader(headerText: "Create Scrapbook"),
                 const SizedBox(height: 5),
                 buildCoverPage(),
@@ -86,10 +91,14 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                       );
                       return;
                     }
-                    pushNewScreen(
+                    Navigator.push(
                       context,
-                      screen: const CreateScrapbookPage2(),
-                      // withNavBar: false,
+                      MaterialPageRoute(
+                        builder: (context) => CreateScrapbookPage2(
+                          title: _title.text,
+                          caption: _caption.text,
+                        ),
+                      ),
                     );
                   },
                   buttonText: "Next",

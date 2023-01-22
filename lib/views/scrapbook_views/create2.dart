@@ -4,18 +4,22 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/views/main_views/home.dart';
-import 'package:scrap_real/views/navigation.dart';
+import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/create1.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class CreateScrapbookPage2 extends StatefulWidget {
-  const CreateScrapbookPage2({Key? key}) : super(key: key);
+  final String title;
+  final String caption;
+  const CreateScrapbookPage2({
+    Key? key,
+    required this.title,
+    required this.caption,
+  }) : super(key: key);
   @override
   State<CreateScrapbookPage2> createState() => _CreateScrapbookPage2State();
 }
@@ -24,6 +28,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   bool tag = true;
   bool type = true;
   bool visibility = true;
+  File? image;
 
   final TextEditingController _collaborator = TextEditingController();
 
@@ -45,7 +50,18 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
     super.dispose();
   }
 
-  File? image;
+  Future createScrapbook() async {
+    FireStoreMethods().createScrapbook(
+      widget.title,
+      widget.caption,
+      tag,
+      type,
+      visibility,
+      context,
+      mounted,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +78,12 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CustomBackButton(buttonFunction: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateScrapbookPage1(),
+                    ),
+                  );
                 }),
                 CustomHeader(headerText: "Create Scrapbook"),
                 const SizedBox(height: 15),
@@ -148,12 +169,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                 const SizedBox(height: 20),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
-                  buttonFunction: () {
-                    pushNewScreen(
-                      context,
-                      screen: const CreateScrapbookPage1(),
-                    );
-                  },
+                  buttonFunction: createScrapbook,
                   buttonText: "Create",
                   buttonColor: const Color(0xff7be5e7),
                 ),

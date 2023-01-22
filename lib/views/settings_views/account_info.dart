@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scrap_real/utils/custom_snackbar.dart';
+import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/settings_views/delete_account.dart';
 import 'package:scrap_real/views/settings_views/user_settings.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
@@ -149,7 +151,19 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 const SizedBox(height: 30),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(35),
-                  buttonFunction: () {},
+                  buttonFunction: () {
+                    // add the rest of the functionality here
+                    CustomSnackBar.snackBarAlert(
+                      context,
+                      "Account Updated!",
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NavBar(),
+                      ),
+                    );
+                  },
                   buttonText: "Save",
                 )
               ],

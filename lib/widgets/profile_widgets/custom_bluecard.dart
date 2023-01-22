@@ -23,8 +23,8 @@ class CustomBlueUserInfoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x19000000),
-            offset: Offset(2, 4),
+            color: Color.fromARGB(255, 118, 208, 209),
+            offset: Offset(2, 2),
             blurRadius: 2,
           ),
         ],

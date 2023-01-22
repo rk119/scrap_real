@@ -6,9 +6,9 @@ class ScrapbookModel {
   final String tag;
   final String type;
   final String visibility;
-  final String collaborators;
+  final List collaborators;
   final String coverUrl;
-  final String posts;
+  final List posts;
 
   ScrapbookModel({
     this.creatorUid = '',
