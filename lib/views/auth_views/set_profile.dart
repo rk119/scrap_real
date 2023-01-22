@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:scrap_real/views/auth_views/choose_interests.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
+import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_biocard.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_namecard.dart';
@@ -151,7 +151,7 @@ class _SetProfilePageState extends State<SetProfilePage> {
     }
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ChooseInterestsPage()),
+      MaterialPageRoute(builder: (context) => const NavBar()),
     );
   }
 }
