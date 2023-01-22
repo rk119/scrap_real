@@ -41,9 +41,9 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
       // ignore: avoid_print
       print(e);
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');
-      final match = regex.firstMatch(e.toString());
+      final match = regex.firstMatch(e.toString())?.group(2);
       if (!mounted) return;
-      CustomSnackBar.showSnackBar(context, match?.group(2));
+      CustomSnackBar.showSnackBar(context, match);
     }
   }
 

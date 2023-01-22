@@ -78,7 +78,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 GoogleMap(
                   mapType: MapType.normal,
                   initialCameraPosition: CameraPosition(
-                    target: _currentPosition!,
+                    target: _currentPosition,
                     zoom: 14,
                   ),
                   onMapCreated: (GoogleMapController controller) {

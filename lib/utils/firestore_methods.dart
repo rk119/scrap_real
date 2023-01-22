@@ -64,12 +64,12 @@ class FireStoreMethods {
     } catch (e) {
       // ignore: avoid_print
       print(e);
-      final regex = RegExp(r'^\[(.)\]\s(.)$');
-      final match = regex.firstMatch(e.toString());
+      final regex = RegExp(r'^\[(.*)\]\s(.*)$');
+      final match = regex.firstMatch(e.toString())?.group(2);
       if (!mounted) {
         return;
       }
-      CustomSnackBar.showSnackBar(context, match?.group(2));
+      CustomSnackBar.showSnackBar(context, match);
       Navigator.of(context).pop();
     }
     // navigatorKey.currentState!.popUntil((route) => route.isFirst);

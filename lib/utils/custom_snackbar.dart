@@ -3,7 +3,7 @@ import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 
 class CustomSnackBar {
   static showSnackBar(BuildContext context, String? message) {
-    if (message == null) return;
+    message ??= "Something went wrong";
 
     final snackBar = SnackBar(
       content: Text(message),
@@ -22,7 +22,7 @@ class CustomSnackBar {
         headerSize: 15,
         headerColor: Colors.white,
       ),
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: Colors.green,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

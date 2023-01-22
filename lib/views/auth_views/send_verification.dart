@@ -48,9 +48,9 @@ class _SendVerificationPageState extends State<SendVerificationPage> {
       await Future.delayed(const Duration(seconds: 60));
       setState(() => canResend = true);
     } catch (e) {
-      final regex = RegExp(r'^\[(.)\]\s(.)$');
-      final match = regex.firstMatch(e.toString());
-      CustomSnackBar.showSnackBar(context, match?.group(2));
+      final regex = RegExp(r'^\[(.*)\]\s(.*)$');
+      final match = regex.firstMatch(e.toString())?.group(2);
+      CustomSnackBar.showSnackBar(context, match);
 
       timer = Timer.periodic(
         const Duration(seconds: 3),
