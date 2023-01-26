@@ -1,7 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrap_real/models/scrapbook.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
@@ -64,12 +63,12 @@ class FireStoreMethods {
     } catch (e) {
       // ignore: avoid_print
       print(e);
-      final regex = RegExp(r'^\[(.*)\]\s(.*)$');
-      final match = regex.firstMatch(e.toString())?.group(2);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
       if (!mounted) {
         return;
       }
-      CustomSnackBar.showSnackBar(context, match);
+      CustomSnackBar.showSnackBar(context, match?.group(2));
       Navigator.of(context).pop();
     }
     // navigatorKey.currentState!.popUntil((route) => route.isFirst);
@@ -164,6 +163,47 @@ class FireStoreMethods {
       // ignore: avoid_print
       print(e.toString());
     }
+  }
+
+  void setProfile(
+    String uid,
+    BuildContext context,
+    String name,
+    String bio,
+    PlatformFile? pickedFile,
+    String? photoUrl,
+    bool mounted,
+  ) async {
+    final docUser = FirebaseFirestore.instance.collection('users').doc(uid);
+    if (name.isNotEmpty) {
+      docUser.update({'name': name});
+    } else {
+      CustomSnackBar.showSnackBar(
+        context,
+        "Please enter a name",
+      );
+      return;
+    }
+    if (bio.isNotEmpty) {
+      docUser.update({'bio': bio});
+    }
+    if (pickedFile != null) {
+      photoUrl = await StorageMethods().uploadProfilePic(pickedFile);
+      docUser.update({'photoUrl': photoUrl});
+    }
+    if (!mounted) {
+      return;
+    }
+    CustomSnackBar.snackBarAlert(
+      context,
+      "Profile Created!",
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NavBar(),
+      ),
+    );
   }
 
   void updateProfile(

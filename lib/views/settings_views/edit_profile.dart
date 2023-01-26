@@ -15,7 +15,7 @@ import 'package:scrap_real/widgets/card_widgets/custom_biocard.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_namecard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
-import 'package:scrap_real/widgets/profile_widgets/custom_profile2.dart';
+import 'package:scrap_real/widgets/profile_widgets/custom_profile.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -94,7 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         );
                       }),
                       CustomHeader(headerText: "Edit Profile"),
-                      CustomProfilePicture2(
+                      CustomProfilePicture(
                         pickedFile: pickedFile,
                         context: context,
                         onTapFunc: selectFile,
@@ -183,9 +183,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void updateProfile() {
     FireStoreMethods().updateProfile(
       uid,
-      _username.text,
-      _name.text,
-      _bio.text,
+      _username.text.trim(),
+      _name.text.trim(),
+      _bio.text.trim(),
       pickedFile,
       photoUrl,
       mounted,

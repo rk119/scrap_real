@@ -52,14 +52,14 @@ class CustomUserProfileInfo extends StatelessWidget {
                 text2: "Posts",
               ),
             ),
-            const SizedBox(width: 25),
+            const SizedBox(width: 20),
             Expanded(
               child: CustomBlueUserInfoCard(
                 text1: followers,
                 text2: "Followers",
               ),
             ),
-            const SizedBox(width: 25),
+            const SizedBox(width: 20),
             Expanded(
               child: CustomBlueUserInfoCard(
                 text1: following,
