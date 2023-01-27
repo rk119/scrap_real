@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,9 +10,12 @@ import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/create1.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
+import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
+
+import '../main_views/user_profile.dart';
 
 class CreateScrapbookPage2 extends StatefulWidget {
   final String title;
@@ -29,6 +34,8 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   bool type = true;
   bool visibility = true;
   File? image;
+  String _searchQuery = "";
+  bool search = true;
 
   final TextEditingController _collaborator = TextEditingController();
 
@@ -50,6 +57,75 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
     super.dispose();
   }
 
+  // Future<Map<String, dynamic>?> getCurrentUID() {
+  //   var data = FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .get()
+  //       .then((value) => value.data());
+  //   return data;
+  // }
+
+  Widget usersView() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      builder: (context, snapshots) {
+        if (!snapshots.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return (snapshots.connectionState == ConnectionState.waiting)
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshots.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data = snapshots.data!.docs[index].data()
+                      as Map<String, dynamic>;
+
+                  if (_searchQuery.isEmpty) {
+                    return CustomUserCard(
+                      photoUrl: data['photoUrl'],
+                      alt: "assets/images/profile.png",
+                      username: data['username'],
+                      onTapFunc: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => UserProfilePage(
+                            uid: (snapshots.data! as dynamic).docs[index]
+                                ['uid'],
+                            implyLeading: search,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (data['username']
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(_searchQuery.toLowerCase())) {
+                    // print(getCurrentUID().then((value) => value!['username']));
+                    return !_collaborators.contains(data['username'])
+                        ? CustomUserCard(
+                            photoUrl: data['photoUrl'],
+                            alt: "assets/images/profile.png",
+                            username: data['username'],
+                            onTapFunc: () => setState(() {
+                              _collaborators.add(data['username']);
+                            }),
+                          )
+                        : Container();
+                  }
+                  return Container();
+                },
+              );
+      },
+    );
+  }
+
   Future createScrapbook() async {
     FireStoreMethods().createScrapbook(
       widget.title,
@@ -57,9 +133,11 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
       tag,
       type,
       visibility,
+      _collaborators,
       context,
       mounted,
     );
+    print(_collaborators);
   }
 
   @override
@@ -167,6 +245,8 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                 const SizedBox(height: 20),
                 buildCollaborators(),
                 const SizedBox(height: 20),
+                _searchQuery.isNotEmpty ? usersView() : const SizedBox(),
+                const SizedBox(height: 20),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: createScrapbook,
@@ -238,6 +318,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                       color: const Color.fromARGB(255, 193, 193, 193),
                     ),
                   ),
+                  onChanged: (value) => setState(() {
+                    _searchQuery = value;
+                  }),
                 ),
               ),
             ),

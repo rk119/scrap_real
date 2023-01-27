@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/settings_views/account_info.dart';
 import 'package:scrap_real/views/settings_views/appearance.dart';
+import 'package:scrap_real/views/settings_views/blocked_users.dart';
 import 'package:scrap_real/views/settings_views/edit_profile.dart';
 import 'package:scrap_real/views/settings_views/information.dart';
 import 'package:scrap_real/views/settings_views/privacy_policy.dart';
@@ -14,6 +15,7 @@ import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_menuitem.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/views/auth_views/welcome.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserSettingsPage extends StatefulWidget {
   const UserSettingsPage({Key? key}) : super(key: key);
@@ -121,14 +123,29 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
                 const SizedBox(height: 5),
                 CustomMenuItem(
-                  svgPath: "assets/support.svg",
-                  text: "Support",
+                  svgPath: "assets/blocked_users.svg",
+                  text: "Blocked Users",
                   buttonFunction: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SupportPage()),
+                          builder: (context) => const BlockedUsersPage()),
                     );
+                  },
+                ),
+                const SizedBox(height: 5),
+                CustomMenuItem(
+                  svgPath: "assets/support.svg",
+                  text: "Support",
+                  buttonFunction: () async {
+                    String email =
+                        Uri.encodeComponent("wafitechsolutions@gmail.com");
+                    Uri mail = Uri.parse("mailto:$email?");
+                    if (await launchUrl(mail)) {
+                      //email app opened
+                    } else {
+                      //email app is not opened
+                    }
                   },
                 ),
                 const SizedBox(height: 5),

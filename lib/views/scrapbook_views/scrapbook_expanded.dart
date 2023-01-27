@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -164,16 +166,37 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             child: Align(
                               alignment: Alignment.topRight,
                               child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SavedScrapbooksPage(),
-                                    ),
-                                  );
-                                  CustomSnackBar.snackBarAlert(
-                                      context, "Saved!");
+                                onTap: () async {
+                                  if (await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      .get()
+                                      .then((value) => value
+                                          .data()!['savedScrapbooks']
+                                          .contains(widget.scrapbookId))) {
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        .update({
+                                      'savedScrapbooks': FieldValue.arrayRemove(
+                                          [widget.scrapbookId])
+                                    });
+                                    CustomSnackBar.snackBarAlert(
+                                        context, "Removed from saved!");
+                                  } else {
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        .update({
+                                      'savedScrapbooks': FieldValue.arrayUnion(
+                                          [widget.scrapbookId])
+                                    });
+                                    CustomSnackBar.snackBarAlert(
+                                        context, "Saved!");
+                                  }
                                 },
                                 child: Icon(
                                   Icons.bookmark,

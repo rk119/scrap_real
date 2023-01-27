@@ -105,7 +105,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   : Colors.white,
               actions: [
                 widget.implyLeading
-                    ? const SizedBox()
+                    ? optionsMenu(iconColor)
                     : settingsMenu(iconColor),
               ],
               elevation: 0,
@@ -205,6 +205,113 @@ class _UserProfilePageState extends State<UserProfilePage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const UserSettingsPage()),
+          );
+        },
+        child: Icon(
+          Icons.menu,
+          size: 45,
+          color: iconColor,
+        ),
+      ),
+    );
+  }
+
+  Widget optionsMenu(Color iconColor) {
+    return Container(
+      alignment: const Alignment(1.07, 0),
+      child: TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Block User"),
+                              content: const Text(
+                                  "Are you sure you want to block this user?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(user.uid)
+                                        .update({
+                                      'blockedUsers': FieldValue.arrayUnion(
+                                          [userData['uid']])
+                                    });
+                                  },
+                                  child: const Text("Block"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text("Block User"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Report User"),
+                              content: const Text(
+                                  "Are you sure you want to report this user?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    // FireStoreMethods().reportUser(
+                                    //   user.uid,
+                                    //   userData['uid'],
+                                    // );
+                                    FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(user.uid)
+                                        .update({
+                                      'reportedUsers': FieldValue.arrayUnion(
+                                          [userData['uid']])
+                                    });
+                                  },
+                                  child: const Text("Report"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text("Report User"),
+                    ),
+                  ],
+                ),
+              );
+            },
           );
         },
         child: Icon(

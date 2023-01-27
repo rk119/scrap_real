@@ -60,6 +60,10 @@ class AuthMethods {
         photoUrl: "",
         followers: [],
         following: [],
+        savedPosts: [],
+        blockedUsers: [],
+        reportUsers: [],
+        reportPosts: [],
       );
       final json = userModel.toJson();
       await docUser.set(json);

@@ -7,6 +7,10 @@ class UserModel {
   final String photoUrl;
   final List followers;
   final List following;
+  final List savedPosts;
+  final List blockedUsers;
+  final List reportUsers;
+  final List reportPosts;
 
   UserModel({
     this.uid = '',
@@ -17,6 +21,10 @@ class UserModel {
     required this.photoUrl,
     required this.followers,
     required this.following,
+    required this.savedPosts,
+    required this.blockedUsers,
+    required this.reportUsers,
+    required this.reportPosts,
   });
 
   Map<String, dynamic> toJson() => {
@@ -28,5 +36,9 @@ class UserModel {
         "photoUrl": "",
         'followers': [],
         'following': [],
+        'savedPosts': [],
+        'blockedUsers': [],
+        'reportUsers': [],
+        'reportPosts': [],
       };
 }

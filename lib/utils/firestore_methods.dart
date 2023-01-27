@@ -18,6 +18,7 @@ class FireStoreMethods {
     bool tag,
     bool type,
     bool visibility,
+    List<dynamic> _collaborators,
     BuildContext context,
     bool mounted,
     // GlobalKey<FormState> formKey,
@@ -35,7 +36,7 @@ class FireStoreMethods {
 
     try {
       final docScrapbook = _firestore.collection('scrapbooks').doc();
-
+      print(_collaborators);
       final scrapbookModel = ScrapbookModel(
         creatorUid: _auth.currentUser!.uid,
         scrapbookId: docScrapbook.id,
@@ -44,12 +45,18 @@ class FireStoreMethods {
         tag: tag ? "Factual" : "Personal",
         type: type ? "Normal" : "Challenge",
         visibility: visibility ? "Public" : "Private",
-        collaborators: [],
+        collaborators: _collaborators,
         coverUrl: "",
         posts: [],
       );
       final json = scrapbookModel.toJson();
       await docScrapbook.set(json);
+
+      // if (_collaborators.isNotEmpty) {
+      // await docScrapbook.update({
+      // 'collaborators': FieldValue.arrayUnion(_collaborators),
+      // });
+      // }
 
       if (!mounted) return;
       CustomSnackBar.snackBarAlert(

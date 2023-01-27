@@ -31,7 +31,7 @@ class ScrapbookModel {
         'tag': tag,
         'type': type,
         'visibility': visibility,
-        'collaborators': [],
+        'collaborators': collaborators,
         "coverUrl": "",
         'posts': [],
       };

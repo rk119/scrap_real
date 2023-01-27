@@ -1,4 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
@@ -13,7 +15,24 @@ class SavedScrapbooksPage extends StatefulWidget {
 }
 
 class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
-  // final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser!;
+  var savedScrapbooks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    savedScrapbooks = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .then((value) => value['savedScrapbooks']);
+    setState(() {});
+    print(savedScrapbooks);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,27 +54,50 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
                 }),
                 CustomHeader(headerText: "Saved"),
                 const SizedBox(height: 30),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 5,
-                  padding: const EdgeInsets.all(10),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        CustomScrapbookLarge(
-                            scrapbookId: "data['scrapbookId']",
-                            title: "Saved Scrapbook"),
-                        const SizedBox(height: 10),
-                      ],
-                    );
-                  },
-                ),
+                _buildSavedScrapbooks(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSavedScrapbooks() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('scrapbooks')
+          .where('scrapbookId', whereIn: savedScrapbooks)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return (snapshot.connectionState == ConnectionState.waiting)
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data =
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  return Column(
+                    children: [
+                      CustomScrapbookLarge(
+                        scrapbookId: data['scrapbookId'],
+                        title: data['title'],
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  );
+                },
+              );
+      },
     );
   }
 }
