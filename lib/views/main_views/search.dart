@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/main_views/user_profile.dart';
+import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbooklarge.dart';
@@ -61,7 +62,10 @@ class _SearchPageState extends State<SearchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CustomBackButton(buttonFunction: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NavBar(currentIndex: 0)));
                 }),
                 SizedBox(height: 20),
                 CustomSearchField(

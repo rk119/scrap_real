@@ -347,40 +347,60 @@ class _UserProfilePageState extends State<UserProfilePage> {
       stream: postsStream,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
-          return Center(
-            child: CustomText(text: "No Scrapbooks posted", textSize: 15),
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFF918EF4),
+            ),
           );
         }
-        return (snapshots.connectionState == ConnectionState.waiting)
-            ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
-              )
-            : snapshots.data!.docs.isEmpty
-                ? Center(
-                    child: CustomText(text: "No Scrapbooks", textSize: 15),
-                  )
-                : GridView.builder(
-                    itemCount: snapshots.data!.docs.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.5,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      var data = snapshots.data!.docs[index].data()
-                          as Map<String, dynamic>;
+        if (snapshots.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
+          );
+        } else if (snapshots.data!.docs.isEmpty) {
+          return Center(
+            child: CustomText(text: "No Scrapbooks", textSize: 15),
+          );
+        } else {
+          var scrapbooksToShow = [];
+          for (var i = 0; i < snapshots.data!.docs.length; i++) {
+            var data = snapshots.data!.docs[i].data() as Map<String, dynamic>;
+            if (data['visibility'] == 'Private' &&
+                data['creatorUid'] != user.uid &&
+                !data['collaborators'].contains(user.uid)) {
+              continue;
+            } else {
+              scrapbooksToShow.add(snapshots.data!.docs[i]);
+            }
+          }
 
-                      return ScrapbookMiniSize(
-                        scrapbookId: data['scrapbookId'],
-                        scrapbookTitle: data['title'],
-                        coverImage: data['coverUrl'],
-                      );
-                    },
-                  );
+          return GridView.builder(
+            itemCount: scrapbooksToShow.length,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1.5,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              var data = scrapbooksToShow[index].data() as Map<String, dynamic>;
+
+              if (data['visibility'] == 'Private' &&
+                  data['creatorUid'] != user.uid &&
+                  !data['collaborators'].contains(user.uid)) {
+                return const SizedBox.shrink();
+              } else {
+                return ScrapbookMiniSize(
+                  scrapbookId: data['scrapbookId'],
+                  scrapbookTitle: data['title'],
+                  coverImage: data['coverUrl'],
+                );
+              }
+            },
+          );
+        }
       },
     );
   }
