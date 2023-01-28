@@ -61,7 +61,7 @@ dependencies:
   go_router: ^6.0.0
   file_picker: ^5.2.5
   custom_info_window: ^1.0.1
-  clippy_flutter: ^1.1.1
+  flutter_custom_clippers: ^2.1.0
 
 dev_dependencies:
   flutter_test:

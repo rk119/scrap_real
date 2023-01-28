@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:custom_info_window/custom_info_window.dart';
-import 'package:clippy_flutter/triangle.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -113,20 +113,20 @@ class _ExplorePageState extends State<ExplorePage> {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      height: 120,
-                                      width: 180,
+                                      height: 135,
+                                      width: 170,
                                       decoration: BoxDecoration(
                                         color: Colors.pink,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                   ),
-                                  Triangle.isosceles(
-                                    edge: Edge.BOTTOM,
+                                  ClipPath(
+                                    clipper: TriangleClipper(),
                                     child: Container(
+                                      height: 15,
+                                      width: 15,
                                       color: Colors.pink,
-                                      width: 20.0,
-                                      height: 10.0,
                                     ),
                                   ),
                                 ],
