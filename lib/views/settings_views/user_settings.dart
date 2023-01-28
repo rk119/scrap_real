@@ -117,7 +117,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ReportedContentPage()),
+                          builder: (context) => const ReportedScrapbooksPage()),
                     );
                   },
                 ),
