@@ -49,8 +49,10 @@ class _ReportedContentPageState extends State<ReportedContentPage> {
                     return Column(
                       children: [
                         CustomScrapbookLarge(
-                            scrapbookId: "data['scrapbookId']",
-                            title: "Reported Scrapbook"),
+                          scrapbookId: "data['scrapbookId']",
+                          title: "Reported Scrapbook",
+                          coverImage: "data['coverImage']",
+                        ),
                         const SizedBox(height: 10),
                       ],
                     );

@@ -121,7 +121,7 @@ class _SetProfilePageState extends State<SetProfilePage> {
                   );
                 }
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: Color(0xFF918EF4)),
                 );
               }),
             ),

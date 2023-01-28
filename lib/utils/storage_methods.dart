@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 class StorageMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // this was the old method of uploading images
@@ -64,6 +66,21 @@ class StorageMethods {
     }
     // ignore: avoid_print
     print('No Image Selected');
+  }
+
+  Future<String> uploadScrapbookCover(File pickedFile) async {
+    const path = 'scrapbookCover';
+    final file = File(pickedFile.path);
+
+    final ref = _storage
+        .ref()
+        .child(path)
+        .child(_firestore.collection('scrapbook').doc().id);
+    UploadTask uploadTask = ref.putFile(file);
+
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
   }
 
   // Future<String> uploadPost(String description, Uint8List file, String uid,

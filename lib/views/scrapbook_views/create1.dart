@@ -46,12 +46,6 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                CustomBackButton(buttonFunction: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NavBar()),
-                  );
-                }),
                 CustomHeader(headerText: "Create Scrapbook"),
                 const SizedBox(height: 5),
                 buildCoverPage(),
@@ -97,6 +91,7 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                         builder: (context) => CreateScrapbookPage2(
                           title: _title.text,
                           caption: _caption.text,
+                          image: image,
                         ),
                       ),
                     );

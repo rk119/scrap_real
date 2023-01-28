@@ -45,7 +45,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 CustomBackButton(buttonFunction: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const NavBar()),
+                    MaterialPageRoute(builder: (context) => NavBar()),
                   );
                 }),
                 CustomHeader(headerText: "Settings"),

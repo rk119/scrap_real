@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrap_real/views/main_views/user_profile.dart';
@@ -21,6 +22,23 @@ class _SearchPageState extends State<SearchPage> {
   bool users = true;
   bool search = true;
   String _searchQuery = "";
+  var blockedUsers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    blockedUsers = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) => value['blockedUsers']);
+    setState(() {});
+    print(blockedUsers);
+  }
 
   @override
   void dispose() {
@@ -80,7 +98,11 @@ class _SearchPageState extends State<SearchPage> {
                   },
                 ),
                 const SizedBox(height: 1),
-                users ? usersView() : scrapbooksView(),
+                _searchQuery == ""
+                    ? Container()
+                    : users
+                        ? usersView()
+                        : scrapbooksView(),
                 // usersView2(),
               ],
             ),
@@ -92,16 +114,21 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget usersView() {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      stream: blockedUsers.isNotEmpty
+          ? FirebaseFirestore.instance
+              .collection('users')
+              .where(FieldPath.documentId, whereNotIn: blockedUsers)
+              .snapshots()
+          : FirebaseFirestore.instance.collection('users').snapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
         return (snapshots.connectionState == ConnectionState.waiting)
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               )
             : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -159,12 +186,12 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
         return (snapshots.connectionState == ConnectionState.waiting)
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               )
             : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -180,6 +207,7 @@ class _SearchPageState extends State<SearchPage> {
                         CustomScrapbookLarge(
                           scrapbookId: data['scrapbookId'],
                           title: data['title'],
+                          coverImage: data['coverUrl'],
                         ),
                         SizedBox(height: 10),
                       ],
@@ -194,6 +222,7 @@ class _SearchPageState extends State<SearchPage> {
                         CustomScrapbookLarge(
                           scrapbookId: data['scrapbookId'],
                           title: data['title'],
+                          coverImage: data['coverUrl'],
                         ),
                         SizedBox(height: 10),
                       ],

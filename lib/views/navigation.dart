@@ -7,18 +7,17 @@ import 'package:scrap_real/views/main_views/notifications.dart';
 import 'package:scrap_real/views/main_views/user_profile.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({Key? key}) : super(key: key);
+  int? currentIndex;
+  NavBar({Key? key, this.currentIndex}) : super(key: key);
 
   @override
   State<NavBar> createState() => _NavBarState();
 }
 
 class _NavBarState extends State<NavBar> {
-  int _currentIndex = 4;
-
   void navigate(int index) {
     setState(() {
-      _currentIndex = index;
+      widget.currentIndex = index;
     });
   }
 
@@ -35,6 +34,7 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    int _currentIndex = widget.currentIndex ?? 4;
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

@@ -32,7 +32,7 @@ class ScrapbookModel {
         'type': type,
         'visibility': visibility,
         'collaborators': collaborators,
-        "coverUrl": "",
+        "coverUrl": coverUrl,
         'posts': [],
       };
 }

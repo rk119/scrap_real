@@ -95,12 +95,12 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
         return (snapshots.connectionState == ConnectionState.waiting)
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               )
             : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -139,6 +139,7 @@ class _HomePageState extends State<HomePage> {
                           CustomScrapbookLarge(
                             scrapbookId: data['scrapbookId'],
                             title: data['title'],
+                            coverImage: data['coverUrl'],
                           ),
                           SizedBox(height: 10),
                         ],
@@ -151,6 +152,7 @@ class _HomePageState extends State<HomePage> {
                         CustomScrapbookLarge(
                           scrapbookId: data['scrapbookId'],
                           title: data['title'],
+                          coverImage: data['coverUrl'],
                         ),
                         SizedBox(height: 10),
                       ],

@@ -16,7 +16,7 @@ class MainPage extends StatelessWidget {
           if (snapshot.hasData) {
             var user = FirebaseAuth.instance.currentUser!;
             if (user.email != null && user.emailVerified) {
-              return const NavBar();
+              return NavBar();
             }
             return const SendVerificationPage();
           } else {

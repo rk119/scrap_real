@@ -90,7 +90,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                     ? Colors.grey.shade900
                     : Colors.white,
             child: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: Color(0xFF918EF4)),
             ),
           )
         : Scaffold(
@@ -115,15 +115,16 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                         alignment: Alignment.center,
                         children: [
                           Container(
-                            height: 250,
+                            height: 200,
+                            width: 350,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               color: greyColor,
+                              image: DecorationImage(
+                                image: NetworkImage(scrapbookData['coverUrl']),
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          CustomText(
-                            text: "Scrapbook cover image",
-                            textSize: 15,
                           ),
                         ],
                       ),

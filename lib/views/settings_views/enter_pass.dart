@@ -98,7 +98,7 @@ class _EnterPassPageState extends State<EnterPassPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const NavBar(),
+                              builder: (context) => NavBar(),
                             ));
                       } catch (e) {
                         // ignore: avoid_print

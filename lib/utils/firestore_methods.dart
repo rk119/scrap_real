@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class FireStoreMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future createScrapbook(
+    File? image,
     String title,
     String caption,
     bool tag,
@@ -37,6 +40,10 @@ class FireStoreMethods {
     try {
       final docScrapbook = _firestore.collection('scrapbooks').doc();
       print(_collaborators);
+      String photoUrl = "";
+      if (image != null) {
+        photoUrl = await StorageMethods().uploadScrapbookCover(image);
+      }
       final scrapbookModel = ScrapbookModel(
         creatorUid: _auth.currentUser!.uid,
         scrapbookId: docScrapbook.id,
@@ -46,7 +53,7 @@ class FireStoreMethods {
         type: type ? "Normal" : "Challenge",
         visibility: visibility ? "Public" : "Private",
         collaborators: _collaborators,
-        coverUrl: "",
+        coverUrl: photoUrl,
         posts: [],
       );
       final json = scrapbookModel.toJson();
@@ -65,7 +72,7 @@ class FireStoreMethods {
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const NavBar()),
+        MaterialPageRoute(builder: (context) => NavBar()),
       );
     } catch (e) {
       // ignore: avoid_print
@@ -208,7 +215,7 @@ class FireStoreMethods {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const NavBar(),
+        builder: (context) => NavBar(),
       ),
     );
   }
@@ -248,7 +255,7 @@ class FireStoreMethods {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const NavBar(),
+          builder: (context) => NavBar(),
         ),
       );
     } catch (e) {

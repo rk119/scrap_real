@@ -106,12 +106,12 @@ class _ScrapbookImagesPageState extends State<ScrapbookImagesPage> {
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
         return (snapshots.connectionState == ConnectionState.waiting)
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               )
             : snapshots.data!.docs.isEmpty
                 ? const SizedBox()

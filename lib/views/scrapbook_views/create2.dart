@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
+import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/scrapbook_views/create1.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
@@ -18,12 +19,14 @@ import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
 import '../main_views/user_profile.dart';
 
 class CreateScrapbookPage2 extends StatefulWidget {
+  final File? image;
   final String title;
   final String caption;
   const CreateScrapbookPage2({
     Key? key,
     required this.title,
     required this.caption,
+    required this.image,
   }) : super(key: key);
   @override
   State<CreateScrapbookPage2> createState() => _CreateScrapbookPage2State();
@@ -72,12 +75,12 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
         return (snapshots.connectionState == ConnectionState.waiting)
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               )
             : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -86,23 +89,6 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                 itemBuilder: (context, index) {
                   var data = snapshots.data!.docs[index].data()
                       as Map<String, dynamic>;
-
-                  if (_searchQuery.isEmpty) {
-                    return CustomUserCard(
-                      photoUrl: data['photoUrl'],
-                      alt: "assets/images/profile.png",
-                      username: data['username'],
-                      onTapFunc: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => UserProfilePage(
-                            uid: (snapshots.data! as dynamic).docs[index]
-                                ['uid'],
-                            implyLeading: search,
-                          ),
-                        ),
-                      ),
-                    );
-                  }
                   if (data['username']
                       .toString()
                       .toLowerCase()
@@ -128,6 +114,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
 
   Future createScrapbook() async {
     FireStoreMethods().createScrapbook(
+      widget.image,
       widget.title,
       widget.caption,
       tag,
@@ -159,7 +146,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CreateScrapbookPage1(),
+                      builder: (context) => NavBar(
+                        currentIndex: 2,
+                      ),
                     ),
                   );
                 }),
@@ -325,23 +314,23 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
               ),
             ),
             const SizedBox(width: 10),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.125,
-              height: 45,
-              decoration: BoxDecoration(
-                color: const Color(0xffB0F0F1),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    _collaborators.add(_collaborator.text);
-                    _collaborator.clear();
-                  });
-                },
-                child: const Icon(Icons.add, color: Colors.black, size: 30),
-              ),
-            ),
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.125,
+            //   height: 45,
+            //   decoration: BoxDecoration(
+            //     color: const Color(0xffB0F0F1),
+            //     borderRadius: BorderRadius.circular(6),
+            //   ),
+            //   child: TextButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         _collaborators.add(_collaborator.text);
+            //         _collaborator.clear();
+            //       });
+            //     },
+            //     child: const Icon(Icons.add, color: Colors.black, size: 30),
+            //   ),
+            // ),
           ],
         ),
       ),

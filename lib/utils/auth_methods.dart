@@ -104,7 +104,7 @@ class AuthMethods {
       if (!mounted) return;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const NavBar()),
+        MaterialPageRoute(builder: (context) => NavBar()),
       );
     } catch (e) {
       final regex = RegExp(r'^\[(.*)\]\s(.*)$');

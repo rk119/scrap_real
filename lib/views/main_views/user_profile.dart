@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
+import 'package:scrap_real/views/main_views/home.dart';
+import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/settings_views/user_settings.dart';
 import 'package:scrap_real/widgets/profile_widgets/custom_profileinfocard.dart';
 import 'package:scrap_real/widgets/profile_widgets/custom_userinfowidget.dart';
@@ -94,7 +96,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ? Colors.grey.shade900
                     : Colors.white,
             child: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: Color(0xFF918EF4)),
             ),
           )
         : Scaffold(
@@ -186,9 +188,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         thickness: 1,
                         color: iconColor,
                       ),
-                      const SizedBox(height: 13),
+                      const SizedBox(height: 15),
                       postsView(),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -247,8 +248,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NavBar()),
+                                    );
                                     FirebaseFirestore.instance
                                         .collection('users')
                                         .doc(user.uid)
@@ -285,8 +289,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NavBar()),
+                                    );
                                     // FireStoreMethods().reportUser(
                                     //   user.uid,
                                     //   userData['uid'],
@@ -346,7 +353,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         }
         return (snapshots.connectionState == ConnectionState.waiting)
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               )
             : snapshots.data!.docs.isEmpty
                 ? Center(
@@ -359,7 +366,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 1,
+                      childAspectRatio: 1.5,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
                     ),
@@ -370,6 +377,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       return ScrapbookMiniSize(
                         scrapbookId: data['scrapbookId'],
                         scrapbookTitle: data['title'],
+                        coverImage: data['coverUrl'],
                       );
                     },
                   );

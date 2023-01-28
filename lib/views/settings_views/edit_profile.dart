@@ -141,7 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
                 }
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: Color(0xFF918EF4)),
                 );
               }),
             ),

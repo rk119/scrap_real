@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
@@ -11,10 +12,12 @@ class CustomScrapbookLarge extends StatelessWidget {
     Key? key,
     required this.scrapbookId,
     required this.title,
+    required this.coverImage,
   }) : super(key: key);
 
   final String scrapbookId;
   String title;
+  String coverImage;
 
   @override
   Widget build(BuildContext context) {
@@ -29,28 +32,37 @@ class CustomScrapbookLarge extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        width: 350,
-        height: 205,
-        decoration: BoxDecoration(
-          color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
-              ? Colors.grey.shade700
-              : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(children: [
-          const SizedBox(height: 40),
-          SizedBox(
-            height: 100,
-            child: Center(
-              child: CustomText(
-                text: title, // max 22 char
-                textSize: 23,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: 200,
+            width: 350,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Provider.of<ThemeProvider>(context).themeMode ==
+                      ThemeMode.dark
+                  ? Colors.grey.shade700
+                  : Colors.grey.shade200,
+              image: DecorationImage(
+                image: NetworkImage(
+                  coverImage,
+                ),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.4), BlendMode.darken),
               ),
             ),
           ),
-          Container(height: 40),
-        ]),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 23,
+              color: coverImage != "" ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

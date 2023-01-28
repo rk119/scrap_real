@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbooklarge.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class SavedScrapbooksPage extends StatefulWidget {
   const SavedScrapbooksPage({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class SavedScrapbooksPage extends StatefulWidget {
 class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
   final user = FirebaseAuth.instance.currentUser!;
   var savedScrapbooks = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
         .then((value) => value['savedScrapbooks']);
     setState(() {});
     print(savedScrapbooks);
+    isLoading = false;
   }
 
   @override
@@ -53,8 +56,34 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
                   Navigator.of(context).pop();
                 }),
                 CustomHeader(headerText: "Saved"),
-                const SizedBox(height: 30),
-                _buildSavedScrapbooks(),
+                isLoading
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                          ),
+                          const CircularProgressIndicator(
+                              color: Color(0xFF918EF4)),
+                        ],
+                      )
+                    : savedScrapbooks.isNotEmpty
+                        ? Container(
+                            child: _buildSavedScrapbooks(),
+                          )
+                        : Column(
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                              ),
+                              CustomText(
+                                text: "You haven't saved any scrapbooks yet",
+                                textSize: 20,
+                                textAlignment: TextAlign.center,
+                                textWeight: FontWeight.w300,
+                              ),
+                            ],
+                          ),
               ],
             ),
           ),
@@ -70,33 +99,30 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
           .where('scrapbookId', whereIn: savedScrapbooks)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return (snapshot.connectionState == ConnectionState.waiting)
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  var data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return Column(
-                    children: [
-                      CustomScrapbookLarge(
-                        scrapbookId: data['scrapbookId'],
-                        title: data['title'],
-                      ),
-                      const SizedBox(height: 30),
-                    ],
-                  );
-                },
+        if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var data =
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
+              return Column(
+                children: [
+                  CustomScrapbookLarge(
+                    scrapbookId: data['scrapbookId'],
+                    title: data['title'],
+                    coverImage: data['coverUrl'],
+                  ),
+                  const SizedBox(height: 30),
+                ],
               );
+            },
+          );
+        } else {
+          return const Center(
+              child: CircularProgressIndicator(color: Color(0xFF918EF4)));
+        }
       },
     );
   }

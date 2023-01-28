@@ -70,7 +70,7 @@ class _ExplorePageState extends State<ExplorePage> {
           ? Container(
               color: Colors.white,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
               ),
             )
           : Stack(
