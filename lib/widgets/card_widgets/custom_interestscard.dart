@@ -12,6 +12,7 @@ class CustomInterestsCard extends StatelessWidget {
     required this.buttonText,
     required this.svgPath,
     required this.buttonFunction,
+    required this.selected,
   }) : super(key: key);
 
   Color buttonColor;
@@ -19,6 +20,7 @@ class CustomInterestsCard extends StatelessWidget {
   String buttonText;
   String svgPath;
   void Function()? buttonFunction;
+  bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class CustomInterestsCard extends StatelessWidget {
       height: 70,
       width: 345,
       decoration: BoxDecoration(
+        border: selected ? Border.all(color: Colors.black, width: 2) : null,
         color: buttonColor,
         borderRadius: buttonBorderRadius,
         boxShadow: const [
@@ -39,9 +42,9 @@ class CustomInterestsCard extends StatelessWidget {
       child: TextButton(
         onPressed: buttonFunction,
         child: Row(
-          // mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(width: 65),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.15),
             SizedBox(
               width: 45,
               height: 45,

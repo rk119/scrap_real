@@ -186,6 +186,7 @@ class FireStoreMethods {
     String bio,
     PlatformFile? pickedFile,
     String? photoUrl,
+    List<bool> interests,
     bool mounted,
   ) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc(uid);
@@ -205,6 +206,9 @@ class FireStoreMethods {
       photoUrl = await StorageMethods().uploadProfilePic(pickedFile);
       docUser.update({'photoUrl': photoUrl});
     }
+
+    docUser.update({'interests': interests});
+
     if (!mounted) {
       return;
     }

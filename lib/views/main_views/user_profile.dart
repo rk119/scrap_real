@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
-import 'package:scrap_real/views/main_views/home.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/settings_views/user_settings.dart';
 import 'package:scrap_real/widgets/profile_widgets/custom_profileinfocard.dart';
@@ -37,6 +36,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   bool isFollowing = false;
   bool isCurrentUser = false;
   bool isLoading = true;
+  var scrapbooksToShow = [];
 
   @override
   void initState() {
@@ -64,7 +64,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
       //     .get();
 
       // get the user data
-      postsLen = scrapbookSnap.docs.length;
+
+      for (var i = 0; i < scrapbookSnap.docs.length; i++) {
+        var data = scrapbookSnap.docs[i].data();
+        if (data['visibility'] == 'Private' &&
+            data['creatorUid'] != user.uid &&
+            !data['collaborators'].contains(user.uid)) {
+          continue;
+        } else {
+          scrapbooksToShow.add(scrapbookSnap.docs[i]);
+        }
+      }
+
+      postsLen = scrapbooksToShow.length;
       userData = userSnap.data()!;
       followers = userData['followers'].length;
       following = userData['following'].length;
@@ -362,18 +374,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
             child: CustomText(text: "No Scrapbooks", textSize: 15),
           );
         } else {
-          var scrapbooksToShow = [];
-          for (var i = 0; i < snapshots.data!.docs.length; i++) {
-            var data = snapshots.data!.docs[i].data() as Map<String, dynamic>;
-            if (data['visibility'] == 'Private' &&
-                data['creatorUid'] != user.uid &&
-                !data['collaborators'].contains(user.uid)) {
-              continue;
-            } else {
-              scrapbooksToShow.add(snapshots.data!.docs[i]);
-            }
-          }
-
           return GridView.builder(
             itemCount: scrapbooksToShow.length,
             physics: const NeverScrollableScrollPhysics(),

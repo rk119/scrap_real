@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:drop_shadow/drop_shadow.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/views/auth_views/interests.dart';
 import 'package:scrap_real/views/auth_views/register.dart';
 import 'package:scrap_real/views/auth_views/login.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';

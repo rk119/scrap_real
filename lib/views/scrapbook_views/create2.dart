@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,15 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/scrapbook_views/create1.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
-
-import '../main_views/user_profile.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class CreateScrapbookPage2 extends StatefulWidget {
   final File? image;
@@ -69,49 +66,6 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   //   return data;
   // }
 
-  Widget usersView() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').snapshots(),
-      builder: (context, snapshots) {
-        if (!snapshots.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
-          );
-        }
-        return (snapshots.connectionState == ConnectionState.waiting)
-            ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
-              )
-            : ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: snapshots.data!.docs.length,
-                itemBuilder: (context, index) {
-                  var data = snapshots.data!.docs[index].data()
-                      as Map<String, dynamic>;
-                  if (data['username']
-                      .toString()
-                      .toLowerCase()
-                      .startsWith(_searchQuery.toLowerCase())) {
-                    // print(getCurrentUID().then((value) => value!['username']));
-                    return !_collaborators.contains(data['username'])
-                        ? CustomUserCard(
-                            photoUrl: data['photoUrl'],
-                            alt: "assets/images/profile.png",
-                            username: data['username'],
-                            onTapFunc: () => setState(() {
-                              _collaborators.add(data['username']);
-                            }),
-                          )
-                        : Container();
-                  }
-                  return Container();
-                },
-              );
-      },
-    );
-  }
-
   Future createScrapbook() async {
     FireStoreMethods().createScrapbook(
       widget.image,
@@ -124,6 +78,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
       context,
       mounted,
     );
+    // ignore: avoid_print
     print(_collaborators);
   }
 
@@ -229,12 +184,11 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                 ),
                 const SizedBox(height: 20),
                 subheader("Collaborators"),
-                const SizedBox(height: 10),
                 buildAddCollaborators(),
-                const SizedBox(height: 20),
-                buildCollaborators(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 _searchQuery.isNotEmpty ? usersView() : const SizedBox(),
+                const SizedBox(height: 10),
+                buildCollaborators(),
                 const SizedBox(height: 20),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
@@ -247,6 +201,50 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget usersView() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      builder: (context, snapshots) {
+        if (!snapshots.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
+          );
+        }
+        return (snapshots.connectionState == ConnectionState.waiting)
+            ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
+              )
+            : ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: snapshots.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data = snapshots.data!.docs[index].data()
+                      as Map<String, dynamic>;
+                  if (data['username']
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(_searchQuery.toLowerCase())) {
+                    return !_collaborators.contains(data['username'])
+                        ? CustomUserCard(
+                            photoUrl: data['photoUrl'],
+                            alt: "assets/images/profile.png",
+                            username: data['username'],
+                            onTapFunc: () => setState(() {
+                              _collaborators.add(data['username']);
+                            }),
+                            bottomPadding: 5,
+                          )
+                        : Container();
+                  }
+                  return Container();
+                },
+              );
+      },
     );
   }
 
@@ -309,11 +307,14 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                   ),
                   onChanged: (value) => setState(() {
                     _searchQuery = value;
+                    // _scrollController.animateTo();
+                    // _scrollController.animateTo(offset,
+                    // duration: duration, curve: curve);
                   }),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            // const SizedBox(width: 10),
             // Container(
             //   width: MediaQuery.of(context).size.width * 0.125,
             //   height: 45,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/utils/firestore_methods.dart';
+import 'package:scrap_real/views/auth_views/interests.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_biocard.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_namecard.dart';
@@ -114,7 +114,19 @@ class _SetProfilePageState extends State<SetProfilePage> {
                       const SizedBox(height: 44),
                       CustomTextButton(
                         buttonBorderRadius: BorderRadius.circular(30),
-                        buttonFunction: setProfile,
+                        buttonFunction: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChooseInterestsPage(
+                                name: _name.text.trim(),
+                                bio: _bio.text.trim(),
+                                photoUrl: photoUrl,
+                                pickedFile: pickedFile,
+                              ),
+                            ),
+                          );
+                        },
                         buttonText: "Set Profile",
                       ),
                     ],
@@ -143,17 +155,5 @@ class _SetProfilePageState extends State<SetProfilePage> {
     setState(() {
       pickedFile = result.files.first;
     });
-  }
-
-  void setProfile() {
-    FireStoreMethods().setProfile(
-      uid,
-      context,
-      _name.text.trim(),
-      _bio.text.trim(),
-      pickedFile,
-      photoUrl,
-      mounted,
-    );
   }
 }

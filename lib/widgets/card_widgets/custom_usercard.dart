@@ -12,12 +12,14 @@ class CustomUserCard extends StatelessWidget {
     required this.alt,
     required this.username,
     required this.onTapFunc,
+    required this.bottomPadding,
   }) : super(key: key);
 
   String? photoUrl;
   String alt;
   String username;
   void Function()? onTapFunc;
+  double bottomPadding = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class CustomUserCard extends StatelessWidget {
               ),
             ]),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: bottomPadding),
         ],
       ),
     );

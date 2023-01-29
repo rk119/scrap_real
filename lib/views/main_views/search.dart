@@ -156,6 +156,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                       ),
+                      bottomPadding: 20,
                     );
                   }
                   if (data['username']
@@ -175,6 +176,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                       ),
+                      bottomPadding: 20,
                     );
                   }
                   return Container();

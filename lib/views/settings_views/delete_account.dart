@@ -111,7 +111,11 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                             .doc(user.uid)
                             .delete();
                         await user.delete();
-                        await FirebaseStorage.instance.refFromURL(url).delete();
+                        url != ""
+                            ? await FirebaseStorage.instance
+                                .refFromURL(url)
+                                .delete()
+                            : null;
                       }
                       // ignore: use_build_context_synchronously
                       Navigator.push(
