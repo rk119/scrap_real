@@ -108,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  CustomBackButton(buttonFunction: () {
+                  CustomBackButton(
+                    key: const Key('loginBack'),
+                    buttonFunction: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -124,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 137),
                   CustomTextFormField(
+                      key: const Key('loginEmail'),
                       textController: _email,
                       headingText: "Email",
                       validatorFunction: (email) =>
@@ -133,6 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                       hintingText: "Enter Email"),
                   const SizedBox(height: 30),
                   CustomPasswordFormField(
+                    key: const Key('loginPass'),
                     textColor: Provider.of<ThemeProvider>(context).themeMode ==
                             ThemeMode.dark
                         ? Colors.white
@@ -156,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                   buildForgotPassword(context),
                   const SizedBox(height: 136),
                   CustomTextButton(
+                    key: const Key('loginButton'),
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: loginUser,
                     buttonText: "Login",

@@ -95,6 +95,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                 ),
                 CustomTextButton(
+                  key: const Key('registerPage'),
                   buttonBorderRadius: BorderRadius.circular(10),
                   buttonFunction: () {
                     Navigator.push(
@@ -108,6 +109,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
                 const SizedBox(height: 23),
                 CustomTextButton(
+                  key: const Key('loginPage'),
                   buttonBorderRadius: BorderRadius.circular(10),
                   buttonFunction: () {
                     Navigator.push(
