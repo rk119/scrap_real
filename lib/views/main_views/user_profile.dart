@@ -260,11 +260,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => NavBar()),
-                                    );
                                     FirebaseFirestore.instance
                                         .collection('users')
                                         .doc(user.uid)
@@ -272,6 +267,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       'blockedUsers': FieldValue.arrayUnion(
                                           [userData['uid']])
                                     });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NavBar()),
+                                    );
                                   },
                                   child: const Text("Block"),
                                 ),
@@ -314,7 +314,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         .collection('users')
                                         .doc(user.uid)
                                         .update({
-                                      'reportedUsers': FieldValue.arrayUnion(
+                                      'reportUsers': FieldValue.arrayUnion(
                                           [userData['uid']])
                                     });
                                   },
