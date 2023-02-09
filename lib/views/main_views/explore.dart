@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,6 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:scrap_real/models/autocomplate_prediction.dart';
+import 'package:scrap_real/models/place_auto_complate_response.dart';
+import 'package:scrap_real/utils/network_utility.dart';
+import 'package:scrap_real/views/main_views/location_list_tile.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -15,16 +20,17 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController? _controller;
   late LatLng _currentPosition = const LatLng(0, 0);
   BitmapDescriptor currentPositionIcon = BitmapDescriptor.defaultMarker;
   final TextEditingController _search = TextEditingController();
   CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
-  // List<AutocompletePrediction> placesPredictions = [];
-  // Mode? _mode = Mode.overlay;
+  List<AutocompletePrediction> placesPredictions = [];
   Timer? debounce;
   bool tapped = false;
+  // var apiKey = DotEnv().env['API_KEY'];
+  var apiKey = 'AIzaSyAPDpwLsPSi4QpbyZZR0Ze8fgKNTPk3srk';
 
   setCustomMarkerIcon() async {
     currentPositionIcon = await BitmapDescriptor.fromAssetImage(
@@ -61,6 +67,49 @@ class _ExplorePageState extends State<ExplorePage> {
     print(_currentPosition);
   }
 
+  void placeAutocomplete(String query) async {
+    Uri uri = Uri.https(
+      'maps.googleapis.com',
+      '/maps/api/place/autocomplete/json',
+      {
+        'input': query,
+        'key': apiKey,
+      },
+    );
+    String? response = await NetworkUtility().fetchUrl(uri);
+    if (response != null) {
+      PlaceAutocompleteResponse result =
+          PlaceAutocompleteResponse.parseAutocompleteResult(response);
+      if (result.predictions != null) {
+        setState(() {
+          placesPredictions = result.predictions!;
+        });
+      }
+    }
+  }
+
+  void getLatLngFromPlaceId(String placeId) async {
+    Uri uri = Uri.https(
+      'maps.googleapis.com',
+      'maps/api/geocode/json',
+      {
+        'place_id': placeId,
+        'key': apiKey,
+      },
+    );
+    String? response = await NetworkUtility().fetchUrl(uri);
+    final parsed = json.decode(response!).cast<String, dynamic>();
+    LatLng newLatLng = LatLng(
+        parsed['results'][0]['geometry']['location']['lat'],
+        parsed['results'][0]['geometry']['location']['lng']);
+    print(newLatLng);
+    _controller!.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: newLatLng, zoom: 14)));
+    setState(() {
+      _currentPosition = newLatLng;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,10 +131,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     zoom: 14,
                   ),
                   onMapCreated: (GoogleMapController controller) {
-                    // _controller.future.then((value) {
-                    //   value.animateCamera(
-                    //       CameraUpdate.newLatLngZoom(_currentPosition!, 14));
-                    // });
+                    _controller = controller;
                     _customInfoWindowController.googleMapController =
                         controller;
                   },
@@ -93,11 +139,6 @@ class _ExplorePageState extends State<ExplorePage> {
                     _customInfoWindowController.onCameraMove!();
                   },
                   myLocationEnabled: true,
-                  // onCameraMove: (CameraPosition position) {
-                  //   setState(() {
-                  //     _currentPosition = position.target;
-                  //   });
-                  // },
                   markers: {
                     Marker(
                       markerId: const MarkerId('currentLocation'),
@@ -175,45 +216,21 @@ class _ExplorePageState extends State<ExplorePage> {
                             ),
                           ),
                           onChanged: (value) {
-                            print(value);
-                            // if (debounce?.isActive ?? false) debounce?.cancel();
-                            // debounce = Timer(
-                            //   const Duration(milliseconds: 700),
-                            //   () async {
-                            //     if (value.length > 2) {
-                            //       print(value);
-                            //     }
-                            //   },
-                            // );
+                            placeAutocomplete(value);
                           },
                         ),
                       ),
-
-                      // TextButton(
-                      //     onPressed: () {
-                      //       LocationService().getPlaceId(_search.text);
-                      //     },
-                      //     child: Text("Dubai")),
-
-                      //   ElevatedButton(
-                      //     onPressed: () {
-                      //       placesAutocomplete("Dubai");
-                      //     },
-                      //     child: Text("Dubai"),
-                      //   ),
-                      // Expanded(
-                      // child: ListView.builder(
-                      // itemCount: placesPredictions.length,
-                      // itemBuilder: (context, index) => LocationListTile(
-                      //   press: () {},
-                      //   location: placesPredictions[index].description!,
-                      // ),
-                      // ),
-                      // ),
-                      // LocationListTile(
-                      //   press: () {},
-                      //   location: "Dubai",
-                      // ),
+                      Expanded(
+                          child: ListView.builder(
+                        itemCount: placesPredictions.length,
+                        itemBuilder: (context, index) => LocationListTile(
+                          press: () {
+                            getLatLngFromPlaceId(
+                                placesPredictions[index].placeId!);
+                          },
+                          location: placesPredictions[index].description!,
+                        ),
+                      ))
                     ],
                   ),
                 ),
