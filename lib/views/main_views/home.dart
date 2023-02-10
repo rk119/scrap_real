@@ -91,7 +91,19 @@ class _HomePageState extends State<HomePage> {
 
   Widget scrapbooksView() {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('scrapbooks').snapshots(),
+      stream: _value == "Home"
+          ? FirebaseFirestore.instance
+              .collection('scrapbooks')
+              .where('type', isEqualTo: "Normal")
+              .where('visibility', isEqualTo: 'Public')
+              .snapshots()
+          : _value == "Groups"
+              // add a new bool field while making a scrapbook
+              ? FirebaseFirestore.instance.collection('scrapbooks').snapshots()
+              : FirebaseFirestore.instance
+                  .collection('scrapbooks')
+                  .where('type', isEqualTo: "Challenge")
+                  .snapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
@@ -110,54 +122,54 @@ class _HomePageState extends State<HomePage> {
                   var data = snapshots.data!.docs[index].data()
                       as Map<String, dynamic>;
 
-                  if (data['visibility'] == 'Private') {
-                    final creatorUid = data['creatorUid'];
-                    final userUid = FirebaseAuth.instance.currentUser!.uid;
-                    // if you want to allow private scrapbooks to be
-                    // viewed by followers, you will have to work with
-                    // futures, which can't really be done inside
-                    // this ListView.builder. That means you would
-                    // have to find an alternative method
-                    // the code for checking if the creator is followed by the current user is there below:
-                    // final firestore = FirebaseFirestore.instance;
-                    // bool isFollowing = false;
-                    // try {
-                    //   DocumentSnapshot snap =
-                    //       firestore.collection('users').doc(userUid).get();
-                    //   List following = (snap.data()! as dynamic)['following'];
+                  // if (data['visibility'] == 'Private') {
+                  //   final creatorUid = data['creatorUid'];
+                  //   final userUid = FirebaseAuth.instance.currentUser!.uid;
+                  // if you want to allow private scrapbooks to be
+                  // viewed by followers, you will have to work with
+                  // futures, which can't really be done inside
+                  // this ListView.builder. That means you would
+                  // have to find an alternative method
+                  // the code for checking if the creator is followed by the current user is there below:
+                  // final firestore = FirebaseFirestore.instance;
+                  // bool isFollowing = false;
+                  // try {
+                  //   DocumentSnapshot snap =
+                  //       firestore.collection('users').doc(userUid).get();
+                  //   List following = (snap.data()! as dynamic)['following'];
 
-                    //   if (following.contains(creatorUid)) {
-                    //     isFollowing = true;
-                    //   }
-                    // } catch (e) {
-                    //   // ignore: avoid_print
-                    //   print(e);
-                    // }
-                    if (creatorUid == userUid) {
-                      return Column(
-                        children: [
-                          CustomScrapbookLarge(
-                            scrapbookId: data['scrapbookId'],
-                            title: data['title'],
-                            coverImage: data['coverUrl'],
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      );
-                    }
-                    return SizedBox();
-                  } else {
-                    return Column(
-                      children: [
-                        CustomScrapbookLarge(
-                          scrapbookId: data['scrapbookId'],
-                          title: data['title'],
-                          coverImage: data['coverUrl'],
-                        ),
-                        SizedBox(height: 10),
-                      ],
-                    );
-                  }
+                  //   if (following.contains(creatorUid)) {
+                  //     isFollowing = true;
+                  //   }
+                  // } catch (e) {
+                  //   // ignore: avoid_print
+                  //   print(e);
+                  // }
+                  // if (creatorUid == userUid) {
+                  //   return Column(
+                  //     children: [
+                  //       CustomScrapbookLarge(
+                  //         scrapbookId: data['scrapbookId'],
+                  //         title: data['title'],
+                  //         coverImage: data['coverUrl'],
+                  //       ),
+                  //       SizedBox(height: 10),
+                  //     ],
+                  //   );
+                  // }
+                  // return SizedBox();
+                  // } else {
+                  return Column(
+                    children: [
+                      CustomScrapbookLarge(
+                        scrapbookId: data['scrapbookId'],
+                        title: data['title'],
+                        coverImage: data['coverUrl'],
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  );
+                  // }
                 },
               );
       },

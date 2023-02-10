@@ -227,6 +227,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           press: () {
                             getLatLngFromPlaceId(
                                 placesPredictions[index].placeId!);
+                            // Hana: clean up search and remove list view
                           },
                           location: placesPredictions[index].description!,
                         ),

@@ -77,6 +77,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
       _collaborators,
       context,
       mounted,
+      // _collaborators.length > 0 ? true : false,
     );
     // ignore: avoid_print
     print(_collaborators);
