@@ -87,7 +87,7 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
                         : CircleAvatar(
                             backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(
-                              photoUrl!,
+                              photoUrl,
                             ),
                             radius: 25,
                           ),

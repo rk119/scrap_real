@@ -113,6 +113,8 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
                     scrapbookId: data['scrapbookId'],
                     title: data['title'],
                     coverImage: data['coverUrl'],
+                    scrapbookTag: data['tag'],
+                    creatorId: data['creatorId'],
                   ),
                   const SizedBox(height: 30),
                 ],

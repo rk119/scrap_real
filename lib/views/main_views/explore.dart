@@ -70,6 +70,8 @@ class _ExplorePageState extends State<ExplorePage> {
           location.add(_scrapbookData['longitude']);
           location.add(_scrapbookData['title']);
           location.add(_scrapbookData['coverUrl']);
+          location.add(_scrapbookData['tag']);
+          location.add(_scrapbookData['creatorId']);
           scrapbookData.add(location);
         }
       }
@@ -340,6 +342,9 @@ class _ExplorePageState extends State<ExplorePage> {
                               scrapbookId: scrapbookData[index][0],
                               scrapbookTitle: scrapbookData[index][3],
                               coverImage: scrapbookData[index][4],
+                              scrapbookTag: scrapbookData[index][5],
+                              creatorId: scrapbookData[index][6],
+                              map: true,
                             ),
                             ClipPath(
                               clipper: TriangleClipper(),

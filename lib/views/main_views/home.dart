@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Timer timer = Timer(Duration(seconds: 3), () {});
+
   String _value = "Home";
   final List<DropdownMenuItem> _items = [
     DropdownMenuItem(
@@ -164,6 +168,8 @@ class _HomePageState extends State<HomePage> {
                         scrapbookId: data['scrapbookId'],
                         title: data['title'],
                         coverImage: data['coverUrl'],
+                        scrapbookTag: data['tag'],
+                        creatorId: data['creatorUid'],
                       ),
                       SizedBox(height: 10),
                     ],

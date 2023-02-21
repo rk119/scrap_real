@@ -396,6 +396,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   scrapbookId: data['scrapbookId'],
                   scrapbookTitle: data['title'],
                   coverImage: data['coverUrl'],
+                  scrapbookTag: data['tag'],
+                  creatorId: data['creatorUid'],
+                  map: false,
                 );
               }
             },
