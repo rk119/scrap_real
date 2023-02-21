@@ -14,6 +14,7 @@ import 'package:scrap_real/models/place_auto_complate_response.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/network_utility.dart';
 import 'package:scrap_real/views/main_views/location_list_tile.dart';
+import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbookmini.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -60,10 +61,17 @@ class _ExplorePageState extends State<ExplorePage> {
       for (int i = 0; i < scrapbookSnap.size; i++) {
         var location = [];
         var _scrapbookData = scrapbookSnap.docs[i].data();
-        location.add(_scrapbookData['scrapbookId']);
-        location.add(_scrapbookData['latitude']);
-        location.add(_scrapbookData['longitude']);
-        scrapbookData.add(location);
+        if (_scrapbookData['latitude'] == 0 ||
+            _scrapbookData['longitude'] == 0) {
+          continue;
+        } else {
+          location.add(_scrapbookData['scrapbookId']);
+          location.add(_scrapbookData['latitude']);
+          location.add(_scrapbookData['longitude']);
+          location.add(_scrapbookData['title']);
+          location.add(_scrapbookData['coverUrl']);
+          scrapbookData.add(location);
+        }
       }
 
       setState(() {
@@ -190,7 +198,12 @@ class _ExplorePageState extends State<ExplorePage> {
                         onCameraMove: (position) {
                           _customInfoWindowController.onCameraMove!();
                         },
+                        onTap: (position) {
+                          _customInfoWindowController.hideInfoWindow!();
+                        },
                         myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
                         markers: getMarkers(),
                       ),
                       CustomInfoWindow(
@@ -282,6 +295,17 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ],
                   ),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () async {
+                  await getLocation();
+                  _controller!.animateCamera(CameraUpdate.newCameraPosition(
+                      CameraPosition(target: _currentPosition, zoom: 14)));
+                },
+                backgroundColor: Color.fromARGB(255, 108, 200, 202),
+                child: const Icon(
+                  Icons.my_location,
+                  color: Colors.black,
+                )),
           );
   }
 
@@ -301,36 +325,38 @@ class _ExplorePageState extends State<ExplorePage> {
                   BitmapDescriptor.hueViolet,
                 ),
                 onTap: () {
-                  if (tapped) {
-                    _customInfoWindowController.hideInfoWindow!();
-                    tapped = false;
-                  } else {
-                    _customInfoWindowController.addInfoWindow!(
-                        Column(
+                  _customInfoWindowController.addInfoWindow!(
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: Container(
-                                height: 135,
-                                width: 170,
-                                decoration: BoxDecoration(
-                                  color: Colors.pink,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
+                            ScrapbookMiniSize(
+                              scrapbookId: scrapbookData[index][0],
+                              scrapbookTitle: scrapbookData[index][3],
+                              coverImage: scrapbookData[index][4],
                             ),
                             ClipPath(
                               clipper: TriangleClipper(),
                               child: Container(
                                 height: 15,
                                 width: 15,
-                                color: Colors.pink,
+                                color: Colors.black,
                               ),
                             ),
                           ],
                         ),
-                        _currentPosition);
-                    tapped = true;
-                  }
+                      ),
+                    ),
+                    LatLng(
+                      scrapbookData[index][1],
+                      scrapbookData[index][2],
+                    ),
+                  );
                 },
               ),
             );

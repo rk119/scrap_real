@@ -43,7 +43,7 @@ class ScrapbookMiniSize extends StatelessWidget {
               color: Provider.of<ThemeProvider>(context).themeMode ==
                       ThemeMode.dark
                   ? Colors.grey.shade700
-                  : Colors.grey.shade200,
+                  : Colors.grey.shade900,
               image: DecorationImage(
                 image: NetworkImage(
                   coverImage,
@@ -58,7 +58,7 @@ class ScrapbookMiniSize extends StatelessWidget {
             scrapbookTitle,
             style: GoogleFonts.poppins(
               fontSize: 15,
-              color: coverImage != "" ? Colors.white : Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),

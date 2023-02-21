@@ -18,7 +18,10 @@ class LocationListTile extends StatelessWidget {
         ListTile(
           onTap: press,
           horizontalTitleGap: 0,
-          leading: SvgPicture.asset("assets/icons/location_pin.svg"),
+          leading: const Icon(
+            Icons.location_city_rounded,
+            color: Color(0xff918ef4),
+          ),
           title: Text(
             location,
             maxLines: 2,
@@ -28,7 +31,7 @@ class LocationListTile extends StatelessWidget {
         const Divider(
           height: 2,
           thickness: 2,
-          color: Color(0xFFF8F8F8),
+          color: Color.fromARGB(153, 234, 234, 234),
         ),
       ],
     );
