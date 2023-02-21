@@ -236,7 +236,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                   prefixIcon: const Icon(Icons.search),
                                   suffixIcon: _search.text.isNotEmpty
                                       ? IconButton(
-                                          icon: const Icon(Icons.clear),
+                                          icon: const Icon(
+                                            Icons.clear,
+                                            color: Colors.black,
+                                          ),
                                           onPressed: clearSearchText,
                                         )
                                       : null,

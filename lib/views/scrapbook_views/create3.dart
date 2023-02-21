@@ -42,7 +42,7 @@ class CreateScrapbookPage3 extends StatefulWidget {
 class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
   List<File?> images = List.filled(12, null);
   int pageNumber = 0;
-  bool _isLocationEnabled = true;
+  bool _isLocationEnabled = false;
   final List<String> likes = [];
 
   @override
@@ -270,6 +270,22 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
                 child: Image.file(images[index]!),
               ),
             ),
+            actions: [
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      images[index] = null;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.red, fontSize: 15),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -360,7 +376,7 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Location Enabled",
+            "Location ${_isLocationEnabled ? "Enabled" : "Disabled"}",
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w500,
