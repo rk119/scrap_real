@@ -38,6 +38,7 @@ class _SearchPageState extends State<SearchPage> {
         .get()
         .then((value) => value['blockedUsers']);
     setState(() {});
+    // ignore: avoid_print
     print(blockedUsers);
   }
 

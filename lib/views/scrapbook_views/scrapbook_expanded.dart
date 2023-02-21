@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
+import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/ar_view.dart';
 import 'package:scrap_real/views/scrapbook_views/comments.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_images.dart';
@@ -28,6 +29,7 @@ class ScrapbookExpandedView extends StatefulWidget {
 }
 
 class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
+  final user = FirebaseAuth.instance.currentUser!;
   var scrapbookData = {};
   bool posts = true;
   int postsLen = 0;
@@ -36,6 +38,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   bool isFollowing = false;
   bool isCurrentUser = false;
   bool isLoading = true;
+  bool isLiked = false;
 
   @override
   void initState() {
@@ -64,6 +67,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
       // followers = userSnap.data()!['followers'].length;
       // following = userSnap.data()!['following'].length;
       // isFollowing = userSnap.data()!['followers'].contains(user.uid);
+      isLiked = scrapbookData['likes'].contains(user.uid);
       setState(() {
         isLoading = false;
       });
@@ -132,11 +136,25 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {},
-                            child: Icon(
-                              Icons.heart_broken,
-                              size: 30,
-                            ),
+                            onTap: () async {
+                              FireStoreMethods().likeScrapbook(
+                                widget.scrapbookId,
+                                user.uid,
+                              );
+                              setState(() {
+                                isLiked = !isLiked;
+                              });
+                            },
+                            child: isLiked
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                    size: 30,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border,
+                                    size: 30,
+                                  ),
                           ),
                           const SizedBox(width: 15),
                           InkWell(
@@ -144,13 +162,15 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ScrapbookCommentsPage(),
+                                  builder: (context) => ScrapbookCommentsPage(
+                                    scrapbookId: widget.scrapbookId,
+                                  ),
                                 ),
                               );
                             },
                             child: Icon(
                               Icons.comment,
+                              color: Color(0xFF918EF4),
                               size: 30,
                             ),
                           ),
@@ -158,7 +178,8 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                           InkWell(
                             onTap: () {},
                             child: Icon(
-                              Icons.share,
+                              Icons.person_add_alt_1,
+                              color: Color(0xFF918EF4),
                               size: 30,
                             ),
                           ),
@@ -170,16 +191,14 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                 onTap: () async {
                                   if (await FirebaseFirestore.instance
                                       .collection('users')
-                                      .doc(FirebaseAuth
-                                          .instance.currentUser!.uid)
+                                      .doc(user.uid)
                                       .get()
                                       .then((value) => value
                                           .data()!['savedScrapbooks']
                                           .contains(widget.scrapbookId))) {
                                     await FirebaseFirestore.instance
                                         .collection('users')
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
+                                        .doc(user.uid)
                                         .update({
                                       'savedScrapbooks': FieldValue.arrayRemove(
                                           [widget.scrapbookId])
@@ -189,8 +208,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                   } else {
                                     await FirebaseFirestore.instance
                                         .collection('users')
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
+                                        .doc(user.uid)
                                         .update({
                                       'savedScrapbooks': FieldValue.arrayUnion(
                                           [widget.scrapbookId])
@@ -200,7 +218,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                   }
                                 },
                                 child: Icon(
-                                  Icons.bookmark,
+                                  Icons.more_horiz,
                                   size: 30,
                                 ),
                               ),

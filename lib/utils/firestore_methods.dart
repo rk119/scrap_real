@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scrap_real/models/comment.dart';
 import 'package:scrap_real/models/scrapbook.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/storage_methods.dart';
@@ -21,7 +23,12 @@ class FireStoreMethods {
     bool tag,
     bool type,
     bool visibility,
-    List<dynamic> _collaborators,
+    List<dynamic> likes,
+    List<dynamic> collaborators,
+    List<dynamic> posts,
+    bool group,
+    double latitude,
+    double longitude,
     BuildContext context,
     bool mounted,
     // GlobalKey<FormState> formKey,
@@ -39,10 +46,21 @@ class FireStoreMethods {
 
     try {
       final docScrapbook = _firestore.collection('scrapbooks').doc();
-      print(_collaborators);
+      // ignore: avoid_print
+      print(collaborators);
       String photoUrl = "";
       if (image != null) {
         photoUrl = await StorageMethods().uploadScrapbookCover(image);
+      }
+
+      List<String> postsUrls = [];
+      for (var i = 0; i < posts.length; i++) {
+        if (posts[i] != null) {
+          postsUrls.add(
+              await StorageMethods().uploadPost(posts[i], docScrapbook.id));
+        } else {
+          postsUrls.add("");
+        }
       }
       final scrapbookModel = ScrapbookModel(
         creatorUid: _auth.currentUser!.uid,
@@ -52,16 +70,20 @@ class FireStoreMethods {
         tag: tag ? "Factual" : "Personal",
         type: type ? "Normal" : "Challenge",
         visibility: visibility ? "Public" : "Private",
-        collaborators: _collaborators,
+        collaborators: collaborators,
+        likes: likes,
         coverUrl: photoUrl,
-        posts: [],
+        posts: postsUrls,
+        group: group,
+        latitude: latitude,
+        longitude: longitude,
       );
       final json = scrapbookModel.toJson();
       await docScrapbook.set(json);
 
-      // if (_collaborators.isNotEmpty) {
+      // if (collaborators.isNotEmpty) {
       // await docScrapbook.update({
-      // 'collaborators': FieldValue.arrayUnion(_collaborators),
+      // 'collaborators': FieldValue.arrayUnion(collaborators),
       // });
       // }
 
@@ -88,26 +110,30 @@ class FireStoreMethods {
     // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
-  // Future<String> likePost(String postId, String uid, List likes) async {
-  //   String res = "Some error occurred";
-  //   try {
-  //     if (likes.contains(uid)) {
-  //       // if the likes list contains the user uid, we need to remove it
-  //       _firestore.collection('posts').doc(postId).update({
-  //         'likes': FieldValue.arrayRemove([uid])
-  //       });
-  //     } else {
-  //       // else we need to add uid to the likes array
-  //       _firestore.collection('posts').doc(postId).update({
-  //         'likes': FieldValue.arrayUnion([uid])
-  //       });
-  //     }
-  //     res = 'success';
-  //   } catch (err) {
-  //     res = err.toString();
-  //   }
-  //   return res;
-  // }
+  Future<String> likeScrapbook(String scrapbookId, String uid) async {
+    String res = "Some error occurred";
+    try {
+      DocumentSnapshot snap =
+          await _firestore.collection('scrapbooks').doc(scrapbookId).get();
+      List likes = (snap.data()! as dynamic)['likes'];
+
+      if (likes.contains(uid)) {
+        // if the likes list contains the user uid, we need to remove it
+        _firestore.collection('scrapbooks').doc(scrapbookId).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        // else we need to add uid to the likes array
+        _firestore.collection('scrapbooks').doc(scrapbookId).update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
 
   // Future<String> postComment(String postId, String text, String uid,
   //     String name, String profilePic) async {
@@ -265,6 +291,75 @@ class FireStoreMethods {
     } catch (e) {
       // ignore: avoid_print
       print(e);
+    }
+  }
+
+  Future<String> getCurrentUserPfp() async {
+    String res = "Some error occurred";
+    try {
+      DocumentSnapshot snap = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .get();
+      res = (snap.data()! as dynamic)['photoUrl'];
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future createComment(
+    String comment,
+    String scrapbookId,
+    BuildContext context,
+    bool mounted,
+  ) async {
+    try {
+      int commentNum = 0;
+      DocumentSnapshot snap = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .get();
+
+      final docComment = _firestore
+          .collection('comment')
+          .doc(scrapbookId)
+          .collection('comments')
+          .doc();
+
+      CollectionReference collectionReference = _firestore
+          .collection('comment')
+          .doc(scrapbookId)
+          .collection('comments');
+      collectionReference.get().then((QuerySnapshot snapshot) async {
+        commentNum = snapshot.size;
+        final commentModel = CommentModel(
+          creatorUid: _auth.currentUser!.uid,
+          commentId: docComment.id,
+          username: (snap.data()! as dynamic)['username'],
+          comment: comment,
+          photoUrl: (snap.data()! as dynamic)['photoUrl'],
+          commentNum: commentNum + 1,
+        );
+        final json = commentModel.toJson();
+        await docComment.set(json);
+
+        if (!mounted) return;
+        CustomSnackBar.snackBarAlert(
+          context,
+          "Comment Created!",
+        );
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
+      if (!mounted) {
+        return;
+      }
+      CustomSnackBar.showSnackBar(context, match?.group(2));
+      Navigator.of(context).pop();
     }
   }
 }

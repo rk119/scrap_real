@@ -83,6 +83,20 @@ class StorageMethods {
     return downloadUrl;
   }
 
+  Future<String> uploadPost(File pickedFile, String scrapbookId) async {
+    var path = "posts/$scrapbookId";
+    final file = File(pickedFile.path);
+
+    final ref = _storage
+        .ref()
+        .child(path)
+        .child(_firestore.collection('scrapbook').doc().id);
+    UploadTask uploadTask = ref.putFile(file);
+
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
   // Future<String> uploadPost(String description, Uint8List file, String uid,
   //     String username, String profImage) async {
   //   // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management

@@ -6,9 +6,13 @@ class ScrapbookModel {
   final String tag;
   final String type;
   final String visibility;
+  final List likes;
   final List collaborators;
   final String coverUrl;
   final List posts;
+  final bool group;
+  final double latitude;
+  final double longitude;
 
   ScrapbookModel({
     this.creatorUid = '',
@@ -18,9 +22,13 @@ class ScrapbookModel {
     required this.tag,
     required this.type,
     required this.visibility,
+    required this.likes,
     required this.collaborators,
     required this.coverUrl,
     required this.posts,
+    required this.group,
+    required this.latitude,
+    required this.longitude,
   });
 
   Map<String, dynamic> toJson() => {
@@ -31,8 +39,12 @@ class ScrapbookModel {
         'tag': tag,
         'type': type,
         'visibility': visibility,
+        'likes': likes,
         'collaborators': collaborators,
         "coverUrl": coverUrl,
-        'posts': [],
+        'posts': posts,
+        'group': group,
+        'latitude': latitude,
+        'longitude': longitude,
       };
 }

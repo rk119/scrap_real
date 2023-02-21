@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/navigation.dart';
+import 'package:scrap_real/views/scrapbook_views/create3.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
@@ -33,10 +34,8 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   bool tag = true;
   bool type = true;
   bool visibility = true;
-  File? image;
   String _searchQuery = "";
   bool search = true;
-
   final TextEditingController _collaborator = TextEditingController();
 
   final List<String> _collaborators = [];
@@ -65,23 +64,6 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   //       .then((value) => value.data());
   //   return data;
   // }
-
-  Future createScrapbook() async {
-    FireStoreMethods().createScrapbook(
-      widget.image,
-      widget.title,
-      widget.caption,
-      tag,
-      type,
-      visibility,
-      _collaborators,
-      context,
-      mounted,
-      // _collaborators.length > 0 ? true : false,
-    );
-    // ignore: avoid_print
-    print(_collaborators);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,8 +175,24 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                 const SizedBox(height: 20),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
-                  buttonFunction: createScrapbook,
-                  buttonText: "Create",
+                  buttonFunction: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateScrapbookPage3(
+                          coverImage: widget.image,
+                          title: widget.title,
+                          caption: widget.caption,
+                          tag: tag,
+                          type: type,
+                          visibility: visibility,
+                          collaborators: _collaborators,
+                          group: _collaborators.isNotEmpty,
+                        ),
+                      ),
+                    );
+                  },
+                  buttonText: "Next",
                   buttonColor: const Color(0xff7be5e7),
                 ),
               ],
