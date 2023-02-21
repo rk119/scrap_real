@@ -26,7 +26,7 @@ class ExplorePage extends StatefulWidget {
 class _ExplorePageState extends State<ExplorePage> {
   GoogleMapController? _controller;
   late LatLng _currentPosition = const LatLng(0, 0);
-  BitmapDescriptor currentPositionIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
   final Set<Marker> markers = {};
   var scrapbookData = [];
   bool isLoading = true;
@@ -41,8 +41,8 @@ class _ExplorePageState extends State<ExplorePage> {
   var apiKey = 'AIzaSyAPDpwLsPSi4QpbyZZR0Ze8fgKNTPk3srk';
 
   setCustomMarkerIcon() async {
-    currentPositionIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(), "assets/markers/current_location.png");
+    markerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), "assets/markers/placeholder.png");
   }
 
   @override
@@ -321,9 +321,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   scrapbookData[index][1],
                   scrapbookData[index][2],
                 ),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueViolet,
-                ),
+                icon: markerIcon,
                 onTap: () {
                   _customInfoWindowController.addInfoWindow!(
                     Expanded(
