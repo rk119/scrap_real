@@ -249,81 +249,90 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                       ),
                       const SizedBox(height: 15),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                            onTap: () async {
-                              FireStoreMethods().likeScrapbook(
-                                widget.scrapbookId,
-                                user.uid,
-                              );
-                              setState(() {
-                                isLiked = !isLiked;
-                              });
-                            },
-                            child: isLiked
-                                ? Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                    size: 30,
-                                  )
-                                : Icon(
-                                    Icons.favorite_border,
-                                    size: 30,
-                                  ),
-                          ),
-                          const SizedBox(width: 15),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ScrapbookCommentsPage(
-                                    scrapbookId: widget.scrapbookId,
-                                  ),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  FireStoreMethods().likeScrapbook(
+                                    widget.scrapbookId,
+                                    user.uid,
+                                  );
+                                  setState(() {
+                                    isLiked = !isLiked;
+                                  });
+                                },
+                                child: isLiked
+                                    ? Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 30,
+                                      )
+                                    : Icon(
+                                        Icons.favorite_border,
+                                        size: 30,
+                                      ),
+                              ),
+                              const SizedBox(width: 15),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ScrapbookCommentsPage(
+                                        scrapbookId: widget.scrapbookId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.comment,
+                                  color: Color(0xFF918EF4),
+                                  size: 30,
                                 ),
-                              );
-                            },
-                            child: Icon(
-                              Icons.comment,
-                              color: Color(0xFF918EF4),
-                              size: 30,
-                            ),
+                              ),
+                              const SizedBox(width: 15),
+                              InkWell(
+                                onTap: () {
+                                  requestAlert();
+                                },
+                                child: Icon(
+                                  Icons.person_add_alt_1,
+                                  color: Color(0xFF918EF4),
+                                  size: 30,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 15),
-                          InkWell(
-                            onTap: () {
-                              requestAlert();
-                            },
-                            child: Icon(
-                              Icons.person_add_alt_1,
-                              color: Color(0xFF918EF4),
-                              size: 30,
-                            ),
-                          ),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.444),
-                          PopupMenuButton(onSelected: (value) {
-                            value == 'save'
-                                ? FireStoreMethods()
-                                    .saveScrapbook(widget.scrapbookId, context)
-                                : reportScrapbook();
-                          }, itemBuilder: (BuildContext context) {
-                            containSavedPost();
-                            return [
-                              PopupMenuItem(
-                                  value: 'save',
-                                  child: CustomText(
-                                    text: isSaved ? 'Save' : 'Unsave',
-                                    textSize: 15,
-                                  )),
-                              PopupMenuItem(
-                                  value: 'report',
-                                  child: CustomText(
-                                    text: 'Report',
-                                    textSize: 15,
-                                  ))
-                            ];
-                          }),
+                          PopupMenuButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              onSelected: (value) {
+                                value == 'save'
+                                    ? FireStoreMethods().saveScrapbook(
+                                        widget.scrapbookId, context)
+                                    : reportScrapbook();
+                              },
+                              itemBuilder: (BuildContext context) {
+                                containSavedPost();
+                                return [
+                                  PopupMenuItem(
+                                      value: 'save',
+                                      child: CustomText(
+                                        text: isSaved ? 'Save' : 'Unsave',
+                                        textSize: 15,
+                                      )),
+                                  PopupMenuItem(
+                                      value: 'report',
+                                      child: CustomText(
+                                        text: 'Report',
+                                        textSize: 15,
+                                      ))
+                                ];
+                              }),
                         ],
                       ),
                       const SizedBox(height: 15),
