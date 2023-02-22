@@ -71,7 +71,8 @@ class _ExplorePageState extends State<ExplorePage> {
           location.add(_scrapbookData['title']);
           location.add(_scrapbookData['coverUrl']);
           location.add(_scrapbookData['tag']);
-          location.add(_scrapbookData['creatorId']);
+          location.add(_scrapbookData['creatorUid']);
+          print(location);
           scrapbookData.add(location);
         }
       }
@@ -329,33 +330,31 @@ class _ExplorePageState extends State<ExplorePage> {
                 icon: markerIcon,
                 onTap: () {
                   _customInfoWindowController.addInfoWindow!(
-                    Expanded(
-                      child: Container(
-                        height: 100,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          children: [
-                            ScrapbookMiniSize(
-                              scrapbookId: scrapbookData[index][0],
-                              scrapbookTitle: scrapbookData[index][3],
-                              coverImage: scrapbookData[index][4],
-                              scrapbookTag: scrapbookData[index][5],
-                              creatorId: scrapbookData[index][6],
-                              map: true,
+                    Container(
+                      height: 100,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          ScrapbookMiniSize(
+                            scrapbookId: scrapbookData[index][0],
+                            scrapbookTitle: scrapbookData[index][3],
+                            coverImage: scrapbookData[index][4],
+                            scrapbookTag: scrapbookData[index][5],
+                            creatorId: scrapbookData[index][6],
+                            map: true,
+                          ),
+                          ClipPath(
+                            clipper: TriangleClipper(),
+                            child: Container(
+                              height: 15,
+                              width: 15,
+                              color: Colors.black,
                             ),
-                            ClipPath(
-                              clipper: TriangleClipper(),
-                              child: Container(
-                                height: 15,
-                                width: 15,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     LatLng(

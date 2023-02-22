@@ -29,8 +29,8 @@ class ScrapbookMiniSize extends StatefulWidget {
 }
 
 class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
-  var photos = {};
-  var usernames = {};
+  String photo = "";
+  String username = "";
 
   @override
   void initState() {
@@ -38,14 +38,25 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
     widget.map ? getData() : null;
   }
 
+  @override
+  void didUpdateWidget(covariant ScrapbookMiniSize oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    photo = "";
+    username = "";
+    widget.map ? getData() : null;
+  }
+
   getData() async {
-    var userSnap = await FirebaseFirestore.instance.collection('users').get();
-    var userData = userSnap.docs;
-    for (var user in userData) {
-      usernames[user['uid']] = user['username'];
-      photos[user['uid']] = user['photoUrl'];
-    }
-    setState(() {});
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.creatorId)
+        .get()
+        .then((value) {
+      setState(() {
+        photo = value.data()!['photoUrl'];
+        username = value.data()!['username'];
+      });
+    });
   }
 
   @override
@@ -79,7 +90,7 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
                 ),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.6), BlendMode.darken),
+                    Colors.black.withOpacity(0.7), BlendMode.darken),
               ),
             ),
             child: Row(
@@ -96,19 +107,22 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               color: Colors.white,
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
                               image: DecorationImage(
-                                image: photos[widget.creatorId] == "" ||
-                                        photos[widget.creatorId] == null
+                                image: photo == ''
                                     ? const AssetImage(
                                             'assets/images/profile.png')
                                         as ImageProvider
-                                    : NetworkImage(photos[widget.creatorId]),
+                                    : NetworkImage(photo),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           Text(
-                            usernames[widget.creatorId] ?? 'Unknown',
+                            username,
                             style: GoogleFonts.poppins(
                               fontSize: 9,
                               color: Colors.white,
@@ -124,6 +138,10 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
                       bottom: 2, left: 4, right: 4, top: 2),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
+                    ),
                     color: const Color(0x4cffffff),
                   ),
                   child: Row(

@@ -27,8 +27,8 @@ class CustomScrapbookLarge extends StatefulWidget {
 }
 
 class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
-  var photos = {};
-  var usernames = {};
+  String photo = '';
+  String username = '';
 
   @override
   void initState() {
@@ -37,13 +37,16 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
   }
 
   getData() async {
-    var userSnap = await FirebaseFirestore.instance.collection('users').get();
-    var userData = userSnap.docs;
-    for (var user in userData) {
-      usernames[user['uid']] = user['username'];
-      photos[user['uid']] = user['photoUrl'];
-    }
-    setState(() {});
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.creatorId)
+        .get()
+        .then((value) {
+      setState(() {
+        photo = value.data()!['photoUrl'];
+        username = value.data()!['username'];
+      });
+    });
   }
 
   @override
@@ -77,7 +80,7 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
                 ),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.6), BlendMode.darken),
+                    Colors.black.withOpacity(0.75), BlendMode.darken),
               ),
             ),
             child: Row(
@@ -93,18 +96,21 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         color: Colors.white,
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2,
+                        ),
                         image: DecorationImage(
-                          image: photos[widget.creatorId] == "" ||
-                                  photos[widget.creatorId] == null
+                          image: photo == ''
                               ? const AssetImage('assets/images/profile.png')
                                   as ImageProvider
-                              : NetworkImage(photos[widget.creatorId]),
+                              : NetworkImage(photo),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                     Text(
-                      usernames[widget.creatorId] ?? 'Unknown',
+                      username,
                       style: GoogleFonts.poppins(
                         fontSize: 15,
                         color: Colors.white,
@@ -119,6 +125,10 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
                       bottom: 6, left: 10, right: 10, top: 6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 2,
+                    ),
                     color: const Color(0x4cffffff),
                   ),
                   child: Row(
