@@ -345,10 +345,6 @@ class FireStoreMethods {
         await docComment.set(json);
 
         if (!mounted) return;
-        CustomSnackBar.snackBarAlert(
-          context,
-          "Comment Created!",
-        );
       });
     } catch (e) {
       // ignore: avoid_print
@@ -360,6 +356,33 @@ class FireStoreMethods {
       }
       CustomSnackBar.showSnackBar(context, match?.group(2));
       Navigator.of(context).pop();
+    }
+  }
+
+  void saveScrapbook(String scrapbookId, BuildContext context) async {
+    if (await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .get()
+        .then((value) =>
+            value.data()!['savedScrapbooks'].contains(scrapbookId))) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .update({
+        'savedScrapbooks': FieldValue.arrayRemove([scrapbookId])
+      });
+      // ignore: use_build_context_synchronously
+      CustomSnackBar.snackBarAlert(context, "Removed from saved!");
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .update({
+        'savedScrapbooks': FieldValue.arrayUnion([scrapbookId])
+      });
+      // ignore: use_build_context_synchronously
+      CustomSnackBar.snackBarAlert(context, "Saved!");
     }
   }
 }

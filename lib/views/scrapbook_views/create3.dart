@@ -107,18 +107,16 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
   }
 
   Widget subheader(String text) {
-    return Container(
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          height: 1.5,
-          color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
-              ? const Color(0xffd1e1ff)
-              : const Color(0xff141b41),
-        ),
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+        color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+            ? const Color(0xffd1e1ff)
+            : const Color(0xff141b41),
       ),
     );
   }
@@ -293,50 +291,46 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
   }
 
   Widget addLeftAndRightButtonsforPages() {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              if (pageNumber <= 0) {
-                pageNumber = 0;
-              } else {
-                pageNumber--;
-                print(pageNumber);
-              }
-              setState(() {});
-            },
-            child: const Icon(Icons.arrow_circle_left_sharp,
-                size: 60, color: Color.fromARGB(255, 139, 225, 226)),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () {
+            if (pageNumber <= 0) {
+              pageNumber = 0;
+            } else {
+              pageNumber--;
+            }
+            setState(() {});
+          },
+          child: const Icon(Icons.arrow_circle_left_sharp,
+              size: 60, color: Color.fromARGB(255, 139, 225, 226)),
+        ),
+        Text(
+          "${pageNumber + 1}/3",
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            height: 1.5,
+            color:
+                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+                    ? const Color(0xffd1e1ff)
+                    : const Color(0xff141b41),
           ),
-          Text(
-            "${pageNumber + 1}/3",
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              height: 1.5,
-              color: Provider.of<ThemeProvider>(context).themeMode ==
-                      ThemeMode.dark
-                  ? const Color(0xffd1e1ff)
-                  : const Color(0xff141b41),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (pageNumber >= 2) {
-                pageNumber = 2;
-              } else {
-                pageNumber++;
-                print(pageNumber);
-              }
-              setState(() {});
-            },
-            child: const Icon(Icons.arrow_circle_right_sharp,
-                size: 60, color: Color.fromARGB(255, 139, 225, 226)),
-          ),
-        ],
-      ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (pageNumber >= 2) {
+              pageNumber = 2;
+            } else {
+              pageNumber++;
+            }
+            setState(() {});
+          },
+          child: const Icon(Icons.arrow_circle_right_sharp,
+              size: 60, color: Color.fromARGB(255, 139, 225, 226)),
+        ),
+      ],
     );
   }
 
@@ -371,35 +365,32 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
   }
 
   Widget locationToggle() {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Location ${_isLocationEnabled ? "Enabled" : "Disabled"}",
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              height: 1.5,
-              color: Provider.of<ThemeProvider>(context).themeMode ==
-                      ThemeMode.dark
-                  ? const Color(0xffd1e1ff)
-                  : const Color(0xff141b41),
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Location ${_isLocationEnabled ? "Enabled" : "Disabled"}",
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            height: 1.5,
+            color:
+                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+                    ? const Color(0xffd1e1ff)
+                    : const Color(0xff141b41),
           ),
-          Switch(
-            value: _isLocationEnabled,
-            onChanged: (value) {
-              setState(() {
-                _isLocationEnabled = value;
-                print(_isLocationEnabled);
-              });
-            },
-            activeTrackColor: Color.fromARGB(255, 225, 225, 255),
-            activeColor: const Color(0xff918ef4),
-          ),
-        ],
-      ),
+        ),
+        Switch(
+          value: _isLocationEnabled,
+          onChanged: (value) {
+            setState(() {
+              _isLocationEnabled = value;
+            });
+          },
+          activeTrackColor: const Color.fromARGB(255, 225, 225, 255),
+          activeColor: const Color(0xff918ef4),
+        ),
+      ],
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
-import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class CustomScrapbookLarge extends StatefulWidget {
   final String scrapbookId;

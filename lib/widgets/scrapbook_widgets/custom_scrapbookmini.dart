@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
-import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class ScrapbookMiniSize extends StatefulWidget {
   final String scrapbookId;
@@ -25,6 +24,7 @@ class ScrapbookMiniSize extends StatefulWidget {
     required this.creatorId,
     required this.map,
   }) : super(key: key);
+  @override
   State<ScrapbookMiniSize> createState() => _ScrapbookMiniSize();
 }
 
@@ -90,7 +90,7 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
                 ),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.7), BlendMode.darken),
+                    Colors.black.withOpacity(0.65), BlendMode.darken),
               ),
             ),
             child: Row(

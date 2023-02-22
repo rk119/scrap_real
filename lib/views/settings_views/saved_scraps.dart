@@ -33,7 +33,6 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
         .get()
         .then((value) => value['savedScrapbooks']);
     setState(() {});
-    print(savedScrapbooks);
     isLoading = false;
   }
 

@@ -10,7 +10,6 @@ import 'package:scrap_real/views/settings_views/information.dart';
 import 'package:scrap_real/views/settings_views/privacy_policy.dart';
 import 'package:scrap_real/views/settings_views/reported_content.dart';
 import 'package:scrap_real/views/settings_views/saved_scraps.dart';
-import 'package:scrap_real/views/settings_views/support.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_menuitem.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';

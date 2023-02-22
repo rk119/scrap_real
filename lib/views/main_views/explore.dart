@@ -31,7 +31,7 @@ class _ExplorePageState extends State<ExplorePage> {
   var scrapbookData = [];
   bool isLoading = true;
   final TextEditingController _search = TextEditingController();
-  CustomInfoWindowController _customInfoWindowController =
+  final CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
   List<AutocompletePrediction> placesPredictions = [];
   Timer? debounce;
@@ -42,7 +42,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   setCustomMarkerIcon() async {
     markerIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(), "assets/markers/placeholder.png");
+        const ImageConfiguration(), "assets/markers/placeholder.png");
   }
 
   @override
@@ -60,19 +60,17 @@ class _ExplorePageState extends State<ExplorePage> {
 
       for (int i = 0; i < scrapbookSnap.size; i++) {
         var location = [];
-        var _scrapbookData = scrapbookSnap.docs[i].data();
-        if (_scrapbookData['latitude'] == 0 ||
-            _scrapbookData['longitude'] == 0) {
+        var scrapData = scrapbookSnap.docs[i].data();
+        if (scrapData['latitude'] == 0 || scrapData['longitude'] == 0) {
           continue;
         } else {
-          location.add(_scrapbookData['scrapbookId']);
-          location.add(_scrapbookData['latitude']);
-          location.add(_scrapbookData['longitude']);
-          location.add(_scrapbookData['title']);
-          location.add(_scrapbookData['coverUrl']);
-          location.add(_scrapbookData['tag']);
-          location.add(_scrapbookData['creatorUid']);
-          print(location);
+          location.add(scrapData['scrapbookId']);
+          location.add(scrapData['latitude']);
+          location.add(scrapData['longitude']);
+          location.add(scrapData['title']);
+          location.add(scrapData['coverUrl']);
+          location.add(scrapData['tag']);
+          location.add(scrapData['creatorUid']);
           scrapbookData.add(location);
         }
       }
@@ -115,8 +113,6 @@ class _ExplorePageState extends State<ExplorePage> {
     setState(() {
       _currentPosition = location;
     });
-
-    print(_currentPosition);
   }
 
   void placeAutocomplete(String query) async {
@@ -154,7 +150,6 @@ class _ExplorePageState extends State<ExplorePage> {
     LatLng newLatLng = LatLng(
         parsed['results'][0]['geometry']['location']['lat'],
         parsed['results'][0]['geometry']['location']['lng']);
-    print(newLatLng);
     _controller!.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: newLatLng, zoom: 14)));
     setState(() {
@@ -175,8 +170,7 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
           )
         : Scaffold(
-            body: _currentPosition == null ||
-                    _currentPosition.latitude == 0 ||
+            body: _currentPosition.latitude == 0 ||
                     _currentPosition.longitude == 0
                 ? Container(
                     color: Colors.white,
@@ -307,7 +301,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   _controller!.animateCamera(CameraUpdate.newCameraPosition(
                       CameraPosition(target: _currentPosition, zoom: 14)));
                 },
-                backgroundColor: Color.fromARGB(255, 108, 200, 202),
+                backgroundColor: const Color.fromARGB(255, 108, 200, 202),
                 child: const Icon(
                   Icons.my_location,
                   color: Colors.black,
@@ -316,7 +310,7 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Set<Marker> getMarkers() {
-    if (scrapbookData.length > 0) {
+    if (scrapbookData.isNotEmpty) {
       setState(
         () {
           for (int index = 0; index < scrapbookData.length; index++) {

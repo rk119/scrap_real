@@ -10,7 +10,7 @@ import 'package:scrap_real/widgets/card_widgets/custom_interestscard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 
-// this page will not be necessary. To-Do: remove later
+// ignore: must_be_immutable
 class ChooseInterestsPage extends StatefulWidget {
   final String name;
   final String bio;

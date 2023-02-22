@@ -2,20 +2,18 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/ar_view.dart';
 import 'package:scrap_real/views/scrapbook_views/comments.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_images.dart';
-import 'package:scrap_real/views/settings_views/saved_scraps.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class ScrapbookExpandedView extends StatefulWidget {
@@ -39,6 +37,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   bool isCurrentUser = false;
   bool isLoading = true;
   bool isLiked = false;
+  late bool isSaved;
 
   @override
   void initState() {
@@ -68,6 +67,20 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
       // following = userSnap.data()!['following'].length;
       // isFollowing = userSnap.data()!['followers'].contains(user.uid);
       isLiked = scrapbookData['likes'].contains(user.uid);
+      if (await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((value) =>
+              value.data()!['savedScrapbooks'].contains(widget.scrapbookId))) {
+        setState(() {
+          isSaved = false;
+        });
+      } else {
+        setState(() {
+          isSaved = true;
+        });
+      }
       setState(() {
         isLoading = false;
       });
@@ -78,6 +91,108 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
         isLoading = true;
       });
     }
+  }
+
+  Future requestAlert() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: CustomSubheader(
+          headerText: "Request Collaboration Access",
+          headerSize: 20,
+          headerColor: const Color(0xff918ef4),
+        ),
+        content: CustomText(
+          text:
+              "You are about to request collaboration access to this Scrapbook. Collaborators will be able to contribute to this scrapbook.\n\nWould you like to confirm?",
+          textSize: 13,
+          textAlignment: TextAlign.center,
+          textWeight: FontWeight.w400,
+        ),
+        actions: <Widget>[
+          Row(
+            children: [
+              CustomTextButton(
+                buttonBorderRadius: BorderRadius.circular(35),
+                buttonFunction: () {
+                  Navigator.of(context).pop();
+                  requestSentAlert();
+                },
+                buttonText: "Yes, I want access",
+                buttonWidth: MediaQuery.of(context).size.width * 0.35,
+                buttonHeight: 60,
+                fontSize: 12,
+              ),
+              SizedBox(width: 22),
+              CustomTextButton(
+                buttonBorderRadius: BorderRadius.circular(35),
+                buttonFunction: () {
+                  Navigator.of(context).pop();
+                },
+                buttonText: "Cancel",
+                buttonColor: Colors.grey.shade200,
+                buttonWidth: MediaQuery.of(context).size.width * 0.35,
+                buttonHeight: 60,
+                fontSize: 12,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future requestSentAlert() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              content: SizedBox(
+                width: double.maxFinite,
+                height: 140,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    CustomSubheader(
+                      headerText: "Request Sent!",
+                      headerSize: 20,
+                      headerColor: const Color(0xff918ef4),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  void containSavedPost() async {
+    if (await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .then((value) =>
+            value.data()!['savedScrapbooks'].contains(widget.scrapbookId))) {
+      setState(() {
+        isSaved = true;
+      });
+    } else {
+      setState(() {
+        isSaved = false;
+      });
+    }
+  }
+
+  void reportScrapbook() {
+    // ignore: avoid_print
+    print('report');
   }
 
   @override
@@ -176,54 +291,39 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                           ),
                           const SizedBox(width: 15),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              requestAlert();
+                            },
                             child: Icon(
                               Icons.person_add_alt_1,
                               color: Color(0xFF918EF4),
                               size: 30,
                             ),
                           ),
-                          SizedBox(width: 15),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: InkWell(
-                                onTap: () async {
-                                  if (await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(user.uid)
-                                      .get()
-                                      .then((value) => value
-                                          .data()!['savedScrapbooks']
-                                          .contains(widget.scrapbookId))) {
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(user.uid)
-                                        .update({
-                                      'savedScrapbooks': FieldValue.arrayRemove(
-                                          [widget.scrapbookId])
-                                    });
-                                    CustomSnackBar.snackBarAlert(
-                                        context, "Removed from saved!");
-                                  } else {
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(user.uid)
-                                        .update({
-                                      'savedScrapbooks': FieldValue.arrayUnion(
-                                          [widget.scrapbookId])
-                                    });
-                                    CustomSnackBar.snackBarAlert(
-                                        context, "Saved!");
-                                  }
-                                },
-                                child: Icon(
-                                  Icons.more_horiz,
-                                  size: 30,
-                                ),
-                              ),
-                            ),
-                          ),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.444),
+                          PopupMenuButton(onSelected: (value) {
+                            value == 'save'
+                                ? FireStoreMethods()
+                                    .saveScrapbook(widget.scrapbookId, context)
+                                : reportScrapbook();
+                          }, itemBuilder: (BuildContext context) {
+                            containSavedPost();
+                            return [
+                              PopupMenuItem(
+                                  value: 'save',
+                                  child: CustomText(
+                                    text: isSaved ? 'Save' : 'Unsave',
+                                    textSize: 15,
+                                  )),
+                              PopupMenuItem(
+                                  value: 'report',
+                                  child: CustomText(
+                                    text: 'Report',
+                                    textSize: 15,
+                                  ))
+                            ];
+                          }),
                         ],
                       ),
                       const SizedBox(height: 15),

@@ -37,14 +37,12 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
         .get()
         .then((value) => value['reportPosts']);
     setState(() {});
-    print(reportedScrapbooks);
 
     reportedUsers = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get()
         .then((value) => value['reportUsers']);
-    print(reportedUsers);
 
     setState(() {});
     isLoading = false;

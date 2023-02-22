@@ -6,6 +6,7 @@ import 'package:scrap_real/views/main_views/home.dart';
 import 'package:scrap_real/views/main_views/notifications.dart';
 import 'package:scrap_real/views/main_views/user_profile.dart';
 
+// ignore: must_be_immutable
 class NavBar extends StatefulWidget {
   int? currentIndex;
   NavBar({Key? key, this.currentIndex}) : super(key: key);
@@ -34,11 +35,11 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
-    int _currentIndex = widget.currentIndex ?? 4;
+    int current = widget.currentIndex ?? 4;
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: _pages[current],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: current,
         onTap: navigate,
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,

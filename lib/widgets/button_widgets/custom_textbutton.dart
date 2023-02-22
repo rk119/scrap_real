@@ -11,6 +11,9 @@ class CustomTextButton extends StatelessWidget {
     required this.buttonText,
     this.buttonColor = const Color(0xff7be5e7),
     this.buttonTextColor = Colors.black,
+    this.buttonWidth = double.infinity,
+    this.buttonHeight = 50,
+    this.fontSize = 18,
     Key? key,
   }) : super(key: key);
 
@@ -19,12 +22,15 @@ class CustomTextButton extends StatelessWidget {
   String buttonText;
   Color buttonColor;
   Color buttonTextColor;
+  double buttonWidth;
+  double buttonHeight;
+  double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 50,
+      width: buttonWidth,
+      height: buttonHeight,
       decoration: BoxDecoration(
         color: buttonColor,
         borderRadius: buttonBorderRadius,
@@ -43,7 +49,7 @@ class CustomTextButton extends StatelessWidget {
             buttonText,
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: fontSize,
               fontWeight: FontWeight.w600,
               height: 1.5,
               color: buttonTextColor,

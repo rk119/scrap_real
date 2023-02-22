@@ -1,14 +1,10 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/utils/firestore_methods.dart';
-import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 
@@ -188,50 +184,46 @@ class _ScrapbookImagesPageState extends State<ScrapbookImagesPage> {
   }
 
   Widget addLeftAndRightButtonsforPages() {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              if (pageNumber <= 0) {
-                pageNumber = 0;
-              } else {
-                pageNumber--;
-                print(pageNumber);
-              }
-              setState(() {});
-            },
-            child: const Icon(Icons.arrow_circle_left_sharp,
-                size: 60, color: Color.fromARGB(255, 139, 225, 226)),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () {
+            if (pageNumber <= 0) {
+              pageNumber = 0;
+            } else {
+              pageNumber--;
+            }
+            setState(() {});
+          },
+          child: const Icon(Icons.arrow_circle_left_sharp,
+              size: 60, color: Color.fromARGB(255, 139, 225, 226)),
+        ),
+        Text(
+          "${pageNumber + 1}/3",
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            height: 1.5,
+            color:
+                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+                    ? const Color(0xffd1e1ff)
+                    : const Color(0xff141b41),
           ),
-          Text(
-            "${pageNumber + 1}/3",
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              height: 1.5,
-              color: Provider.of<ThemeProvider>(context).themeMode ==
-                      ThemeMode.dark
-                  ? const Color(0xffd1e1ff)
-                  : const Color(0xff141b41),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (pageNumber >= 2) {
-                pageNumber = 2;
-              } else {
-                pageNumber++;
-                print(pageNumber);
-              }
-              setState(() {});
-            },
-            child: const Icon(Icons.arrow_circle_right_sharp,
-                size: 60, color: Color.fromARGB(255, 139, 225, 226)),
-          ),
-        ],
-      ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (pageNumber >= 2) {
+              pageNumber = 2;
+            } else {
+              pageNumber++;
+            }
+            setState(() {});
+          },
+          child: const Icon(Icons.arrow_circle_right_sharp,
+              size: 60, color: Color.fromARGB(255, 139, 225, 226)),
+        ),
+      ],
     );
   }
 }

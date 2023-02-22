@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
 class NetworkUtility {
@@ -10,6 +11,7 @@ class NetworkUtility {
         throw Exception('Failed to load data');
       }
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
     return null;

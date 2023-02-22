@@ -2,11 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
@@ -37,7 +34,6 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
         .get()
         .then((value) => value['blockedUsers']);
     setState(() {});
-    print(blockedUsers);
     isLoading = false;
   }
 
@@ -183,8 +179,6 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
                               });
                             },
                             child: Container(
-                              child: Icon(Icons.remove,
-                                  color: Colors.white, size: 40),
                               padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Colors.red,
@@ -197,6 +191,8 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
                                   )
                                 ],
                               ),
+                              child: const Icon(Icons.remove,
+                                  color: Colors.white, size: 40),
                             ),
                           ),
                         ],

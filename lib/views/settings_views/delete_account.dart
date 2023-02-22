@@ -93,8 +93,8 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                   buttonBorderRadius: BorderRadius.circular(35),
                   buttonFunction: () async {
                     try {
-                      final FirebaseAuth _auth = FirebaseAuth.instance;
-                      final user = _auth.currentUser!;
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final user = auth.currentUser!;
                       final credentials = EmailAuthProvider.credential(
                           email: user.email!, password: _pass.text);
                       final result =
@@ -133,7 +133,6 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                       }
                       CustomSnackBar.showSnackBar(context, match);
                     }
-                    ;
                   },
                   buttonText: "Confirm",
                   buttonColor: const Color(0xffbc2d21),

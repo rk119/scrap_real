@@ -24,11 +24,30 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser!.uid;
 
-  TextEditingController _comment = TextEditingController();
+  final TextEditingController _comment = TextEditingController();
 
   //String photoUrl = FireStoreMethods().getCurrentUserPfp() as String;
   String photoUrl = "";
   String alt = "assets/images/profile.png";
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUserPfp();
+  }
+
+  void getCurrentUserPfp() async {
+    try {
+      DocumentSnapshot snap =
+          await _firestore.collection('users').doc(user).get();
+      setState(() {
+        photoUrl = (snap.data()! as dynamic)['photoUrl'];
+      });
+    } catch (err) {
+      // ignore: avoid_print
+      print(err.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +67,8 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
                 CustomBackButton(buttonFunction: () {
                   Navigator.of(context).pop();
                 }),
-                CustomHeader(headerText: "Scrapbook Comments"),
+                CustomHeader(headerText: "Comments"),
                 const SizedBox(height: 20),
-                buildComments(),
                 Container(
                   width: double.infinity,
                   height: 60,
@@ -110,12 +128,25 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
                         ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: addComment,
-                      // onPressed: addComment,
-                      child: Text('Post'),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: TextButton(
+                        onPressed: addComment,
+                        // onPressed: addComment,
+                        child: const Text('Post'),
+                      ),
                     ),
                   ]),
+                ),
+                const SizedBox(height: 20),
+                Scrollbar(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 530,
+                    child: SingleChildScrollView(
+                        child: Wrap(children: [buildComments()])),
+                  ),
                 ),
               ],
             ),

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/scrapbook_views/create3.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
@@ -14,7 +13,6 @@ import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
-import 'package:scrap_real/widgets/text_widgets/custom_text.dart';
 
 class CreateScrapbookPage2 extends StatefulWidget {
   final File? image;

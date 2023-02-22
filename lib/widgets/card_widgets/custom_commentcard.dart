@@ -80,11 +80,19 @@ class CustomCommentCard extends StatelessWidget {
                     ),
                   ),
                 ]),
-                CustomText(
-                  text: comment,
-                  textSize: 15,
-                  textAlignment: TextAlign.left,
-                  textWeight: FontWeight.w300,
+                Row(
+                  children: [
+                    const SizedBox(width: 73),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: CustomText(
+                        text: comment,
+                        textSize: 15,
+                        textAlignment: TextAlign.left,
+                        textWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
