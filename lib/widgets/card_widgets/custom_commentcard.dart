@@ -27,6 +27,7 @@ class CustomCommentCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            margin: const EdgeInsets.all(2),
             width: double.infinity,
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -37,7 +38,7 @@ class CustomCommentCard extends StatelessWidget {
                     ? Colors.grey.shade800
                     : Colors.white,
               ),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(8),
               color: Provider.of<ThemeProvider>(context).themeMode ==
                       ThemeMode.dark
                   ? Colors.black

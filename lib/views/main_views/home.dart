@@ -18,23 +18,60 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Timer timer = Timer(Duration(seconds: 3), () {});
-
   String _value = "Home";
-  final List<DropdownMenuItem> _items = [
-    DropdownMenuItem(
-      value: "Home",
-      child: Text("Home"),
-    ),
-    DropdownMenuItem(
-      value: "Groups",
-      child: Text("Groups"),
-    ),
-    DropdownMenuItem(
-      value: "Nearby Challenges",
-      child: Text("Nearby Challenges"),
-    ),
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    dropDown(_value);
+  }
+
+  List<DropdownMenuItem> dropDown(String value) {
+    final List<DropdownMenuItem> items = [
+      DropdownMenuItem(
+        value: "Home",
+        child: Row(
+          children: [
+            Icon(
+              Icons.home_outlined,
+              color: value == "Home" ? Color(0xFF918EF4) : Colors.black,
+            ),
+            SizedBox(width: 10),
+            Text("Home"),
+          ],
+        ),
+      ),
+      DropdownMenuItem(
+        value: "Groups",
+        child: Row(
+          children: [
+            Icon(
+              Icons.group_outlined,
+              color: value == "Groups" ? Color(0xFF918EF4) : Colors.black,
+            ),
+            SizedBox(width: 10),
+            Text("Groups"),
+          ],
+        ),
+      ),
+      DropdownMenuItem(
+        value: "Nearby Challenges",
+        child: Row(
+          children: [
+            Icon(
+              Icons.flag_outlined,
+              color: value == "Nearby Challenges"
+                  ? Color(0xFF918EF4)
+                  : Colors.black,
+            ),
+            SizedBox(width: 10),
+            Text("Nearby Challenges"),
+          ],
+        ),
+      ),
+    ];
+    return items;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,12 +93,23 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: DropdownButton<dynamic>(
+                        dropdownColor:
+                            Provider.of<ThemeProvider>(context).themeMode ==
+                                    ThemeMode.dark
+                                ? Colors.grey[850]
+                                : Color(0xFFFAFAFA),
+                        borderRadius: BorderRadius.circular(10),
                         onChanged: (value) => setState(() {
                           _value = value;
                         }),
+                        iconSize: 25,
                         value: _value,
                         isExpanded: true,
-                        items: _items,
+                        items: dropDown(_value),
+                        style: const TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     SizedBox(width: 10),

@@ -54,101 +54,102 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-              vertical: 50,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CustomBackButton(buttonFunction: () {
-                  Navigator.of(context).pop();
-                }),
-                CustomHeader(headerText: "Comments"),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  height: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CustomBackButton(buttonFunction: () {
+                    Navigator.of(context).pop();
+                  }),
+                  CustomHeader(headerText: "Comments"),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    height: 60,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: Provider.of<ThemeProvider>(context).themeMode ==
+                                ThemeMode.dark
+                            ? Colors.grey.shade800
+                            : Colors.white,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
                       color: Provider.of<ThemeProvider>(context).themeMode ==
                               ThemeMode.dark
-                          ? Colors.grey.shade800
-                          : Colors.white,
+                          ? Colors.black
+                          : const Color(0xffFAFAFA),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x3f000000),
+                          blurRadius: 2,
+                          offset: Offset(0, 1),
+                        )
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(15),
-                    color: Provider.of<ThemeProvider>(context).themeMode ==
-                            ThemeMode.dark
-                        ? Colors.black
-                        : Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x3f000000),
-                        blurRadius: 2,
-                        offset: Offset(0, 1),
-                      )
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: photoUrl == ""
-                            ? AssetImage(alt)
-                            : NetworkImage(photoUrl) as ImageProvider,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextField(
-                          controller: _comment,
-                          style: GoogleFonts.poppins(
-                            color:
-                                Provider.of<ThemeProvider>(context).themeMode ==
-                                        ThemeMode.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: "Add a comment...",
-                            hintStyle: GoogleFonts.poppins(
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: photoUrl == ""
+                              ? AssetImage(alt)
+                              : NetworkImage(photoUrl) as ImageProvider,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            controller: _comment,
+                            style: GoogleFonts.poppins(
                               color: Provider.of<ThemeProvider>(context)
                                           .themeMode ==
                                       ThemeMode.dark
-                                  ? Colors.grey.shade800
-                                  : Colors.grey.shade400,
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
-                            border: InputBorder.none,
+                            decoration: InputDecoration(
+                              hintText: "Add a comment...",
+                              hintStyle: GoogleFonts.poppins(
+                                color: Provider.of<ThemeProvider>(context)
+                                            .themeMode ==
+                                        ThemeMode.dark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey,
+                              ),
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          addComment();
-                        },
-                        icon: const Icon(
-                          Icons.send,
-                          color: Color(0xFF918EF4),
+                        IconButton(
+                          onPressed: () {
+                            addComment();
+                          },
+                          icon: const Icon(
+                            Icons.send,
+                            color: Color(0xFF918EF4),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Scrollbar(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 530,
-                    child: SingleChildScrollView(
-                        child: Wrap(children: [buildComments()])),
+                  const SizedBox(height: 20),
+                  Scrollbar(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 530,
+                      child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Wrap(children: [buildComments()])),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -170,28 +171,25 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
             child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
-        return (snapshots.connectionState == ConnectionState.waiting)
-            ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF918EF4)),
-              )
-            : ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: snapshots.data!.docs.length,
-                itemBuilder: (context, index) {
-                  var data = snapshots.data!.docs[index].data()
-                      as Map<String, dynamic>;
+        return ListView.builder(
+          reverse: true,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          itemCount: snapshots.data!.docs.length,
+          itemBuilder: (context, index) {
+            var data =
+                snapshots.data!.docs[index].data() as Map<String, dynamic>;
 
-                  return CustomCommentCard(
-                    photoUrl: data['photoUrl'],
-                    alt: "assets/images/profile.png",
-                    username: data['username'],
-                    comment: data['comment'],
-                    bottomPadding: 5,
-                  );
-                },
-              );
+            return CustomCommentCard(
+              photoUrl: data['photoUrl'],
+              alt: "assets/images/profile.png",
+              username: data['username'],
+              comment: data['comment'],
+              bottomPadding: 5,
+            );
+          },
+        );
       },
     );
   }
