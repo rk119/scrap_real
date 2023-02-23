@@ -187,7 +187,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
         .doc(user.uid)
         .get()
         .then((value) =>
-            value.data()!['savedScrapbooks'].contains(widget.scrapbookId))) {
+            value.data()!['savedPosts'].contains(widget.scrapbookId))) {
       setState(() {
         isSaved = true;
       });
