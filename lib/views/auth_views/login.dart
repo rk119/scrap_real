@@ -109,14 +109,14 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   CustomBackButton(
-                    key: const Key('loginBack'),
-                    buttonFunction: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const WelcomePage()),
-                    );
-                  }),
+                      key: const Key('loginBack'),
+                      buttonFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const WelcomePage()),
+                        );
+                      }),
                   CustomHeader(headerText: "Login"),
                   const SizedBox(height: 15),
                   CustomSubheader(
@@ -157,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintingText: "Enter Password",
                     obscureTextBool: obscureText,
                   ),
+                  const SizedBox(height: 8),
                   buildForgotPassword(context),
                   const SizedBox(height: 136),
                   CustomTextButton(

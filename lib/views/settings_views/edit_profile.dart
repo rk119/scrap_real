@@ -55,6 +55,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     try {
       var userSnap =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      _username.text = userSnap['username'];
+      _name.text = userSnap['name'];
+      _bio.text = userSnap['bio'];
 
       photoUrl = userSnap['photoUrl'];
       userData = userSnap.data()!;
@@ -112,9 +115,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         textName: "Username",
                         hintingText: "Enter Username",
                         textController: _username,
-                        validatorFunction: (value) {
-                          return null;
-                        },
+                        validatorFunction: (value) =>
+                            (value != null && value.length > 10)
+                                ? 'Username can be max of 10 characters'
+                                : null,
                       ),
                       const SizedBox(height: 30),
                       CustomNameCard(
@@ -180,7 +184,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
 
+  Future<bool> checkValueExistsInDatabase(String value, String field) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('users')
+        .where(field, isEqualTo: value)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.isEmpty;
+  }
+
   void updateProfile() {
+    if (_username.text.trim() == userData['username'] &&
+        _name.text.trim() == userData['name'] &&
+        _bio.text.trim() == userData['bio'] &&
+        pickedFile == null) {
+      return;
+    }
     FireStoreMethods().updateProfile(
       uid,
       _username.text.trim(),

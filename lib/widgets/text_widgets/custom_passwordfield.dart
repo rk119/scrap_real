@@ -42,7 +42,7 @@ class CustomPasswordFormField extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Container(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.topLeft,
           decoration: BoxDecoration(
             color:
                 Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
@@ -53,36 +53,49 @@ class CustomPasswordFormField extends StatelessWidget {
               BoxShadow(
                 color: Color(0x3f000000),
                 blurRadius: 2,
-                offset: Offset(1, 1.8),
+                offset: Offset(1, 2),
               )
             ],
           ),
-          height: 60,
-          child: TextFormField(
-            controller: textController,
-            obscureText: obscureTextBool,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validatorFunction,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(10),
-              suffixIcon: GestureDetector(
-                onTap: onTapFunction,
-                child: Icon(
-                  obscureTextBool ? Icons.visibility_off : Icons.visibility,
-                  color: const Color(0xffc4c4c4),
-                ),
+          height: 50,
+          child: Wrap(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    width: 310,
+                    child: TextFormField(
+                      controller: textController,
+                      obscureText: obscureTextBool,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: validatorFunction,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(10),
+                        suffixIcon: GestureDetector(
+                          onTap: onTapFunction,
+                          child: Icon(
+                            obscureTextBool
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: const Color(0xffc4c4c4),
+                          ),
+                        ),
+                        hintText: hintingText,
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: const Color.fromARGB(255, 193, 193, 193),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              hintText: hintingText,
-              hintStyle: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-                color: const Color.fromARGB(255, 193, 193, 193),
-              ),
-            ),
+            ],
           ),
-        )
+        ),
       ],
     );
   }

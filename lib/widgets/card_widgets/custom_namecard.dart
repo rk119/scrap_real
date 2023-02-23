@@ -63,6 +63,7 @@ class CustomNameCard extends StatelessWidget {
                     width: 310,
                     child: TextFormField(
                       controller: textController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       keyboardType: TextInputType.name,
                       validator: validatorFunction,
                       decoration: InputDecoration(

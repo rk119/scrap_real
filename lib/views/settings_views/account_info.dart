@@ -25,7 +25,8 @@ class AccountInformationPage extends StatefulWidget {
 class _AccountInformationPageState extends State<AccountInformationPage> {
   final _formKey1 = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
-  final TextEditingController _email = TextEditingController();
+  final TextEditingController _email =
+      TextEditingController(text: FirebaseAuth.instance.currentUser!.email!);
   final TextEditingController _oldpass = TextEditingController();
   final TextEditingController _pass1 = TextEditingController();
   final TextEditingController _pass2 = TextEditingController();
@@ -70,7 +71,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                   key: _formKey1,
                   child: CustomNameCard(
                     textName: "Change Email",
-                    hintingText: FirebaseAuth.instance.currentUser!.email!,
+                    hintingText: "Enter New Email",
                     textController: _email,
                     validatorFunction: (value) =>
                         value != null && !EmailValidator.validate(value)
@@ -193,6 +194,12 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                       // update email
                       bool isValid = _formKey1.currentState!.validate();
                       if (!isValid) return;
+                      if (FirebaseAuth.instance.currentUser!.email! ==
+                          _email.text.trim()) {
+                        CustomSnackBar.showSnackBar(
+                            context, "Email is already in use!");
+                        return;
+                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(

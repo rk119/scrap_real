@@ -8,16 +8,18 @@ import 'package:scrap_real/themes/theme_provider.dart';
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
     Key? key,
-    required this.textController,
     required this.headingText,
-    required this.validatorFunction,
     required this.hintingText,
+    required this.textController,
+    required this.validatorFunction,
+    this.textColor = const Color(0xffa0a0a0),
   }) : super(key: key);
 
-  TextEditingController textController;
   String headingText;
-  String? Function(String?)? validatorFunction;
   String hintingText;
+  TextEditingController textController;
+  String? Function(String?)? validatorFunction;
+  Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -31,45 +33,54 @@ class CustomTextFormField extends StatelessWidget {
             fontSize: 18,
             fontWeight: FontWeight.w500,
             height: 1.5,
-            color:
-                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
-                    ? Colors.white
-                    : const Color(0xff141b41),
+            color: textColor,
           ),
         ),
         const SizedBox(height: 10),
         Container(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.topLeft,
           decoration: BoxDecoration(
-              color: Provider.of<ThemeProvider>(context).themeMode ==
-                      ThemeMode.dark
-                  ? Colors.black
-                  : const Color(0xfffdfbfb),
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x3f000000),
-                  blurRadius: 2,
-                  offset: Offset(1, 2),
-                )
-              ]),
-          height: 60,
-          child: TextFormField(
-            controller: textController,
-            keyboardType: TextInputType.emailAddress,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validatorFunction,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(10),
-              hintText: hintingText,
-              hintStyle: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-                color: const Color.fromARGB(255, 193, 193, 193),
+            color:
+                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+                    ? Colors.black
+                    : const Color(0xfffdfbfb),
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x3f000000),
+                blurRadius: 2,
+                offset: Offset(1, 2),
+              )
+            ],
+          ),
+          height: 50,
+          child: Wrap(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    width: 310,
+                    child: TextFormField(
+                      controller: textController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      keyboardType: TextInputType.name,
+                      validator: validatorFunction,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(10),
+                        hintText: hintingText,
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: const Color.fromARGB(255, 193, 193, 193),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
         ),
       ],
