@@ -38,11 +38,17 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   bool isLoading = true;
   bool isLiked = false;
   late bool isSaved;
+  bool privileged = false;
 
   @override
   void initState() {
     super.initState();
     getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   getData() async {
@@ -67,12 +73,14 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
       // following = userSnap.data()!['following'].length;
       // isFollowing = userSnap.data()!['followers'].contains(user.uid);
       isLiked = scrapbookData['likes'].contains(user.uid);
+      privileged = scrapbookData['creatorUid'] == user.uid;
+      scrapbookData['collaborators'].contains(user.uid);
       if (await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .get()
           .then((value) =>
-              value.data()!['savedScrapbooks'].contains(widget.scrapbookId))) {
+              value.data()!['savedPosts'].contains(widget.scrapbookId))) {
         setState(() {
           isSaved = false;
         });
@@ -225,9 +233,23 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      CustomBackButton(buttonFunction: () {
-                        Navigator.of(context).pop();
-                      }),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomBackButton(buttonFunction: () {
+                            Navigator.of(context).pop();
+                          }),
+                          SizedBox(
+                            child: privileged
+                                ? IconButton(
+                                    iconSize: 25,
+                                    onPressed: () {},
+                                    icon: Icon(Icons.edit),
+                                  )
+                                : null,
+                          ),
+                        ],
+                      ),
                       CustomHeader(headerText: scrapbookData['title']),
                       const SizedBox(height: 15),
                       Stack(
@@ -299,7 +321,9 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                   requestAlert();
                                 },
                                 child: Icon(
-                                  Icons.person_add_alt_1,
+                                  privileged
+                                      ? Icons.person
+                                      : Icons.person_add_alt_1,
                                   color: Color(0xFF918EF4),
                                   size: 30,
                                 ),
@@ -326,10 +350,17 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                         textSize: 15,
                                       )),
                                   PopupMenuItem(
-                                      value: 'report',
+                                      value: scrapbookData['creatorUid'] ==
+                                              user.uid
+                                          ? 'delete'
+                                          : 'report',
                                       child: CustomText(
-                                        text: 'Report',
+                                        text: scrapbookData['creatorUid'] ==
+                                                user.uid
+                                            ? 'Delete'
+                                            : 'Report',
                                         textSize: 15,
+                                        alert: true,
                                       ))
                                 ];
                               }),

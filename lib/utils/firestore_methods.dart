@@ -364,13 +364,12 @@ class FireStoreMethods {
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .get()
-        .then((value) =>
-            value.data()!['savedScrapbooks'].contains(scrapbookId))) {
+        .then((value) => value.data()!['savedPosts'].contains(scrapbookId))) {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_auth.currentUser!.uid)
           .update({
-        'savedScrapbooks': FieldValue.arrayRemove([scrapbookId])
+        'savedPosts': FieldValue.arrayRemove([scrapbookId])
       });
       // ignore: use_build_context_synchronously
       CustomSnackBar.snackBarAlert(context, "Removed from saved!");
@@ -379,7 +378,7 @@ class FireStoreMethods {
           .collection('users')
           .doc(_auth.currentUser!.uid)
           .update({
-        'savedScrapbooks': FieldValue.arrayUnion([scrapbookId])
+        'savedPosts': FieldValue.arrayUnion([scrapbookId])
       });
       // ignore: use_build_context_synchronously
       CustomSnackBar.snackBarAlert(context, "Saved!");

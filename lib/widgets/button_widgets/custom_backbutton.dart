@@ -15,25 +15,19 @@ class CustomBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: const Alignment(-1.15, 0),
-      child: TextButton(
-        onPressed: buttonFunction,
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        IconButton(
+          padding: const EdgeInsets.only(left: 0.0),
+          iconSize: 25,
+          onPressed: buttonFunction,
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
+              ? Colors.white
+              : Colors.black,
         ),
-        child: SizedBox(
-          width: 20,
-          height: 20,
-          child: SvgPicture.asset(
-            'assets/back.svg',
-            color:
-                Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
-                    ? Colors.white
-                    : Colors.black,
-          ),
-        ),
-      ),
+      ],
     );
   }
 }

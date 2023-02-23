@@ -17,7 +17,7 @@ class SavedScrapbooksPage extends StatefulWidget {
 
 class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
   final user = FirebaseAuth.instance.currentUser!;
-  var savedScrapbooks = [];
+  var savedPosts = [];
   bool isLoading = true;
 
   @override
@@ -27,11 +27,11 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
   }
 
   getData() async {
-    savedScrapbooks = await FirebaseFirestore.instance
+    savedPosts = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get()
-        .then((value) => value['savedScrapbooks']);
+        .then((value) => value['savedPosts']);
     setState(() {});
     isLoading = false;
   }
@@ -65,7 +65,7 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
                               color: Color(0xFF918EF4)),
                         ],
                       )
-                    : savedScrapbooks.isNotEmpty
+                    : savedPosts.isNotEmpty
                         ? Container(
                             child: _buildSavedScrapbooks(),
                           )
@@ -95,7 +95,7 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('scrapbooks')
-          .where('scrapbookId', whereIn: savedScrapbooks)
+          .where('scrapbookId', whereIn: savedPosts)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -113,7 +113,7 @@ class _SavedScrapbooksPageState extends State<SavedScrapbooksPage> {
                     title: data['title'],
                     coverImage: data['coverUrl'],
                     scrapbookTag: data['tag'],
-                    creatorId: data['creatorId'],
+                    creatorId: data['creatorUid'],
                   ),
                   const SizedBox(height: 30),
                 ],

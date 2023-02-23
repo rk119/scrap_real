@@ -11,6 +11,7 @@ class CustomText extends StatelessWidget {
     required this.textSize,
     this.textAlignment = TextAlign.center,
     this.textWeight = FontWeight.w500,
+    this.alert = false,
     Key? key,
   }) : super(key: key);
 
@@ -18,6 +19,7 @@ class CustomText extends StatelessWidget {
   double textSize;
   TextAlign? textAlignment;
   FontWeight? textWeight;
+  bool? alert;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,9 @@ class CustomText extends StatelessWidget {
         height: 1.5,
         color: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
             ? Colors.white
-            : Colors.black,
+            : alert != null && alert == true
+                ? const Color(0xffBC2D21)
+                : Colors.black,
       ),
     );
   }
