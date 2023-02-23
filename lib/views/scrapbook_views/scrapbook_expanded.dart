@@ -119,6 +119,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
         ),
         actions: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CustomTextButton(
                 buttonBorderRadius: BorderRadius.circular(35),
@@ -131,7 +132,6 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                 buttonHeight: 60,
                 fontSize: 12,
               ),
-              SizedBox(width: 22),
               CustomTextButton(
                 buttonBorderRadius: BorderRadius.circular(35),
                 buttonFunction: () {

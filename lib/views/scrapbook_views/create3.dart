@@ -338,6 +338,7 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
     double lat = 0.0;
     double long = 0.0;
     if (_isLocationEnabled) {
+      await Geolocator.requestPermission();
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       lat = position.latitude;

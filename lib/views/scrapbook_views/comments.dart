@@ -94,50 +94,50 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
                       )
                     ],
                   ),
-                  child: Row(children: [
-                    const SizedBox(width: 8),
-                    photoUrl == ""
-                        ? Image.asset(
-                            alt,
-                            width: 50,
-                            height: 50,
-                          )
-                        : CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(
-                              photoUrl,
-                            ),
-                            radius: 25,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: photoUrl == ""
+                            ? AssetImage(alt)
+                            : NetworkImage(photoUrl) as ImageProvider,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: _comment,
+                          style: GoogleFonts.poppins(
+                            color:
+                                Provider.of<ThemeProvider>(context).themeMode ==
+                                        ThemeMode.dark
+                                    ? Colors.white
+                                    : Colors.black,
                           ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      width: 200,
-                      child: TextFormField(
-                        controller: _comment,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Add a comment...",
-                          hintStyle: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: const Color.fromARGB(255, 193, 193, 193),
+                          decoration: InputDecoration(
+                            hintText: "Add a comment...",
+                            hintStyle: GoogleFonts.poppins(
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade400,
+                            ),
+                            border: InputBorder.none,
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.15,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      child: TextButton(
-                        onPressed: addComment,
-                        // onPressed: addComment,
-                        child: const Text('Post'),
+                      IconButton(
+                        onPressed: () {
+                          addComment();
+                        },
+                        icon: const Icon(
+                          Icons.send,
+                          color: Color(0xFF918EF4),
+                        ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Scrollbar(
