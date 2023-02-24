@@ -59,7 +59,7 @@ class CustomTextFormField extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    width: 310,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     child: TextFormField(
                       controller: textController,
                       autovalidateMode: AutovalidateMode.onUserInteraction,

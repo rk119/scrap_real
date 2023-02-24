@@ -63,7 +63,7 @@ class CustomPasswordFormField extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    width: 310,
+                    width: MediaQuery.of(context).size.width * 0.82,
                     child: TextFormField(
                       controller: textController,
                       obscureText: obscureTextBool,

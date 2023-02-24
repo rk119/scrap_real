@@ -34,31 +34,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  // Future<Null> getUserFirestore(String username) async {
-  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //   CollectionReference users = firestore.collection('users');
-  //   String email = "";
-  //   String trimmedUser = username.trim();
-  //   users
-  //       .where('username', isEqualTo: trimmedUser)
-  //       .get()
-  //       .then((QuerySnapshot documentSnapshot) {
-  //     if (documentSnapshot.docs.isNotEmpty) {
-  //       print('Document data: ${documentSnapshot.docs[0].data()}');
-  //       Map<String, dynamic> userDocument =
-  //           documentSnapshot.docs[0].data() as Map<String, dynamic>;
-
-  //       //Sumant coding = 💩;
-  //       email = userDocument['email'];
-  //       _email.text = email.toString();
-  //     } else {
-  //       _email.text = email;
-  //       print('Document does not exist on the database');
-  //     }
-  //   });
-  //   return;
-  // }
-
   Widget buildForgotPassword(BuildContext context) {
     return Container(
       alignment: Alignment.centerRight,
@@ -83,8 +58,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Future loginUser() async {
     AuthMethods().loginUser(
-      _email.text,
-      _password.text,
+      _email.text.trim(),
+      _password.text.trim(),
       context,
       mounted,
       _formKey,
@@ -126,21 +101,26 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 137),
                   CustomTextFormField(
-                      key: const Key('loginEmail'),
-                      textController: _email,
-                      headingText: "Email",
-                      validatorFunction: (email) =>
-                          email != null && !EmailValidator.validate(email)
-                              ? 'Invalid email'
-                              : null,
-                      hintingText: "Enter Email"),
+                    key: const Key('loginEmail'),
+                    textController: _email,
+                    headingText: "Email",
+                    validatorFunction: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Invalid email'
+                            : null,
+                    hintingText: "Enter Email",
+                    textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.white
+                        : const Color(0xff141B41),
+                  ),
                   const SizedBox(height: 30),
                   CustomPasswordFormField(
                     key: const Key('loginPass'),
                     textColor: Provider.of<ThemeProvider>(context).themeMode ==
                             ThemeMode.dark
                         ? Colors.white
-                        : Colors.black,
+                        : const Color(0xff141B41),
                     textController: _password,
                     headingText: "Password",
                     validatorFunction: (value) =>

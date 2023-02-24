@@ -41,9 +41,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future registerUser() async {
     AuthMethods().registerUser(
-      _username.text,
-      _email.text,
-      _password1.text,
+      _username.text.trim(),
+      _email.text.trim(),
+      _password1.text.trim(),
       context,
       mounted,
       _formKey,
@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
     var formColor =
         Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
             ? Colors.white
-            : Colors.black;
+            : const Color(0xff141B41);
 
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -96,6 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ? 'Username can be max of 10 characters'
                             : null,
                     hintingText: "Enter Username",
+                    textColor: formColor,
                   ),
                   const SizedBox(height: 28),
                   CustomTextFormField(
@@ -106,6 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ? 'Invalid email'
                             : null,
                     hintingText: "Enter Email",
+                    textColor: formColor,
                   ),
                   const SizedBox(height: 28),
                   CustomPasswordFormField(
