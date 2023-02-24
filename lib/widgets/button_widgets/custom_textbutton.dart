@@ -30,7 +30,9 @@ class CustomTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: buttonWidth,
-      height: buttonHeight,
+      height: buttonHeight == 50
+          ? MediaQuery.of(context).size.height * 0.065
+          : buttonHeight,
       decoration: BoxDecoration(
         color: buttonColor,
         borderRadius: buttonBorderRadius,

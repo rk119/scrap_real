@@ -53,14 +53,16 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                   textName: "Title",
                   hintingText: "Enter Name",
                   textController: _title,
-                  validatorFunction: (title) =>
-                      (title != null && title.length < 6)
-                          ? 'Enter a min. of 6 characters'
-                          : null,
+                  validatorFunction: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter a title";
+                    }
+                    return null;
+                  },
                   textColor: Provider.of<ThemeProvider>(context).themeMode ==
                           ThemeMode.dark
                       ? Colors.white
-                      : Colors.black,
+                      : const Color(0xff141B41),
                 ),
                 const SizedBox(height: 28),
                 CustomBioCard(
@@ -70,7 +72,7 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                   textColor: Provider.of<ThemeProvider>(context).themeMode ==
                           ThemeMode.dark
                       ? Colors.white
-                      : Colors.black,
+                      : const Color(0xff141B41),
                 ),
                 const SizedBox(height: 44),
                 CustomTextButton(

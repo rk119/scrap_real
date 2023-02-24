@@ -251,7 +251,8 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                         ],
                       ),
                       CustomHeader(headerText: scrapbookData['title']),
-                      const SizedBox(height: 15),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02),
                       Stack(
                         alignment: Alignment.center,
                         children: [
@@ -338,7 +339,10 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                 value == 'save'
                                     ? FireStoreMethods().saveScrapbook(
                                         widget.scrapbookId, context)
-                                    : reportScrapbook();
+                                    : value == 'report'
+                                        ? reportScrapbook()
+                                        : FireStoreMethods().deleteScrapbook(
+                                            widget.scrapbookId, context);
                               },
                               itemBuilder: (BuildContext context) {
                                 containSavedPost();

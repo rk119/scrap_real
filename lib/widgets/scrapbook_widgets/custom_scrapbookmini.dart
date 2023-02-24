@@ -90,7 +90,7 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
                 ),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.65), BlendMode.darken),
+                    Colors.black.withOpacity(0.55), BlendMode.darken),
               ),
             ),
             child: Row(

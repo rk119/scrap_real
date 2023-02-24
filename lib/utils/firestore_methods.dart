@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrap_real/models/comment.dart';
@@ -383,5 +384,38 @@ class FireStoreMethods {
       // ignore: use_build_context_synchronously
       CustomSnackBar.snackBarAlert(context, "Saved!");
     }
+  }
+
+  void deleteScrapbook(String scrapbookId, BuildContext context) async {
+    final scrapbookData = await FirebaseFirestore.instance
+        .collection('scrapbooks')
+        .doc(scrapbookId)
+        .get()
+        .then((value) => value.data()!);
+
+    await FirebaseFirestore.instance
+        .collection('scrapbooks')
+        .doc(scrapbookId)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('comment')
+        .doc(scrapbookId)
+        .collection('comments')
+        .get()
+        .then((value) {
+      for (DocumentSnapshot ds in value.docs) {
+        ds.reference.delete();
+      }
+    });
+
+    final cover = scrapbookData['coverUrl'];
+    cover != "" ? StorageMethods().deleteScrapbookCover(cover) : null;
+
+    await StorageMethods().deleteScrapbook(scrapbookId);
+
+    // ignore: use_build_context_synchronously
+    CustomSnackBar.snackBarAlert(context, "Scrapbook deleted!");
+    Navigator.of(context).pop();
   }
 }
