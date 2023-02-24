@@ -58,7 +58,7 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                   headerSize: 28,
                   headerColor: const Color(0xffbc2d21),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 CustomPasswordFormField(
                   textController: _pass,
                   headingText: "Type your password",
@@ -78,7 +78,7 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                       ? Colors.white
                       : Colors.black,
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 CustomSubheader(
                   headerText: "All your data will be lost.",
                   headerSize: 18,
@@ -88,7 +88,7 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                     headerText: "Are you sure you want to delete your account?",
                     headerSize: 18,
                     headerColor: const Color(0xffa0a0a0)),
-                const SizedBox(height: 30),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(35),
                   buttonFunction: () async {
