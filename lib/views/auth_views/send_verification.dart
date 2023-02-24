@@ -95,12 +95,14 @@ class _SendVerificationPageState extends State<SendVerificationPage> {
                           },
                         ),
                         CustomHeader(headerText: "Verification"),
-                        const SizedBox(height: 150),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.2),
                         CustomText(
                             text:
                                 "A link has been sent to your email to verify your account",
                             textSize: 20),
-                        const SizedBox(height: 50),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05),
                         TextButton(
                           style: TextButton.styleFrom(
                             backgroundColor: const Color(0xffbc2d21),

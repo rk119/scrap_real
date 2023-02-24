@@ -70,14 +70,14 @@ class _ChooseInterestsPageState extends State<ChooseInterestsPage> {
                     );
                   }),
                   CustomHeader(headerText: "Interests"),
-                  const SizedBox(height: 12),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   CustomSubheader(
                     headerText:
                         "Select at least 1 category you'd like to receive recommendations on",
                     headerSize: 20,
                     headerColor: const Color(0xffa09f9f),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   CustomInterestsCard(
                     buttonColor: const Color(0xffffffff),
                     buttonBorderRadius: BorderRadius.circular(15),
@@ -90,7 +90,7 @@ class _ChooseInterestsPageState extends State<ChooseInterestsPage> {
                     },
                     selected: creativity,
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   CustomInterestsCard(
                     buttonColor: const Color(0xffffffff),
                     buttonBorderRadius: BorderRadius.circular(15),
@@ -103,7 +103,7 @@ class _ChooseInterestsPageState extends State<ChooseInterestsPage> {
                     },
                     selected: travel,
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   CustomInterestsCard(
                     buttonColor: const Color(0xffffffff),
                     buttonBorderRadius: BorderRadius.circular(15),
@@ -116,7 +116,7 @@ class _ChooseInterestsPageState extends State<ChooseInterestsPage> {
                     },
                     selected: history,
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   CustomInterestsCard(
                     buttonColor: const Color(0xffffffff),
                     buttonBorderRadius: BorderRadius.circular(15),
@@ -129,7 +129,7 @@ class _ChooseInterestsPageState extends State<ChooseInterestsPage> {
                     },
                     selected: motivation,
                   ),
-                  const SizedBox(height: 44),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                   CustomTextButton(
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: () {

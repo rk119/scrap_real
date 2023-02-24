@@ -83,7 +83,8 @@ class _SetProfilePageState extends State<SetProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CustomHeader(headerText: "Profile Setup"),
-                      const SizedBox(height: 28),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03),
                       CustomProfilePicture(
                         pickedFile: pickedFile,
                         context: context,
@@ -91,7 +92,8 @@ class _SetProfilePageState extends State<SetProfilePage> {
                         photoUrl: photoUrl,
                         alt: "assets/images/profile.png",
                       ),
-                      const SizedBox(height: 7),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01),
                       CustomSubheader(
                         headerText: "Edit",
                         headerSize: 20,
@@ -106,12 +108,14 @@ class _SetProfilePageState extends State<SetProfilePage> {
                         },
                         textColor: formColor,
                       ),
-                      const SizedBox(height: 28),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03),
                       CustomBioCard(
                         textController: _bio,
                         textColor: formColor,
                       ),
-                      const SizedBox(height: 44),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.06),
                       CustomTextButton(
                         buttonBorderRadius: BorderRadius.circular(30),
                         buttonFunction: () {
