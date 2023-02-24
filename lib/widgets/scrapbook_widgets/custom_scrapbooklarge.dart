@@ -79,7 +79,7 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
                 ),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.65), BlendMode.darken),
+                    Colors.black.withOpacity(0.7), BlendMode.darken),
               ),
             ),
             child: Row(
