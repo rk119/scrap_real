@@ -38,6 +38,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Container(
+          width: MediaQuery.of(context).size.width * 0.9,
           alignment: Alignment.topLeft,
           decoration: BoxDecoration(
             color:
@@ -53,7 +54,7 @@ class CustomTextFormField extends StatelessWidget {
               )
             ],
           ),
-          height: 50,
+          height: MediaQuery.of(context).size.height * 0.06,
           child: Wrap(
             children: [
               Stack(

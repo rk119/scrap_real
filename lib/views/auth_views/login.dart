@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         ? Colors.white
                         : const Color(0xff141B41),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 50),
                   CustomPasswordFormField(
                     key: const Key('loginPass'),
                     textColor: Provider.of<ThemeProvider>(context).themeMode ==
