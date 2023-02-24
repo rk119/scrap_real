@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 
 class CustomBackButton extends StatelessWidget {
