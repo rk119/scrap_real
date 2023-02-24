@@ -37,7 +37,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _email.text.trim());
       if (!mounted) return;
-      CustomSnackBar.showSnackBar(context, 'Password Reset Email Sent');
+      CustomSnackBar.snackBarAlert(context, 'Password Reset Email Sent');
       // Wafi: Navigate to login page
     } catch (e) {
       // ignore: avoid_print
@@ -81,12 +81,12 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                     headerSize: 20,
                     headerColor: const Color(0xffa09f9f),
                   ),
-                  const SizedBox(height: 137),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.16),
                   CustomTextFormField(
                     textController: _email,
                     headingText: "Email",
                     validatorFunction: (email) =>
-                        email != null && !EmailValidator.validate(email)
+                        email != null && !EmailValidator.validate(email.trim())
                             ? 'Invalid email'
                             : null,
                     hintingText: "Enter your Email",
@@ -95,7 +95,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                         ? Colors.white
                         : const Color(0xff141B41),
                   ),
-                  const SizedBox(height: 280),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.35),
                   CustomTextButton(
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: resetPassword,

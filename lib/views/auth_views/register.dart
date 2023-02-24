@@ -98,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintingText: "Enter Username",
                     textColor: formColor,
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                   CustomTextFormField(
                     textController: _email,
                     headingText: "Email",
@@ -109,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintingText: "Enter Email",
                     textColor: formColor,
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                   CustomPasswordFormField(
                     textColor: formColor,
                     textController: _password1,
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintingText: "Enter Password",
                     obscureTextBool: obscurePText,
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                   CustomPasswordFormField(
                     textColor: formColor,
                     textController: _password2,
@@ -147,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintingText: "Retype Password",
                     obscureTextBool: obscureCPText,
                   ),
-                  const SizedBox(height: 44),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                   CustomTextButton(
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: registerUser,

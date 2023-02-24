@@ -74,7 +74,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                     hintingText: "Enter New Email",
                     textController: _email,
                     validatorFunction: (value) =>
-                        value != null && !EmailValidator.validate(value)
+                        value != null && !EmailValidator.validate(value.trim())
                             ? 'Invalid email'
                             : null,
                   ),

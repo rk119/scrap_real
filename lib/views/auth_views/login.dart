@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                     headerSize: 20,
                     headerColor: const Color(0xffa09f9f),
                   ),
-                  const SizedBox(height: 137),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.15),
                   CustomTextFormField(
                     key: const Key('loginEmail'),
                     textController: _email,
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         ? Colors.white
                         : const Color(0xff141B41),
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                   CustomPasswordFormField(
                     key: const Key('loginPass'),
                     textColor: Provider.of<ThemeProvider>(context).themeMode ==
@@ -137,9 +137,9 @@ class _LoginPageState extends State<LoginPage> {
                     hintingText: "Enter Password",
                     obscureTextBool: obscureText,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   buildForgotPassword(context),
-                  const SizedBox(height: 136),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.16),
                   CustomTextButton(
                     key: const Key('loginButton'),
                     buttonBorderRadius: BorderRadius.circular(30),
