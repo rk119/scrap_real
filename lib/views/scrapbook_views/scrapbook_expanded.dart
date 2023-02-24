@@ -9,6 +9,7 @@ import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/ar_view.dart';
 import 'package:scrap_real/views/scrapbook_views/comments.dart';
+import 'package:scrap_real/views/scrapbook_views/editScrapbook1.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_images.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
@@ -243,7 +244,15 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             child: privileged
                                 ? IconButton(
                                     iconSize: 25,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => EditScrapbook1(
+                                            scrapbookId: widget.scrapbookId,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     icon: Icon(Icons.edit),
                                   )
                                 : null,
