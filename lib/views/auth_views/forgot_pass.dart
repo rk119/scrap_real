@@ -2,6 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/auth_views/login.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
@@ -81,13 +83,18 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                   ),
                   const SizedBox(height: 137),
                   CustomTextFormField(
-                      textController: _email,
-                      headingText: "Email",
-                      validatorFunction: (email) =>
-                          email != null && !EmailValidator.validate(email)
-                              ? 'Invalid email'
-                              : null,
-                      hintingText: "Enter your Email"),
+                    textController: _email,
+                    headingText: "Email",
+                    validatorFunction: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Invalid email'
+                            : null,
+                    hintingText: "Enter your Email",
+                    textColor: Provider.of<ThemeProvider>(context).themeMode ==
+                            ThemeMode.dark
+                        ? Colors.white
+                        : const Color(0xff141B41),
+                  ),
                   const SizedBox(height: 280),
                   CustomTextButton(
                     buttonBorderRadius: BorderRadius.circular(30),
