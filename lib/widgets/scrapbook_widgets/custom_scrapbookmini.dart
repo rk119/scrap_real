@@ -108,7 +108,7 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
                               borderRadius: BorderRadius.circular(50),
                               color: Colors.white,
                               border: Border.all(
-                                color: Colors.black,
+                                color: Colors.white,
                                 width: 1,
                               ),
                               image: DecorationImage(

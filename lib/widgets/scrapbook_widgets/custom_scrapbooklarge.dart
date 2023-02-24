@@ -96,8 +96,8 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
                         borderRadius: BorderRadius.circular(50),
                         color: Colors.white,
                         border: Border.all(
-                          color: Colors.black,
-                          width: 2,
+                          color: Colors.white,
+                          width: 1,
                         ),
                         image: DecorationImage(
                           image: photo == ''
