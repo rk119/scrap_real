@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                     textController: _email,
                     headingText: "Email",
                     validatorFunction: (email) =>
-                        email != null && !EmailValidator.validate(email)
+                        email != null && !EmailValidator.validate(email.trim())
                             ? 'Invalid email'
                             : null,
                     hintingText: "Enter Email",

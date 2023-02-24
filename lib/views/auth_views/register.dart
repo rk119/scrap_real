@@ -103,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     textController: _email,
                     headingText: "Email",
                     validatorFunction: (email) =>
-                        email != null && !EmailValidator.validate(email)
+                        email != null && !EmailValidator.validate(email.trim())
                             ? 'Invalid email'
                             : null,
                     hintingText: "Enter Email",
@@ -133,10 +133,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     textColor: formColor,
                     textController: _password2,
                     headingText: "Confirm Password",
-                    validatorFunction: (value) =>
-                        (value != null && value != _password1.text)
-                            ? 'Passwords do not match'
-                            : null,
+                    validatorFunction: (value) => (value != null &&
+                            value.trim() != _password1.text.trim())
+                        ? 'Passwords do not match'
+                        : null,
                     onTapFunction: () {
                       setState(
                         () {
