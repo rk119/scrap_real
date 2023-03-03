@@ -166,7 +166,7 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
       child: Column(
         children: <Widget>[
           const Text(
-            "Choose Profile Photo",
+            "Choose a Photo",
             style: TextStyle(fontSize: 20.0),
           ),
           const SizedBox(height: 20),

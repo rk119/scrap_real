@@ -7,7 +7,7 @@ class ScrapbookModel {
   final String type;
   final String visibility;
   final List likes;
-  final List collaborators;
+  final Map collaborators;
   final String coverUrl;
   final List posts;
   final bool group;

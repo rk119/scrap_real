@@ -1,49 +1,55 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
-import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 
-class CreateScrapbookPage3 extends StatefulWidget {
-  final File? coverImage;
-  final String title;
-  final String caption;
-  final bool tag;
-  final bool type;
-  final bool visibility;
-  final Map<String, bool> collaborators;
-  final bool group;
+class EditScrapbook3 extends StatefulWidget {
+  final File? image;
+  final String? title;
+  final String? caption;
+  final bool? tag;
+  final bool? type;
+  final bool? visibility;
+  final Map<dynamic, dynamic> scrapbookData;
+  final String scrapbookId;
 
-  const CreateScrapbookPage3({
-    Key? key,
-    required this.coverImage,
-    required this.title,
-    required this.caption,
-    required this.tag,
-    required this.type,
-    required this.visibility,
-    required this.collaborators,
-    required this.group,
-  }) : super(key: key);
+  const EditScrapbook3(
+      {Key? key,
+      required this.image,
+      required this.title,
+      required this.caption,
+      required this.tag,
+      required this.type,
+      required this.visibility,
+      required this.scrapbookData,
+      required this.scrapbookId})
+      : super(key: key);
 
   @override
-  State<CreateScrapbookPage3> createState() => _CreateScrapbookPage3State();
+  State<EditScrapbook3> createState() => _EditScrapbook3State();
 }
 
-class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
-  List<File?> images = List.filled(12, null);
+class _EditScrapbook3State extends State<EditScrapbook3> {
+  late List<dynamic> images = widget.scrapbookData["posts"];
   int pageNumber = 0;
-  bool _isLocationEnabled = false;
-  final List<String> likes = [];
+  late bool prevIsLocationEnabled = widget.scrapbookData['latitude'] != 0 &&
+          widget.scrapbookData['longitude'] != 0
+      ? true
+      : false;
+  late bool isLocationEnabled = widget.scrapbookData['latitude'] != 0 &&
+          widget.scrapbookData['longitude'] != 0
+      ? true
+      : false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +67,8 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CustomBackButton(buttonFunction: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NavBar(
-                        currentIndex: 2,
-                      ),
-                    ),
-                  );
+                  Navigator.popUntil(
+                      context, ModalRoute.withName('/scrapbookExpanded'));
                 }),
                 CustomHeader(headerText: "Create Scrapbook"),
                 const SizedBox(height: 40),
@@ -90,12 +90,16 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
                 const SizedBox(height: 40),
                 addLeftAndRightButtonsforPages(),
                 const SizedBox(height: 40),
-                locationToggle(),
+                widget.scrapbookData['creatorUid'] ==
+                            FirebaseAuth.instance.currentUser!.uid &&
+                        prevIsLocationEnabled
+                    ? locationToggle()
+                    : const SizedBox(),
                 const SizedBox(height: 60),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
-                  buttonFunction: createScrapbook,
-                  buttonText: "Create",
+                  buttonFunction: confirmScrapbook,
+                  buttonText: "Save",
                   buttonColor: const Color(0xff7be5e7),
                 ),
               ],
@@ -158,7 +162,7 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
         );
       },
       onLongPress: () {
-        images[index] != null ? popUpImage(index) : null;
+        images[index] != "" ? popUpImage(index) : null;
       },
       child: Container(
         width: 120,
@@ -171,15 +175,20 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2),
-            image: images[index] == null
+            image: images[index] == ""
                 ? const DecorationImage(
                     image: AssetImage("assets/images/addImage.png"),
                     fit: BoxFit.cover,
                   )
-                : DecorationImage(
-                    image: FileImage(images[index]!),
-                    fit: BoxFit.cover,
-                  ),
+                : images[index] is String
+                    ? DecorationImage(
+                        image: NetworkImage(images[index]!),
+                        fit: BoxFit.cover,
+                      )
+                    : DecorationImage(
+                        image: FileImage(images[index]!),
+                        fit: BoxFit.cover,
+                      ),
           ),
         ),
       ),
@@ -250,7 +259,9 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
                 Navigator.pop(context);
               },
               child: Expanded(
-                child: Image.file(images[index]!),
+                child: images[index]! is String
+                    ? Image.network(images[index]!)
+                    : Image.file(images[index]!),
               ),
             ),
             actions: [
@@ -258,7 +269,7 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
                 child: TextButton(
                   onPressed: () {
                     setState(() {
-                      images[index] = null;
+                      images[index] = "";
                     });
                     Navigator.pop(context);
                   },
@@ -319,43 +330,12 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
     );
   }
 
-  Future createScrapbook() async {
-    double lat = 0.0;
-    double long = 0.0;
-    if (_isLocationEnabled) {
-      await Geolocator.requestPermission();
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      lat = position.latitude;
-      long = position.longitude;
-    }
-
-    // ignore: use_build_context_synchronously
-    FireStoreMethods().createScrapbook(
-      widget.coverImage,
-      widget.title,
-      widget.caption,
-      widget.tag,
-      widget.type,
-      widget.visibility,
-      likes,
-      widget.collaborators,
-      images,
-      widget.group,
-      lat,
-      long,
-      context,
-      mounted,
-      // _collaborators.length > 0 ? true : false,
-    );
-  }
-
   Widget locationToggle() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Location ${_isLocationEnabled ? "Enabled" : "Disabled"}",
+          "Location ${isLocationEnabled ? "Enabled" : "Disabled"}",
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -367,10 +347,10 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
           ),
         ),
         Switch(
-          value: _isLocationEnabled,
+          value: isLocationEnabled,
           onChanged: (value) {
             setState(() {
-              _isLocationEnabled = value;
+              isLocationEnabled = value;
             });
           },
           activeTrackColor: const Color.fromARGB(255, 225, 225, 255),
@@ -378,5 +358,59 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
         ),
       ],
     );
+  }
+
+  Future confirmScrapbook() async {
+    if (!isLocationEnabled) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+            child: AlertDialog(
+              title: const Text("Disable Location"),
+              content: const Text(
+                  "Are you sure you want to disable location? You will not be able to enable it again."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop;
+                  },
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    editScrapbook(true);
+                  },
+                  child: const Text("Continue"),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } else {
+      editScrapbook(false);
+    }
+  }
+
+  Future editScrapbook(bool locationDisbaled) async {
+    await FireStoreMethods().editScrapbook(
+      widget.scrapbookId,
+      widget.image,
+      widget.title,
+      widget.caption,
+      widget.tag,
+      widget.type,
+      widget.visibility,
+      locationDisbaled,
+      images,
+      context,
+    );
+
+    // ignore: use_build_context_synchronously
+    CustomSnackBar.snackBarAlert(context, "Scrapbook edited!");
+    // ignore: use_build_context_synchronously
+    Navigator.popUntil(context, ModalRoute.withName('/scrapbookExpanded'));
   }
 }

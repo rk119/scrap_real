@@ -25,13 +25,8 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
   File? image;
   final TextEditingController _title = TextEditingController();
   final TextEditingController _caption = TextEditingController();
-  String title = "";
-  String captionText = "";
   String coverUrl = "";
-  bool tag = true;
-  bool type = true;
-  bool visibility = true;
-  List<dynamic> images = List.filled(12, null);
+  var scrapbookData = {};
   bool isLoading = true;
 
   @override
@@ -53,15 +48,10 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
         .doc(widget.scrapbookId)
         .get();
     setState(() {
-      title = documentSnapshot["title"];
-      _title.text = title;
-      captionText = documentSnapshot["caption"];
-      _caption.text = captionText;
+      _title.text = documentSnapshot["title"];
+      _caption.text = documentSnapshot["caption"];
       coverUrl = documentSnapshot["coverUrl"];
-      tag = documentSnapshot["tag"] == "Factual" ? true : false;
-      type = documentSnapshot["type"] == "Normal" ? true : false;
-      visibility = documentSnapshot["visibility"] == "Public" ? true : false;
-      images = documentSnapshot["posts"];
+      scrapbookData = documentSnapshot.data() as Map<dynamic, dynamic>;
       isLoading = false;
     });
   }
@@ -141,16 +131,10 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditScrapbook2(
-                                title:
-                                    _title.text == title ? null : _title.text,
-                                caption: _caption.text == captionText
-                                    ? null
-                                    : _caption.text,
+                                title: _title.text.trim(),
+                                caption: _caption.text.trim(),
                                 image: image,
-                                tag: tag,
-                                type: type,
-                                visibility: visibility,
-                                images: images,
+                                scrapbookData: scrapbookData,
                                 scrapbookId: widget.scrapbookId,
                               ),
                             ),
@@ -214,7 +198,7 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
       child: Column(
         children: <Widget>[
           const Text(
-            "Choose Profile Photo",
+            "Choose a Photo",
             style: TextStyle(fontSize: 20.0),
           ),
           const SizedBox(height: 20),

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/ar_view.dart';
+import 'package:scrap_real/views/scrapbook_views/collaborators.dart';
 import 'package:scrap_real/views/scrapbook_views/comments.dart';
 import 'package:scrap_real/views/scrapbook_views/editScrapbook1.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_images.dart';
@@ -65,17 +66,18 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
       //     .where('creatorUid', isEqualTo: widget.uid)
       //     .get();
 
-      // var sbCollabSnap = await FirebaseFirestore.instance
-      //     .collection('scrapbooks')
-      //     .where('collaborators', arrayContains: widget.uid)
-      //     .get();
       scrapbookData = scrapbookSnap.data()!;
+      var userName = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((value) => value.data()!['username']);
       // followers = userSnap.data()!['followers'].length;
       // following = userSnap.data()!['following'].length;
       // isFollowing = userSnap.data()!['followers'].contains(user.uid);
       isLiked = scrapbookData['likes'].contains(user.uid);
-      privileged = scrapbookData['creatorUid'] == user.uid;
-      scrapbookData['collaborators'].contains(user.uid);
+      privileged = scrapbookData['creatorUid'] == user.uid ||
+          scrapbookData['collaborators'].keys.contains(userName);
       if (await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -204,6 +206,59 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
     print('report');
   }
 
+  void deleteScrapbook() {
+    /* show an alert box confirming delete */
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: CustomSubheader(
+          headerText: "Delete Scrapbook",
+          headerSize: 20,
+          headerColor: const Color(0xffBC2D21),
+        ),
+        content: CustomText(
+          text:
+              "You are about to delete this Scrapbook. This action cannot be undone.\n\nWould you like to confirm?",
+          textSize: 13,
+          textAlignment: TextAlign.center,
+          textWeight: FontWeight.w400,
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomTextButton(
+                buttonTextColor: Colors.white,
+                buttonBorderRadius: BorderRadius.circular(35),
+                buttonFunction: () {
+                  Navigator.of(context).pop();
+                  FireStoreMethods()
+                      .deleteScrapbook(widget.scrapbookId, context);
+                },
+                buttonText: "Yes, delete",
+                buttonWidth: MediaQuery.of(context).size.width * 0.35,
+                buttonHeight: 60,
+                fontSize: 12,
+                buttonColor: const Color(0xffBC2D21),
+              ),
+              CustomTextButton(
+                buttonBorderRadius: BorderRadius.circular(35),
+                buttonFunction: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                buttonText: "Cancel",
+                buttonColor: Colors.grey.shade200,
+                buttonWidth: MediaQuery.of(context).size.width * 0.35,
+                buttonHeight: 60,
+                fontSize: 12,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var greyColor =
@@ -328,7 +383,17 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                               const SizedBox(width: 15),
                               InkWell(
                                 onTap: () {
-                                  requestAlert();
+                                  privileged
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ScrapbookContributorsPage(
+                                              scrapbookId: widget.scrapbookId,
+                                            ),
+                                          ),
+                                        )
+                                      : requestAlert();
                                 },
                                 child: Icon(
                                   privileged
@@ -350,8 +415,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                         widget.scrapbookId, context)
                                     : value == 'report'
                                         ? reportScrapbook()
-                                        : FireStoreMethods().deleteScrapbook(
-                                            widget.scrapbookId, context);
+                                        : deleteScrapbook();
                               },
                               itemBuilder: (BuildContext context) {
                                 containSavedPost();

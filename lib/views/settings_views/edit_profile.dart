@@ -207,6 +207,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _bio.text.trim(),
       pickedFile,
       photoUrl,
+      userData['username'],
       mounted,
       context,
     );

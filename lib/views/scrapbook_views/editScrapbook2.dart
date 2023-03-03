@@ -1,15 +1,12 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
-import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/scrapbook_views/editScrapbook3.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
-import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab2.dart';
@@ -18,10 +15,7 @@ class EditScrapbook2 extends StatefulWidget {
   final File? image;
   final String? title;
   final String? caption;
-  final bool? tag;
-  final bool? type;
-  final bool? visibility;
-  final List<dynamic>? images;
+  final Map<dynamic, dynamic> scrapbookData;
   final String scrapbookId;
 
   const EditScrapbook2(
@@ -29,10 +23,7 @@ class EditScrapbook2 extends StatefulWidget {
       required this.image,
       required this.title,
       required this.caption,
-      required this.tag,
-      required this.type,
-      required this.visibility,
-      required this.images,
+      required this.scrapbookData,
       required this.scrapbookId})
       : super(key: key);
 
@@ -41,12 +32,10 @@ class EditScrapbook2 extends StatefulWidget {
 }
 
 class _EditScrapbook2State extends State<EditScrapbook2> {
-  late bool? prevTag = widget.tag;
-  late bool? prevType = widget.type;
-  late bool? prevVisibility = widget.visibility;
-  bool tag = true;
-  bool type = true;
-  bool visibility = true;
+  late bool tag = widget.scrapbookData['tag'] == "Factual" ? true : false;
+  late bool type = widget.scrapbookData['type'] == "Normal" ? true : false;
+  late bool visibility =
+      widget.scrapbookData['visibility'] == "Public" ? true : false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +53,15 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CustomBackButton(buttonFunction: () {
-                  Navigator.pop(context);
+                  Navigator.popUntil(
+                      context, ModalRoute.withName('/scrapbookExpanded'));
                 }),
                 CustomHeader(headerText: "Create Scrapbook"),
                 const SizedBox(height: 15),
                 subheader("Tag"),
                 const SizedBox(height: 5),
                 CustomSelectionTab1(
-                  selection: widget.tag!,
+                  selection: tag,
                   selection1: "Factual",
                   selecion2: "Personal",
                   path1: "assets/images/factual.png",
@@ -97,7 +87,7 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                 subheader("Type"),
                 const SizedBox(height: 5),
                 CustomSelectionTab1(
-                  selection: widget.type!,
+                  selection: type,
                   selection1: "Normal",
                   selecion2: "Challenge",
                   path1: "assets/images/normal.png",
@@ -123,7 +113,7 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                 subheader("Visibility"),
                 const SizedBox(height: 10),
                 CustomSelectionTab2(
-                  selection: widget.visibility!,
+                  selection: visibility,
                   selection1: "Public",
                   selecion2: "Private",
                   func1: () {
@@ -155,7 +145,7 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                           tag: tag,
                           type: type,
                           visibility: visibility,
-                          images: widget.images,
+                          scrapbookData: widget.scrapbookData,
                           scrapbookId: widget.scrapbookId,
                         ),
                       ),

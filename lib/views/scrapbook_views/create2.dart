@@ -36,7 +36,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   bool search = true;
   final TextEditingController _collaborator = TextEditingController();
 
-  final List<String> _collaborators = [];
+  final Map<String, bool> _collaborators = {};
 
   @override
   void initState() {
@@ -226,13 +226,13 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                       .toString()
                       .toLowerCase()
                       .startsWith(_searchQuery.toLowerCase())) {
-                    return !_collaborators.contains(data['username'])
+                    return !_collaborators.containsKey(data['username'])
                         ? CustomUserCard(
                             photoUrl: data['photoUrl'],
                             alt: "assets/images/profile.png",
                             username: data['username'],
                             onTapFunc: () => setState(() {
-                              _collaborators.add(data['username']);
+                              _collaborators.addAll({data['username']: false});
                             }),
                             bottomPadding: 5,
                           )
@@ -355,7 +355,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
         ),
         child: SingleChildScrollView(
           child: Wrap(
-            children: _collaborators
+            children: _collaborators.keys
                 .map(
                   (collaborator) => Container(
                     margin: const EdgeInsets.all(5),

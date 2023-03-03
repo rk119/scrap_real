@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,6 +10,7 @@ import 'package:scrap_real/models/scrapbook.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/storage_methods.dart';
 import 'package:scrap_real/views/navigation.dart';
+import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
 // import 'package:uuid/uuid.dart';
 
 class FireStoreMethods {
@@ -25,7 +25,7 @@ class FireStoreMethods {
     bool type,
     bool visibility,
     List<dynamic> likes,
-    List<dynamic> collaborators,
+    Map<dynamic, dynamic> collaborators,
     List<dynamic> posts,
     bool group,
     double latitude,
@@ -258,12 +258,24 @@ class FireStoreMethods {
     String bio,
     PlatformFile? pickedFile,
     String? photoUrl,
+    String oldUsername,
     bool mounted,
     BuildContext context,
   ) async {
     try {
       final docUser = FirebaseFirestore.instance.collection('users').doc(docId);
-      if (username.isNotEmpty) {
+      if (username.isNotEmpty && username != oldUsername) {
+        final user = _firestore
+            .collection('users')
+            .where('username', isEqualTo: username.trim());
+        final docUserSnapshot = await user.get();
+        if (docUserSnapshot.docs.isNotEmpty) {
+          if (!mounted) {
+            return;
+          }
+          CustomSnackBar.showSnackBar(context, "Username already exists");
+          return;
+        }
         docUser.update({'username': username});
       }
       if (name.isNotEmpty) {
@@ -387,6 +399,15 @@ class FireStoreMethods {
   }
 
   void deleteScrapbook(String scrapbookId, BuildContext context) async {
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Center(
+    //     child: CircularProgressIndicator(
+    //       color: Color(0xff918ef4),
+    //     ),
+    //   ),
+    // );
     final scrapbookData = await FirebaseFirestore.instance
         .collection('scrapbooks')
         .doc(scrapbookId)
@@ -410,12 +431,79 @@ class FireStoreMethods {
     });
 
     final cover = scrapbookData['coverUrl'];
-    cover != "" ? StorageMethods().deleteScrapbookCover(cover) : null;
+    cover != "" ? StorageMethods().deleteFromScrapbook(cover) : null;
 
     await StorageMethods().deleteScrapbook(scrapbookId);
 
     // ignore: use_build_context_synchronously
     CustomSnackBar.snackBarAlert(context, "Scrapbook deleted!");
     Navigator.of(context).pop();
+  }
+
+  editScrapbook(
+    String scrapbookId,
+    File? cover,
+    String? title,
+    String? caption,
+    bool? tag,
+    bool? type,
+    bool? visibility,
+    bool locationDisabled,
+    List<dynamic> posts,
+    BuildContext context,
+  ) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xff918ef4),
+        ),
+      ),
+    );
+
+    final docScrapbook =
+        FirebaseFirestore.instance.collection('scrapbooks').doc(scrapbookId);
+
+    docScrapbook.update({
+      'title': title,
+      'caption': caption,
+      'tag': tag! ? 'Factual' : 'Personal',
+      'type': type! ? 'Normal' : 'Challenge',
+      'visibility': visibility! ? 'Public' : 'Private',
+    });
+
+    if (locationDisabled) {
+      docScrapbook.update({'latitude': 0, 'longitude': 0});
+    }
+
+    if (cover != null) {
+      String oldCover = "";
+      await docScrapbook.get().then((value) {
+        oldCover = value.data()!['coverUrl'];
+      });
+      await docScrapbook.update(
+          {'coverUrl': await StorageMethods().uploadScrapbookCover(cover)});
+      StorageMethods().deleteFromScrapbook(oldCover);
+    }
+
+    List<dynamic> postsList = [];
+    await docScrapbook.get().then((value) {
+      postsList = List.from(value.data()!['posts']);
+    });
+
+    for (int i = 0; i < posts.length; i++) {
+      if (posts[i] == "" && postsList[i] != "") {
+        await StorageMethods().deleteFromScrapbook(postsList[i]);
+        postsList[i] = "";
+      } else if (posts[i] is File && postsList[i] == "") {
+        postsList[i] = await StorageMethods().uploadPost(posts[i], scrapbookId);
+      } else if (posts[i] is File && postsList[i] != "") {
+        await StorageMethods().deleteFromScrapbook(postsList[i]);
+        postsList[i] = await StorageMethods().uploadPost(posts[i], scrapbookId);
+      }
+    }
+
+    docScrapbook.update({'posts': postsList});
   }
 }

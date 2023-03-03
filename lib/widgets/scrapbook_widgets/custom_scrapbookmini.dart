@@ -69,6 +69,7 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
             builder: (context) => ScrapbookExpandedView(
               scrapbookId: widget.scrapbookId,
             ),
+            settings: const RouteSettings(name: '/scrapbookExpanded'),
           ),
         );
       },

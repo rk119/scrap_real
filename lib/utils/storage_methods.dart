@@ -75,7 +75,7 @@ class StorageMethods {
     final ref = _storage
         .ref()
         .child(path)
-        .child(_firestore.collection('scrapbook').doc().id);
+        .child(_firestore.collection('scrapbooks').doc().id);
     UploadTask uploadTask = ref.putFile(file);
 
     TaskSnapshot snapshot = await uploadTask;
@@ -98,7 +98,7 @@ class StorageMethods {
     return downloadUrl;
   }
 
-  deleteScrapbookCover(String cover) async {
+  deleteFromScrapbook(String cover) async {
     final ref = _storage.refFromURL(cover);
     await ref.delete();
   }

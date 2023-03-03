@@ -58,6 +58,7 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
             builder: (context) => ScrapbookExpandedView(
               scrapbookId: widget.scrapbookId,
             ),
+            settings: const RouteSettings(name: '/scrapbookExpanded'),
           ),
         );
       },
