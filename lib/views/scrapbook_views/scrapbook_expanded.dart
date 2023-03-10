@@ -343,9 +343,10 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                               InkWell(
                                 onTap: () async {
                                   FireStoreMethods().likeScrapbook(
-                                    widget.scrapbookId,
-                                    user.uid,
-                                  );
+                                      widget.scrapbookId,
+                                      user.uid,
+                                      context,
+                                      mounted);
                                   setState(() {
                                     isLiked = !isLiked;
                                   });

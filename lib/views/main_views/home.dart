@@ -147,10 +147,16 @@ class _HomePageState extends State<HomePage> {
               .collection('scrapbooks')
               .where('type', isEqualTo: "Normal")
               .where('visibility', isEqualTo: 'Public')
+              .where('group', isEqualTo: false)
               .snapshots()
           : _value == "Groups"
               // add a new bool field while making a scrapbook
-              ? FirebaseFirestore.instance.collection('scrapbooks').snapshots()
+              ? FirebaseFirestore.instance
+                  .collection('scrapbooks')
+                  .where('type', isEqualTo: "Normal")
+                  .where('visibility', isEqualTo: 'Public')
+                  .where('group', isEqualTo: true)
+                  .snapshots()
               : FirebaseFirestore.instance
                   .collection('scrapbooks')
                   .where('type', isEqualTo: "Challenge")
@@ -218,6 +224,7 @@ class _HomePageState extends State<HomePage> {
                         coverImage: data['coverUrl'],
                         scrapbookTag: data['tag'],
                         creatorId: data['creatorUid'],
+                        scrapbookType: data['type'],
                       ),
                       SizedBox(height: 10),
                     ],

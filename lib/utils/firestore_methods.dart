@@ -2,16 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrap_real/models/comment.dart';
+import 'package:scrap_real/models/notification.dart';
 import 'package:scrap_real/models/scrapbook.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/storage_methods.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
-// import 'package:uuid/uuid.dart';
 
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -111,7 +109,12 @@ class FireStoreMethods {
     // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
-  Future<String> likeScrapbook(String scrapbookId, String uid) async {
+  Future<String> likeScrapbook(
+    String scrapbookId,
+    String uid,
+    BuildContext context,
+    bool mounted,
+  ) async {
     String res = "Some error occurred";
     try {
       DocumentSnapshot snap =
@@ -123,11 +126,17 @@ class FireStoreMethods {
         _firestore.collection('scrapbooks').doc(scrapbookId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
+        // ignore: use_build_context_synchronously
+        removeNotification((snap.data()! as dynamic)['creatorUid'], scrapbookId,
+            'like', context, mounted);
       } else {
         // else we need to add uid to the likes array
         _firestore.collection('scrapbooks').doc(scrapbookId).update({
           'likes': FieldValue.arrayUnion([uid])
         });
+        // ignore: use_build_context_synchronously
+        createNotification((snap.data()! as dynamic)['creatorUid'], scrapbookId,
+            (snap.data()! as dynamic)['coverUrl'], 'like', context, mounted);
       }
       res = 'success';
     } catch (err) {
@@ -177,7 +186,12 @@ class FireStoreMethods {
   //   return res;
   // }
 
-  Future<void> followUser(String uid, String followId) async {
+  Future<void> followUser(
+    String uid,
+    String followId,
+    BuildContext context,
+    bool mounted,
+  ) async {
     try {
       DocumentSnapshot snap =
           await _firestore.collection('users').doc(uid).get();
@@ -191,6 +205,14 @@ class FireStoreMethods {
         await _firestore.collection('users').doc(uid).update({
           'following': FieldValue.arrayRemove([followId])
         });
+        // ignore: use_build_context_synchronously
+        removeNotification(
+          followId,
+          '',
+          'follow',
+          context,
+          mounted,
+        );
       } else {
         await _firestore.collection('users').doc(followId).update({
           'followers': FieldValue.arrayUnion([uid])
@@ -199,6 +221,8 @@ class FireStoreMethods {
         await _firestore.collection('users').doc(uid).update({
           'following': FieldValue.arrayUnion([followId])
         });
+        // ignore: use_build_context_synchronously
+        createNotification(followId, '', '', 'follow', context, mounted);
       }
     } catch (e) {
       // ignore: avoid_print
@@ -329,29 +353,28 @@ class FireStoreMethods {
   ) async {
     try {
       int commentNum = 0;
-      DocumentSnapshot snap = await _firestore
+      DocumentSnapshot snapUser = await _firestore
           .collection('users')
           .doc(_auth.currentUser!.uid)
           .get();
-
-      final docComment = _firestore
-          .collection('comment')
-          .doc(scrapbookId)
-          .collection('comments')
-          .doc();
+      DocumentSnapshot snapPost =
+          await _firestore.collection('scrapbooks').doc(scrapbookId).get();
 
       CollectionReference collectionReference = _firestore
           .collection('comment')
           .doc(scrapbookId)
           .collection('comments');
+
+      final docComment = collectionReference.doc();
+
       collectionReference.get().then((QuerySnapshot snapshot) async {
         commentNum = snapshot.size;
         final commentModel = CommentModel(
           creatorUid: _auth.currentUser!.uid,
           commentId: docComment.id,
-          username: (snap.data()! as dynamic)['username'],
+          username: (snapUser.data()! as dynamic)['username'],
           comment: comment,
-          photoUrl: (snap.data()! as dynamic)['photoUrl'],
+          photoUrl: (snapUser.data()! as dynamic)['photoUrl'],
           commentNum: commentNum + 1,
         );
         final json = commentModel.toJson();
@@ -359,6 +382,14 @@ class FireStoreMethods {
 
         if (!mounted) return;
       });
+      // ignore: use_build_context_synchronously
+      createNotification(
+          (snapPost.data()! as dynamic)['creatorUid'],
+          scrapbookId,
+          (snapPost.data()! as dynamic)['coverUrl'],
+          'comment',
+          context,
+          mounted);
     } catch (e) {
       // ignore: avoid_print
       print(e);
@@ -505,5 +536,95 @@ class FireStoreMethods {
     }
 
     docScrapbook.update({'posts': postsList});
+  }
+
+  Future createNotification(
+    String creatorId,
+    String scrapbookId,
+    String coverUrl,
+    String type,
+    BuildContext context,
+    bool mounted,
+  ) async {
+    try {
+      bool isNotCurrentUser = _auth.currentUser!.uid != creatorId;
+      if (isNotCurrentUser) {
+        int feedNum = 0;
+        DocumentSnapshot snap = await _firestore
+            .collection('users')
+            .doc(_auth.currentUser!.uid)
+            .get();
+
+        CollectionReference collectionReference = _firestore
+            .collection('feed')
+            .doc(creatorId)
+            .collection('feedItems');
+
+        final docFeed = collectionReference.doc();
+
+        collectionReference.get().then((QuerySnapshot snapshot) async {
+          feedNum = snapshot.size;
+          final notificationModel = NotificationModel(
+            uid: _auth.currentUser!.uid,
+            feedId: docFeed.id,
+            type: type,
+            username: (snap.data()! as dynamic)['username'],
+            photoUrl: (snap.data()! as dynamic)['photoUrl'],
+            scrapbookId: scrapbookId,
+            coverUrl: coverUrl,
+            feedNum: feedNum + 1,
+          );
+          final json = notificationModel.toJson();
+          await docFeed.set(json);
+
+          if (!mounted) return;
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
+      if (!mounted) {
+        return;
+      }
+      CustomSnackBar.showSnackBar(context, match?.group(2));
+      Navigator.of(context).pop();
+    }
+  }
+
+  removeNotification(
+    String creatorId,
+    String scrapbookId,
+    String type,
+    BuildContext context,
+    bool mounted,
+  ) {
+    try {
+      CollectionReference collectionReference =
+          _firestore.collection('feed').doc(creatorId).collection('feedItems');
+      collectionReference
+          .where('uid', isEqualTo: _auth.currentUser!.uid)
+          .where('scrapbookId', isEqualTo: scrapbookId)
+          .where('type', isEqualTo: type)
+          .get()
+          .then((QuerySnapshot snapshot) async {
+        if (snapshot.docs.isNotEmpty) {
+          QueryDocumentSnapshot documentSnapshot = snapshot.docs[0];
+          documentSnapshot.reference.delete();
+        }
+        if (!mounted) return;
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
+      if (!mounted) {
+        return;
+      }
+      CustomSnackBar.showSnackBar(context, match?.group(2));
+      Navigator.of(context).pop();
+    }
   }
 }

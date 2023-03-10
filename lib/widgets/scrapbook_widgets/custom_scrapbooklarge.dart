@@ -10,6 +10,7 @@ class CustomScrapbookLarge extends StatefulWidget {
   final String title;
   final String coverImage;
   final String scrapbookTag;
+  final String scrapbookType;
   final String creatorId;
 
   const CustomScrapbookLarge({
@@ -18,6 +19,7 @@ class CustomScrapbookLarge extends StatefulWidget {
     required this.title,
     required this.coverImage,
     required this.scrapbookTag,
+    required this.scrapbookType,
     required this.creatorId,
   }) : super(key: key);
 
@@ -167,6 +169,9 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          widget.scrapbookType == "Challenge"
+              ? Positioned(child: Text('Timer'), bottom: 10, right: 10)
+              : Container(),
         ],
       ),
     );

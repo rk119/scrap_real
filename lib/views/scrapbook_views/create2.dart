@@ -164,12 +164,20 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                   },
                 ),
                 const SizedBox(height: 20),
-                subheader("Collaborators"),
-                buildAddCollaborators(),
-                const SizedBox(height: 10),
-                _searchQuery.isNotEmpty ? usersView() : const SizedBox(),
-                const SizedBox(height: 10),
-                buildCollaborators(),
+                type == true
+                    ? Column(
+                        children: [
+                          subheader("Collaborators"),
+                          buildAddCollaborators(),
+                          const SizedBox(height: 10),
+                          _searchQuery.isNotEmpty
+                              ? usersView()
+                              : const SizedBox(),
+                          const SizedBox(height: 10),
+                          buildCollaborators(),
+                        ],
+                      )
+                    : const SizedBox(height: 240),
                 const SizedBox(height: 20),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),

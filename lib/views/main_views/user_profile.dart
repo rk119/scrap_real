@@ -101,6 +101,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark
             ? Colors.white
             : Colors.black;
+
     return isLoading
         ? Container(
             color:
@@ -151,9 +152,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         isCurrentUser: isCurrentUser,
                         onPressedFunc: () async {
                           FireStoreMethods().followUser(
-                            user.uid,
-                            userData['uid'],
-                          );
+                              user.uid, userData['uid'], context, mounted);
                           setState(() {
                             isFollowing = !isFollowing;
                             if (isFollowing) {

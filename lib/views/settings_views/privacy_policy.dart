@@ -45,7 +45,7 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
                 const SizedBox(height: 30),
                 Container(
                   width: 360,
-                  height: 1900,
+                  height: MediaQuery.of(context).size.height * 3.9,
                   decoration: BoxDecoration(
                     color: Provider.of<ThemeProvider>(context).themeMode ==
                             ThemeMode.dark

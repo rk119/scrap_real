@@ -158,7 +158,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 ),
                 const SizedBox(height: 30),
                 SizedBox(
-                  width: 210,
+                  width: MediaQuery.of(context).size.width * 0.62,
                   child: TextButton(
                     onPressed: () {
                       Navigator.push(

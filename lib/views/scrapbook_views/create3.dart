@@ -42,7 +42,7 @@ class CreateScrapbookPage3 extends StatefulWidget {
 class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
   List<File?> images = List.filled(12, null);
   int pageNumber = 0;
-  bool _isLocationEnabled = false;
+  late bool _isLocationEnabled = widget.type == false ? true : false;
   final List<String> likes = [];
 
   @override
@@ -90,7 +90,7 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
                 const SizedBox(height: 40),
                 addLeftAndRightButtonsforPages(),
                 const SizedBox(height: 40),
-                locationToggle(),
+                widget.type == false ? const SizedBox() : locationToggle(),
                 const SizedBox(height: 60),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
