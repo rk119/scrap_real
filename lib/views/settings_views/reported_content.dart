@@ -35,14 +35,14 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
         .collection('users')
         .doc(user.uid)
         .get()
-        .then((value) => value['reportPosts']);
+        .then((value) => value['reportedPosts']);
     setState(() {});
 
     reportedUsers = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get()
-        .then((value) => value['reportUsers']);
+        .then((value) => value['reportedUsers']);
 
     setState(() {});
     isLoading = false;
@@ -194,7 +194,7 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
                     title: data['title'],
                     coverImage: data['coverUrl'],
                     scrapbookTag: data['tag'],
-                    creatorId: data['creatorId'],
+                    creatorId: data['creatorUid'],
                     scrapbookType: data['type'],
                   ),
                   const SizedBox(height: 30),

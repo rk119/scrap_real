@@ -62,8 +62,8 @@ class AuthMethods {
         following: [],
         savedPosts: [],
         blockedUsers: [],
-        reportUsers: [],
-        reportPosts: [],
+        reportedUsers: [],
+        reportedPosts: [],
       );
       final json = userModel.toJson();
       await docUser.set(json);

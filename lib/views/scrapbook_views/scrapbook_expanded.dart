@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/scrapbook_views/ar_view.dart';
 import 'package:scrap_real/views/scrapbook_views/collaborators.dart';
@@ -39,7 +40,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   bool isCurrentUser = false;
   bool isLoading = true;
   bool isLiked = false;
-  late bool isSaved;
+  bool isSaved = false;
   bool privileged = false;
 
   @override
@@ -85,11 +86,11 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
           .then((value) =>
               value.data()!['savedPosts'].contains(widget.scrapbookId))) {
         setState(() {
-          isSaved = false;
+          isSaved = true;
         });
       } else {
         setState(() {
-          isSaved = true;
+          isSaved = false;
         });
       }
       setState(() {
@@ -202,8 +203,48 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   }
 
   void reportScrapbook() {
-    // ignore: avoid_print
-    print('report');
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          TextEditingController reportController = TextEditingController();
+          return AlertDialog(
+            title: const Text("Report Scrapbook"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                    "Please provide a reason for reporting this scrapbook."),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: reportController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Reason',
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  FireStoreMethods().reportScrapbook(
+                      widget.scrapbookId, reportController.text, context);
+
+                  CustomSnackBar.showSnackBar(context, 'Scrapbook reported');
+
+                  Navigator.pop(context);
+                },
+                child: const Text("Report"),
+              )
+            ],
+          );
+        });
   }
 
   void deleteScrapbook() {
@@ -424,7 +465,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                   PopupMenuItem(
                                       value: 'save',
                                       child: CustomText(
-                                        text: isSaved ? 'Save' : 'Unsave',
+                                        text: isSaved ? 'Unsave' : 'Save',
                                         textSize: 15,
                                       )),
                                   PopupMenuItem(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/settings_views/user_settings.dart';
@@ -282,10 +283,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
+                          TextEditingController reportController =
+                              TextEditingController();
                           return AlertDialog(
                             title: const Text("Report User"),
-                            content: const Text(
-                                "Are you sure you want to report this user?"),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                    "Please provide a reason for reporting this user"),
+                                const SizedBox(height: 10),
+                                TextField(
+                                  controller: reportController,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Reason',
+                                  ),
+                                ),
+                              ],
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -295,22 +311,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NavBar()),
-                                  );
-                                  // FireStoreMethods().reportUser(
-                                  //   user.uid,
-                                  //   userData['uid'],
-                                  // );
-                                  FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(user.uid)
-                                      .update({
-                                    'reportUsers':
-                                        FieldValue.arrayUnion([userData['uid']])
-                                  });
+                                  FireStoreMethods().reportUser(userData['uid'],
+                                      reportController.text, context);
+
+                                  CustomSnackBar.showSnackBar(
+                                      context, 'User reported');
+
+                                  Navigator.pop(context);
                                 },
                                 child: const Text("Report"),
                               ),

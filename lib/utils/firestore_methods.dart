@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrap_real/models/comment.dart';
 import 'package:scrap_real/models/notification.dart';
+import 'package:scrap_real/models/reported_scrapbooks.dart';
+import 'package:scrap_real/models/reported_users.dart';
 import 'package:scrap_real/models/scrapbook.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/storage_methods.dart';
@@ -626,5 +628,63 @@ class FireStoreMethods {
       CustomSnackBar.showSnackBar(context, match?.group(2));
       Navigator.of(context).pop();
     }
+  }
+
+  Future reportScrapbook(
+    String scrapbookId,
+    String reason,
+    BuildContext context,
+  ) async {
+    DocumentSnapshot snapUser =
+        await _firestore.collection('users').doc(_auth.currentUser!.uid).get();
+
+    CollectionReference collectionReference =
+        _firestore.collection('reportedScrapbooks');
+
+    DocumentReference documentReference = collectionReference.doc(scrapbookId);
+
+    final reportModel = ReportScrapbookModel(
+      reporterUid: snapUser.id,
+      scrapbookId: scrapbookId,
+      reportReason: reason,
+    );
+
+    final json = reportModel.toJson();
+
+    await documentReference.set(json);
+
+    await _firestore.collection('users').doc(_auth.currentUser!.uid).update({
+      'reportedPosts': FieldValue.arrayUnion([scrapbookId])
+    });
+    // ignore: use_build_context_synchronously
+    CustomSnackBar.showSnackBar(context, 'Scrapbook reported');
+  }
+
+  Future reportUser(
+    String userId,
+    String reason,
+    BuildContext context,
+  ) async {
+    DocumentSnapshot snapUser =
+        await _firestore.collection('users').doc(_auth.currentUser!.uid).get();
+
+    CollectionReference collectionReference =
+        _firestore.collection('reportedUsers');
+
+    DocumentReference documentReference = collectionReference.doc(userId);
+
+    final reportModel = ReportUserModel(
+      userReportedUid: userId,
+      reporterUid: snapUser.id,
+      reportReason: reason,
+    );
+
+    final json = reportModel.toJson();
+
+    await documentReference.set(json);
+
+    await _firestore.collection('users').doc(_auth.currentUser!.uid).update({
+      'reportedUsers': FieldValue.arrayUnion([userId])
+    });
   }
 }
