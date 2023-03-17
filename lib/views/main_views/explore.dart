@@ -13,8 +13,10 @@ import 'package:scrap_real/models/autocomplate_prediction.dart';
 import 'package:scrap_real/models/place_auto_complate_response.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/network_utility.dart';
+import 'package:scrap_real/views/main_views/ar_view.dart';
 import 'package:scrap_real/views/main_views/location_list_tile.dart';
 import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbookmini.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -159,6 +161,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+    final key = GlobalObjectKey<ExpandableFabState>(context);
     return isLoading
         ? Container(
             color:
@@ -295,17 +298,55 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ],
                   ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () async {
-                  await getLocation();
-                  _controller!.animateCamera(CameraUpdate.newCameraPosition(
-                      CameraPosition(target: _currentPosition, zoom: 14)));
-                },
-                backgroundColor: const Color.fromARGB(255, 108, 200, 202),
-                child: const Icon(
-                  Icons.my_location,
-                  color: Colors.black,
-                )),
+            floatingActionButtonLocation: ExpandableFab.location,
+            floatingActionButton: ExpandableFab(
+              key: key,
+              overlayStyle: ExpandableFabOverlayStyle(
+                // color: Colors.black.withOpacity(0.5),
+                blur: 5,
+              ),
+              onOpen: () {
+                debugPrint('onOpen');
+              },
+              afterOpen: () {
+                debugPrint('afterOpen');
+              },
+              onClose: () {
+                debugPrint('onClose');
+              },
+              afterClose: () {
+                debugPrint('afterClose');
+              },
+              children: [
+                FloatingActionButton(
+                  onPressed: () async {
+                    await getLocation();
+                    _controller!.animateCamera(CameraUpdate.newCameraPosition(
+                        CameraPosition(target: _currentPosition, zoom: 14)));
+                  },
+                  backgroundColor: const Color.fromARGB(255, 108, 200, 202),
+                  child: const Icon(
+                    Icons.my_location,
+                    color: Colors.black,
+                  ),
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AugmentedRealityView(),
+                      ),
+                    );
+                  },
+                  backgroundColor: const Color.fromARGB(255, 108, 200, 202),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           );
   }
 

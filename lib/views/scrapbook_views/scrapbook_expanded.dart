@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
-import 'package:scrap_real/views/scrapbook_views/ar_view.dart';
 import 'package:scrap_real/views/scrapbook_views/collaborators.dart';
 import 'package:scrap_real/views/scrapbook_views/comments.dart';
 import 'package:scrap_real/views/scrapbook_views/editScrapbook1.dart';
@@ -616,19 +615,6 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                         buttonColor: Colors.grey.shade200,
                       ),
                       SizedBox(height: 15),
-                      CustomTextButton(
-                        buttonBorderRadius: BorderRadius.circular(35),
-                        buttonFunction: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const AugmentedRealityView(),
-                            ),
-                          );
-                        },
-                        buttonText: "View in AR",
-                      ),
                     ],
                   ),
                 ),

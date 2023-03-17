@@ -298,6 +298,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_expandable_fab:
+    dependency: "direct main"
+    description:
+      name: flutter_expandable_fab
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -563,34 +570,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  mapbox_gl:
-    dependency: "direct main"
-    description:
-      name: mapbox_gl
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.15.0"
-  mapbox_gl_dart:
-    dependency: transitive
-    description:
-      name: mapbox_gl_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
-  mapbox_gl_platform_interface:
-    dependency: transitive
-    description:
-      name: mapbox_gl_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.15.0"
-  mapbox_gl_web:
-    dependency: transitive
-    description:
-      name: mapbox_gl_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.15.0"
   matcher:
     dependency: transitive
     description:

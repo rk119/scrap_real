@@ -51,7 +51,6 @@ dependencies:
   location: ^4.4.0
   flutter_map: ^3.1.0
   flutter_dotenv: ^5.0.2
-  mapbox_gl: ^0.15.0
   flutter_native_splash: ^2.2.16
   cached_network_image: ^3.2.3
   shared_preferences: ^2.0.17
@@ -62,6 +61,7 @@ dependencies:
   file_picker: ^5.2.5
   custom_info_window: ^1.0.1
   flutter_custom_clippers: ^2.1.0
+  flutter_expandable_fab: ^1.7.1
 
 dev_dependencies:
   flutter_test:
