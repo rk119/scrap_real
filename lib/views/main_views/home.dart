@@ -55,17 +55,15 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       DropdownMenuItem(
-        value: "Nearby Challenges",
+        value: "Recommended",
         child: Row(
           children: [
             Icon(
-              Icons.flag_outlined,
-              color: value == "Nearby Challenges"
-                  ? Color(0xFF918EF4)
-                  : Colors.black,
+              Icons.star_border_outlined,
+              color: value == "Recommended" ? Color(0xFF918EF4) : Colors.black,
             ),
             SizedBox(width: 10),
-            Text("Nearby Challenges"),
+            Text("Recommended"),
           ],
         ),
       ),

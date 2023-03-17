@@ -40,5 +40,6 @@ class UserModel {
         'blockedUsers': [],
         'reportedUsers': [],
         'reportedPosts': [],
+        'isSuspended': false,
       };
 }

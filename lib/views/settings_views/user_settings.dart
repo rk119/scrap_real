@@ -165,12 +165,36 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                   text: "Log out",
                   color: const Color(0xffbc2d21),
                   buttonFunction: () async {
-                    await FirebaseAuth.instance.signOut();
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const WelcomePage()),
+                    // show dialog to confirm
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Log out?"),
+                        content:
+                            const Text("Are you sure you want to log out?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel",
+                                style: TextStyle(color: Colors.black)),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await FirebaseAuth.instance.signOut();
+                              if (!mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const WelcomePage()),
+                              );
+                            },
+                            child: const Text("Log out",
+                                style: TextStyle(color: Color(0xffbc2d21))),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),

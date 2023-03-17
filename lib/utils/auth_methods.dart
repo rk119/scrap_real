@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrap_real/models/user_class.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
+import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/auth_views/send_verification.dart';
 import 'package:scrap_real/views/navigation.dart';
 
@@ -97,11 +98,56 @@ class AuthMethods {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      var user = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
+
       if (!mounted) return;
+
+      bool suspension = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.user!.uid)
+          .get()
+          .then((value) => value.data()!['isSuspended']);
+
+      if (suspension) {
+        Timestamp dateOfSuspension = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.user!.uid)
+            .get()
+            .then((value) => value.data()!['dateOfSuspension']);
+
+        DateTime date = dateOfSuspension.toDate();
+
+        if (DateTime.now().difference(date).inDays > 7) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xff918ef4),
+              ),
+            ),
+          );
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.user!.uid)
+              .update({'isSuspended': false});
+
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.user!.uid)
+              .update({'dateOfSuspension': FieldValue.delete()});
+        } else {
+          // ignore: use_build_context_synchronously
+          CustomSnackBar.showSnackBar(
+              context, "Your account has been suspended");
+          return;
+        }
+      }
+
+      // ignore: use_build_context_synchronously
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => NavBar()),

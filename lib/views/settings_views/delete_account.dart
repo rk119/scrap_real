@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
+import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/views/auth_views/welcome.dart';
 import 'package:scrap_real/views/settings_views/account_info.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
@@ -110,12 +111,27 @@ class _DeleteAccounttate extends State<DeleteAccountPage> {
                             .collection('users')
                             .doc(user.uid)
                             .delete();
+                        await FirebaseFirestore.instance
+                            .collection('reportedUsers')
+                            .doc(user.uid)
+                            .delete();
+
                         await user.delete();
                         url != ""
                             ? await FirebaseStorage.instance
                                 .refFromURL(url)
                                 .delete()
                             : null;
+
+                        await FirebaseFirestore.instance
+                            .collection('scrapbooks')
+                            .where('creatorUid', isEqualTo: user.uid)
+                            .get()
+                            .then((snapshot) async {
+                          for (DocumentSnapshot ds in snapshot.docs) {
+                            FireStoreMethods().deleteScrapbook(ds.id, context);
+                          }
+                        });
                       }
                       // ignore: use_build_context_synchronously
                       Navigator.push(

@@ -468,8 +468,14 @@ class FireStoreMethods {
 
     await StorageMethods().deleteScrapbook(scrapbookId);
 
+    await FirebaseFirestore.instance
+        .collection('reportedScrapbooks')
+        .doc(scrapbookId)
+        .delete();
+
     // ignore: use_build_context_synchronously
     CustomSnackBar.snackBarAlert(context, "Scrapbook deleted!");
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
   }
 

@@ -9,6 +9,7 @@ import 'package:scrap_real/utils/firestore_methods.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_commentcard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'globals.dart' as globals;
 
 class ScrapbookCommentsPage extends StatefulWidget {
   final String scrapbookId;
@@ -64,7 +65,7 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   CustomBackButton(buttonFunction: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(context);
                   }),
                   CustomHeader(headerText: "Comments"),
                   const SizedBox(height: 20),
@@ -198,5 +199,6 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
     FireStoreMethods()
         .createComment(_comment.text, widget.scrapbookId, context, mounted);
     _comment.clear();
+    globals.numComments++;
   }
 }

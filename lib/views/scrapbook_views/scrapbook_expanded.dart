@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'globals.dart' as globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
@@ -32,6 +33,7 @@ class ScrapbookExpandedView extends StatefulWidget {
 class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   final user = FirebaseAuth.instance.currentUser!;
   var scrapbookData = {};
+  var userData = {};
   bool posts = true;
   int postsLen = 0;
   int followers = 0;
@@ -42,6 +44,7 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
   bool isLiked = false;
   bool isSaved = false;
   bool privileged = false;
+  int numLikes = 0;
 
   @override
   void initState() {
@@ -73,10 +76,24 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
           .doc(user.uid)
           .get()
           .then((value) => value.data()!['username']);
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(scrapbookData['creatorUid'])
+          .get();
+
+      userData = userSnap.data()!;
       // followers = userSnap.data()!['followers'].length;
       // following = userSnap.data()!['following'].length;
       // isFollowing = userSnap.data()!['followers'].contains(user.uid);
       isLiked = scrapbookData['likes'].contains(user.uid);
+      numLikes = scrapbookData['likes'].length;
+
+      globals.numComments = await FirebaseFirestore.instance
+          .collection('comment')
+          .doc(widget.scrapbookId)
+          .collection('comments')
+          .get()
+          .then((value) => value.docs.length);
       privileged = scrapbookData['creatorUid'] == user.uid ||
           scrapbookData['collaborators'].keys.contains(userName);
       if (await FirebaseFirestore.instance
@@ -358,6 +375,41 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                       CustomHeader(headerText: scrapbookData['title']),
                       SizedBox(
                           height: MediaQuery.of(context).size.height * 0.02),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(10),
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.white,
+                              border: Border.all(
+                                color: userData['photoUrl'] != ''
+                                    ? Colors.black
+                                    : Colors.white,
+                                width: 1,
+                              ),
+                              image: DecorationImage(
+                                image: userData['photoUrl'] == ''
+                                    ? const AssetImage(
+                                            'assets/images/profile.png')
+                                        as ImageProvider
+                                    : NetworkImage(userData['photoUrl']),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            userData['username'],
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                       Stack(
                         alignment: Alignment.center,
                         children: [
@@ -377,6 +429,50 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                       ),
                       const SizedBox(height: 15),
                       Row(
+                        children: [
+                          Text(
+                            numLikes.toString(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            numLikes != 1 ? " likes" : " like",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            " • ",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            globals.numComments.toString(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            globals.numComments != 1 ? " comments" : " comment",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
@@ -390,6 +486,8 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                                       mounted);
                                   setState(() {
                                     isLiked = !isLiked;
+                                    numLikes =
+                                        isLiked ? numLikes + 1 : numLikes - 1;
                                   });
                                 },
                                 child: isLiked
