@@ -22,6 +22,8 @@ class CreateScrapbookPage3 extends StatefulWidget {
   final bool visibility;
   final Map<String, bool> collaborators;
   final bool group;
+  final String riddle;
+  final String answer;
 
   const CreateScrapbookPage3({
     Key? key,
@@ -33,6 +35,8 @@ class CreateScrapbookPage3 extends StatefulWidget {
     required this.visibility,
     required this.collaborators,
     required this.group,
+    required this.riddle,
+    required this.answer,
   }) : super(key: key);
 
   @override
@@ -322,12 +326,14 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
   Future createScrapbook() async {
     double lat = 0.0;
     double long = 0.0;
+    double alt = 0.0;
     if (_isLocationEnabled) {
       await Geolocator.requestPermission();
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       lat = position.latitude;
       long = position.longitude;
+      alt = position.altitude;
     }
 
     // ignore: use_build_context_synchronously
@@ -342,8 +348,11 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
       widget.collaborators,
       images,
       widget.group,
+      widget.riddle,
+      widget.answer,
       lat,
       long,
+      alt,
       context,
       mounted,
       // _collaborators.length > 0 ? true : false,

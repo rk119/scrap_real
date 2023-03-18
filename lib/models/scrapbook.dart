@@ -11,8 +11,11 @@ class ScrapbookModel {
   final String coverUrl;
   final List posts;
   final bool group;
+  final String riddle;
+  final String answer;
   final double latitude;
   final double longitude;
+  final double altitude;
 
   ScrapbookModel({
     this.creatorUid = '',
@@ -27,8 +30,11 @@ class ScrapbookModel {
     required this.coverUrl,
     required this.posts,
     required this.group,
+    required this.riddle,
+    required this.answer,
     required this.latitude,
     required this.longitude,
+    required this.altitude,
   });
 
   Map<String, dynamic> toJson() => {
@@ -44,7 +50,10 @@ class ScrapbookModel {
         "coverUrl": coverUrl,
         'posts': posts,
         'group': group,
+        'riddle': riddle,
+        'answer': answer,
         'latitude': latitude,
         'longitude': longitude,
+        'altitude': altitude,
       };
 }

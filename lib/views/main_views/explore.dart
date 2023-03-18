@@ -63,7 +63,9 @@ class _ExplorePageState extends State<ExplorePage> {
       for (int i = 0; i < scrapbookSnap.size; i++) {
         var location = [];
         var scrapData = scrapbookSnap.docs[i].data();
-        if (scrapData['latitude'] == 0 || scrapData['longitude'] == 0) {
+        if (scrapData['latitude'] == 0 ||
+            scrapData['longitude'] == 0 ||
+            scrapData['type'] == 'Secret') {
           continue;
         } else {
           location.add(scrapData['scrapbookId']);
@@ -319,6 +321,7 @@ class _ExplorePageState extends State<ExplorePage> {
               },
               children: [
                 FloatingActionButton(
+                  heroTag: 'btn1',
                   onPressed: () async {
                     await getLocation();
                     _controller!.animateCamera(CameraUpdate.newCameraPosition(
@@ -331,6 +334,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                 ),
                 FloatingActionButton(
+                  heroTag: 'btn2',
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -379,6 +383,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             coverImage: scrapbookData[index][4],
                             scrapbookTag: scrapbookData[index][5],
                             creatorId: scrapbookData[index][6],
+                            visibility: scrapbookData[index][7],
                             map: true,
                           ),
                           ClipPath(

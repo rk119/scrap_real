@@ -9,6 +9,7 @@ import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/scrapbook_views/create3.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
+import 'package:scrap_real/widgets/card_widgets/custom_namecard.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
@@ -35,8 +36,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   String _searchQuery = "";
   bool search = true;
   final TextEditingController _collaborator = TextEditingController();
-
   final Map<String, bool> _collaborators = {};
+  final TextEditingController riddle = TextEditingController();
+  final TextEditingController answer = TextEditingController();
 
   @override
   void initState() {
@@ -121,9 +123,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                 CustomSelectionTab1(
                   selection: type,
                   selection1: "Normal",
-                  selecion2: "Challenge",
+                  selecion2: "Secret",
                   path1: "assets/images/normal.png",
-                  path2: "assets/images/challenge.png",
+                  path2: "assets/images/mystery-box.png",
                   func1: () {
                     if (type == false) {
                       setState(() {
@@ -139,7 +141,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                     }
                   },
                   insets1: const EdgeInsets.fromLTRB(20, 7, 22, 7),
-                  insets2: const EdgeInsets.fromLTRB(13, 7, 13, 7),
+                  insets2: const EdgeInsets.fromLTRB(23, 7, 23, 7),
                 ),
                 const SizedBox(height: 20),
                 subheader("Visibility"),
@@ -177,8 +179,124 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                           buildCollaborators(),
                         ],
                       )
-                    : const SizedBox(height: 240),
-                const SizedBox(height: 20),
+                    : Column(
+                        children: [
+                          subheader("Enter your secret code"),
+                          const SizedBox(height: 10),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.black
+                                  : const Color(0xfffdfbfb),
+                              borderRadius: BorderRadius.circular(6),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  blurRadius: 2,
+                                  offset: Offset(1, 2),
+                                )
+                              ],
+                            ),
+                            height: 50,
+                            child: Wrap(
+                              children: [
+                                Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: 310,
+                                      child: TextFormField(
+                                        controller: riddle,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        keyboardType: TextInputType.name,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Please enter a riddle";
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          hintText: "Riddle",
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5,
+                                            color: const Color.fromARGB(
+                                                255, 193, 193, 193),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.black
+                                  : const Color(0xfffdfbfb),
+                              borderRadius: BorderRadius.circular(6),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  blurRadius: 2,
+                                  offset: Offset(1, 2),
+                                )
+                              ],
+                            ),
+                            height: 50,
+                            child: Wrap(
+                              children: [
+                                Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: 310,
+                                      child: TextFormField(
+                                        controller: answer,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        keyboardType: TextInputType.name,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Please enter the answer";
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          hintText: "Secret answer",
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5,
+                                            color: const Color.fromARGB(
+                                                255, 193, 193, 193),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                const SizedBox(height: 90),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: () {
@@ -194,6 +312,8 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                           visibility: visibility,
                           collaborators: _collaborators,
                           group: _collaborators.isNotEmpty,
+                          riddle: riddle.text.trim(),
+                          answer: answer.text.trim(),
                         ),
                       ),
                     );

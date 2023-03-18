@@ -13,6 +13,7 @@ class ScrapbookMiniSize extends StatefulWidget {
   String coverImage;
   String scrapbookTag;
   String creatorId;
+  String visibility;
   bool map;
 
   ScrapbookMiniSize({
@@ -22,6 +23,7 @@ class ScrapbookMiniSize extends StatefulWidget {
     required this.coverImage,
     required this.scrapbookTag,
     required this.creatorId,
+    required this.visibility,
     required this.map,
   }) : super(key: key);
   @override
@@ -181,6 +183,17 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          widget.visibility == 'Private'
+              ? const Positioned(
+                  bottom: 13,
+                  right: 11,
+                  child: Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                )
+              : const SizedBox.shrink(),
         ],
       ),
     );

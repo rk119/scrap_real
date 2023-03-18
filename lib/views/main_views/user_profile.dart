@@ -39,6 +39,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   bool isCurrentUser = false;
   bool isLoading = true;
   var scrapbooksToShow = [];
+  var collabScrapbooksToShow = ['0'];
 
   @override
   void initState() {
@@ -58,25 +59,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
           .collection('scrapbooks')
           .where('creatorUid', isEqualTo: widget.uid)
           .get();
-      // if you want to count the collaborated scrapbooks
-      // add this amount as well
-      // var sbCollabSnap = await FirebaseFirestore.instance
-      //     .collection('scrapbooks')
-      //     .where('collaborators', arrayContains: widget.uid)
-      //     .get();
-
-      // get the user data
 
       for (var i = 0; i < scrapbookSnap.docs.length; i++) {
         var data = scrapbookSnap.docs[i].data();
         if (data['visibility'] == 'Private' &&
             data['creatorUid'] != user.uid &&
-            !data['collaborators'].contains(user.uid)) {
+            !data['collaborators'].keys.contains(user.uid)) {
           continue;
         } else {
           scrapbooksToShow.add(scrapbookSnap.docs[i]);
         }
       }
+
+      print('Collab $collabScrapbooksToShow');
 
       postsLen = scrapbooksToShow.length;
       userData = userSnap.data()!;
@@ -84,6 +79,22 @@ class _UserProfilePageState extends State<UserProfilePage> {
       following = userData['following'].length;
       isFollowing = userData['followers'].contains(user.uid);
       isCurrentUser = widget.uid == user.uid;
+
+      var sbCollabs = await FirebaseFirestore.instance
+          .collection('scrapbooks')
+          .get()
+          .then((value) => value.docs
+              .where((element) => element
+                  .data()['collaborators']
+                  .keys
+                  .contains(userData['username']))
+              .toList());
+
+      for (var i = 0; i < sbCollabs.length; i++) {
+        var data = sbCollabs[i].data();
+        collabScrapbooksToShow.add(data['scrapbookId']);
+      }
+
       setState(() {
         isLoading = false;
       });
@@ -344,14 +355,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget postsView() {
     return posts
-        ? scrapbookContainer(FirebaseFirestore.instance
-            .collection('scrapbooks')
-            .where('creatorUid', isEqualTo: widget.uid)
-            .snapshots())
-        : scrapbookContainer(FirebaseFirestore.instance
-            .collection('scrapbooks')
-            .where('collaborators', arrayContains: widget.uid)
-            .snapshots());
+        ? scrapbookContainer(
+            FirebaseFirestore.instance
+                .collection('scrapbooks')
+                .where('creatorUid', isEqualTo: widget.uid)
+                .snapshots(),
+          )
+        : scrapbookContainer(
+            FirebaseFirestore.instance
+                .collection('scrapbooks')
+                .where('scrapbookId', whereIn: collabScrapbooksToShow)
+                .snapshots(),
+          );
   }
 
   Widget scrapbookContainer(Stream<QuerySnapshot<Object?>> postsStream) {
@@ -375,7 +390,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           );
         } else {
           return GridView.builder(
-            itemCount: scrapbooksToShow.length,
+            itemCount: snapshots.data!.docs.length,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -385,11 +400,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
               crossAxisSpacing: 10,
             ),
             itemBuilder: (BuildContext context, int index) {
-              var data = scrapbooksToShow[index].data() as Map<String, dynamic>;
+              var data =
+                  snapshots.data!.docs[index].data() as Map<String, dynamic>;
 
               if (data['visibility'] == 'Private' &&
                   data['creatorUid'] != user.uid &&
-                  !data['collaborators'].contains(user.uid)) {
+                  !data['collaborators'].keys.contains(user.uid)) {
                 return const SizedBox.shrink();
               } else {
                 return ScrapbookMiniSize(
@@ -398,6 +414,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   coverImage: data['coverUrl'],
                   scrapbookTag: data['tag'],
                   creatorId: data['creatorUid'],
+                  visibility: data['visibility'],
                   map: false,
                 );
               }

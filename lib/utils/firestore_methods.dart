@@ -28,8 +28,11 @@ class FireStoreMethods {
     Map<dynamic, dynamic> collaborators,
     List<dynamic> posts,
     bool group,
+    String riddle,
+    String answer,
     double latitude,
     double longitude,
+    double altitude,
     BuildContext context,
     bool mounted,
     // GlobalKey<FormState> formKey,
@@ -76,8 +79,11 @@ class FireStoreMethods {
         coverUrl: photoUrl,
         posts: postsUrls,
         group: group,
+        riddle: riddle,
+        answer: answer,
         latitude: latitude,
         longitude: longitude,
+        altitude: altitude,
       );
       final json = scrapbookModel.toJson();
       await docScrapbook.set(json);
