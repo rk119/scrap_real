@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,7 @@ class _SearchPageState extends State<SearchPage> {
   bool search = true;
   String _searchQuery = "";
   var blockedUsers = [];
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   void initState() {
@@ -188,14 +190,30 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget scrapbooksView() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('scrapbooks').snapshots(),
+    return StreamBuilder<List<QuerySnapshot>>(
+      stream: CombineLatestStream.list<QuerySnapshot>([
+        FirebaseFirestore.instance
+            .collection('scrapbooks')
+            .where('visibility', isEqualTo: 'Public')
+            .snapshots(),
+        FirebaseFirestore.instance
+            .collection('scrapbooks')
+            .where('visibility', isEqualTo: 'Private')
+            .where('creatorUid', isEqualTo: user.uid)
+            .snapshots(),
+      ]),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
             child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
+
+        List<DocumentSnapshot> documents = [];
+        snapshots.data?.forEach((querySnapshot) {
+          documents.addAll(querySnapshot.docs);
+        });
+
         return (snapshots.connectionState == ConnectionState.waiting)
             ? Center(
                 child: CircularProgressIndicator(color: Color(0xFF918EF4)),
@@ -203,10 +221,9 @@ class _SearchPageState extends State<SearchPage> {
             : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: snapshots.data!.docs.length,
+                itemCount: documents.length,
                 itemBuilder: (context, index) {
-                  var data = snapshots.data!.docs[index].data()
-                      as Map<String, dynamic>;
+                  var data = documents[index].data() as Map<String, dynamic>;
 
                   if (_searchQuery.isEmpty) {
                     return Column(

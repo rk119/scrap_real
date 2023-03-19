@@ -1,26 +1,23 @@
 class CommentModel {
   String creatorUid;
   String commentId;
-  final String username;
+  final String uid;
   final String comment;
-  final String photoUrl;
   final int commentNum;
 
   CommentModel({
     this.creatorUid = '',
     this.commentId = '',
-    required this.username,
+    required this.uid,
     required this.comment,
-    required this.photoUrl,
     required this.commentNum,
   });
 
   Map<String, dynamic> toJson() => {
         'creatorUid': creatorUid,
         'commentId': commentId,
-        'username': username,
+        'uid': uid,
         'comment': comment,
-        'photoUrl': photoUrl,
         'commentNum': commentNum,
       };
 }

@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-
+// import 'package:async/async.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,11 +21,36 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _value = "Home";
+  final user = FirebaseAuth.instance.currentUser!;
+  List<int> interests = [];
 
   @override
   void initState() {
     super.initState();
     dropDown(_value);
+    userInterest();
+  }
+
+  userInterest() async {
+    try {
+      List<int> indexList = [];
+      var userName = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((value) => value.data()!['interests']);
+      for (int i = 0; i < userName.length; i++) {
+        if (userName[i] == true) {
+          indexList.add(i);
+        }
+      }
+      setState(() {
+        interests = indexList;
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
   }
 
   List<DropdownMenuItem> dropDown(String value) {
@@ -139,32 +166,51 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget scrapbooksView() {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<List<QuerySnapshot>>(
       stream: _value == "Home"
-          ? FirebaseFirestore.instance
-              .collection('scrapbooks')
-              .where('type', isEqualTo: "Normal")
-              .where('visibility', isEqualTo: 'Public')
-              .where('group', isEqualTo: false)
-              .snapshots()
-          : _value == "Groups"
-              // add a new bool field while making a scrapbook
-              ? FirebaseFirestore.instance
+          ? CombineLatestStream.list<QuerySnapshot>([
+              FirebaseFirestore.instance
                   .collection('scrapbooks')
                   .where('type', isEqualTo: "Normal")
                   .where('visibility', isEqualTo: 'Public')
-                  .where('group', isEqualTo: true)
+                  .where('group', isEqualTo: false)
                   .snapshots()
-              : FirebaseFirestore.instance
-                  .collection('scrapbooks')
-                  .where('type', isEqualTo: "Challenge")
-                  .snapshots(),
+            ])
+          : _value == "Groups"
+              // add a new bool field while making a scrapbook
+              ? CombineLatestStream.list<QuerySnapshot>([
+                  FirebaseFirestore.instance
+                      .collection('scrapbooks')
+                      .where('type', isEqualTo: "Normal")
+                      .where('visibility', isEqualTo: 'Public')
+                      .where('group', isEqualTo: true)
+                      .snapshots(),
+                  FirebaseFirestore.instance
+                      .collection('scrapbooks')
+                      .where('type', isEqualTo: "Normal")
+                      .where('visibility', isEqualTo: 'Private')
+                      .where('group', isEqualTo: true)
+                      .where('creatorUid', isEqualTo: user.uid)
+                      .snapshots(),
+                ])
+              : CombineLatestStream.list<QuerySnapshot>([
+                  FirebaseFirestore.instance
+                      .collection('scrapbooks')
+                      .where('interestIndex', whereIn: interests)
+                      .snapshots()
+                ]),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
             child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
+
+        List<DocumentSnapshot> documents = [];
+        snapshots.data?.forEach((querySnapshot) {
+          documents.addAll(querySnapshot.docs);
+        });
+
         return (snapshots.connectionState == ConnectionState.waiting)
             ? Center(
                 child: CircularProgressIndicator(color: Color(0xFF918EF4)),
@@ -172,10 +218,9 @@ class _HomePageState extends State<HomePage> {
             : ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: snapshots.data!.docs.length,
+                itemCount: documents.length,
                 itemBuilder: (context, index) {
-                  var data = snapshots.data!.docs[index].data()
-                      as Map<String, dynamic>;
+                  var data = documents[index].data() as Map<String, dynamic>;
 
                   // if (data['visibility'] == 'Private') {
                   //   final creatorUid = data['creatorUid'];

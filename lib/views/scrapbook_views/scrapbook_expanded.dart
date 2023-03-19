@@ -145,6 +145,13 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                 buttonBorderRadius: BorderRadius.circular(35),
                 buttonFunction: () {
                   Navigator.of(context).pop();
+                  FireStoreMethods().createNotification(
+                      scrapbookData['creatorUid'],
+                      scrapbookData['scrapbookId'],
+                      scrapbookData['coverUrl'],
+                      'collaborate',
+                      context,
+                      mounted);
                   requestSentAlert();
                 },
                 buttonText: "Yes, I want access",

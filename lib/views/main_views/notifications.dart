@@ -24,8 +24,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
   List<String> notifMsg = [
     "started following you",
     "liked your post",
-    "commented on your post"
+    "commented on your post",
+    "requested for collaboration access to",
+    "Your request for collaboration access to",
+    "You are now a collaborator for"
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,32 +80,60 @@ class _NotificationsPageState extends State<NotificationsPage> {
             child: CircularProgressIndicator(color: Color(0xFF918EF4)),
           );
         }
-        return ListView.builder(
-          reverse: true,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          itemCount: snapshots.data!.docs.length,
-          itemBuilder: (context, index) {
-            var data =
-                snapshots.data!.docs[index].data() as Map<String, dynamic>;
-            String notifText = "";
-            if (data['type'] == 'follow') {
-              notifText = "@${data['username']} ${notifMsg[0]}";
-            } else if (data['type'] == 'like') {
-              notifText = "@${data['username']} ${notifMsg[1]}";
-            } else {
-              notifText = "@${data['username']} ${notifMsg[2]}";
-            }
-            return CustomNotifCard(
-              photoUrl: data['photoUrl'],
-              postImageUrl: data['coverUrl'],
-              alt: "assets/images/profile.png",
-              type: data['type'],
-              notifText: notifText,
-            );
-          },
-        );
+        if (snapshots.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF918EF4)),
+          );
+        } else if (snapshots.data!.docs.isEmpty) {
+          return Center(
+            child: CustomText(text: "No Notifications", textSize: 15),
+          );
+        } else {
+          return ListView.builder(
+            reverse: true,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: snapshots.data!.docs.length,
+            itemBuilder: (context, index) {
+              var data =
+                  snapshots.data!.docs[index].data() as Map<String, dynamic>;
+              String notifText = "";
+              if (data['type'] == 'follow') {
+                // notifText = '@${data['username']} ${notifMsg[0]}';
+                notifText = notifMsg[0];
+              } else if (data['type'] == 'like') {
+                // notifText = '@${data['username']} ${notifMsg[1]}';
+                notifText = notifMsg[1];
+              } else if (data['type'] == 'comment') {
+                // notifText = '@${data['username']} ${notifMsg[2]}';
+                notifText = notifMsg[2];
+              } else if (data['type'] == 'collaborate') {
+                // notifText =
+                //     '@${data['username']} ${notifMsg[3]} "${data['title']}"';
+                notifText = notifMsg[3];
+              } else if (data['type'] == 'deniedAccess') {
+                // notifText = '${notifMsg[4]} "${data['title']}" is rejected';
+                notifText = notifMsg[4];
+              } else if (data['type'] == 'acceptAccess') {
+                // notifText = '${notifMsg[5]} "${data['title']}"';
+                notifText = notifMsg[5];
+              }
+              return CustomNotifCard(
+                photoUrl: data['photoUrl'],
+                postImageUrl: data['coverUrl'],
+                alt: "assets/images/profile.png",
+                type: data['type'],
+                notifText: notifText,
+                scrapbookId: data['scrapbookId'],
+                uid: data['uid'],
+                username: data['username'],
+                title: data['title'],
+                mounted: mounted,
+              );
+            },
+          );
+        }
       },
     );
   }

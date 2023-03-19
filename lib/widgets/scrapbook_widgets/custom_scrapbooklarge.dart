@@ -169,9 +169,7 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          widget.scrapbookType == "Challenge"
-              ? Positioned(child: Text('Timer'), bottom: 10, right: 10)
-              : Container(),
+          Container(),
         ],
       ),
     );

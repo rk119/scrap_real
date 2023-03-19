@@ -5,6 +5,7 @@ class NotificationModel {
   final String username;
   final String photoUrl;
   final String scrapbookId;
+  final String title;
   final String coverUrl;
   final int feedNum;
 
@@ -15,6 +16,7 @@ class NotificationModel {
     required this.username,
     required this.photoUrl,
     required this.scrapbookId,
+    required this.title,
     required this.coverUrl,
     required this.feedNum,
   });
@@ -26,6 +28,7 @@ class NotificationModel {
         'username': username,
         'photoUrl': photoUrl,
         'scrapbookId': scrapbookId,
+        'title': title,
         'coverUrl': coverUrl,
         'feedNum': feedNum,
       };

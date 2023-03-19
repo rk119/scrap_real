@@ -28,6 +28,7 @@ class FireStoreMethods {
     Map<dynamic, dynamic> collaborators,
     List<dynamic> posts,
     bool group,
+    int interestIndex,
     String riddle,
     String answer,
     double latitude,
@@ -72,13 +73,14 @@ class FireStoreMethods {
         title: title,
         caption: caption,
         tag: tag ? "Factual" : "Personal",
-        type: type ? "Normal" : "Challenge",
+        type: type ? "Normal" : "Secret",
         visibility: visibility ? "Public" : "Private",
         collaborators: collaborators,
         likes: likes,
         coverUrl: photoUrl,
         posts: postsUrls,
         group: group,
+        interestIndex: interestIndex,
         riddle: riddle,
         answer: answer,
         latitude: latitude,
@@ -136,7 +138,7 @@ class FireStoreMethods {
         });
         // ignore: use_build_context_synchronously
         removeNotification((snap.data()! as dynamic)['creatorUid'], scrapbookId,
-            'like', context, mounted);
+            _auth.currentUser!.uid, 'like', context, mounted);
       } else {
         // else we need to add uid to the likes array
         _firestore.collection('scrapbooks').doc(scrapbookId).update({
@@ -217,6 +219,7 @@ class FireStoreMethods {
         removeNotification(
           followId,
           '',
+          _auth.currentUser!.uid,
           'follow',
           context,
           mounted,
@@ -380,9 +383,8 @@ class FireStoreMethods {
         final commentModel = CommentModel(
           creatorUid: _auth.currentUser!.uid,
           commentId: docComment.id,
-          username: (snapUser.data()! as dynamic)['username'],
+          uid: (snapUser.data()! as dynamic)['uid'],
           comment: comment,
-          photoUrl: (snapUser.data()! as dynamic)['photoUrl'],
           commentNum: commentNum + 1,
         );
         final json = commentModel.toJson();
@@ -569,6 +571,13 @@ class FireStoreMethods {
             .doc(_auth.currentUser!.uid)
             .get();
 
+        String title = "";
+        if (scrapbookId != "") {
+          DocumentSnapshot snapPost =
+              await _firestore.collection('scrapbooks').doc(scrapbookId).get();
+          title = (snapPost.data()! as dynamic)['title'];
+        }
+
         CollectionReference collectionReference = _firestore
             .collection('feed')
             .doc(creatorId)
@@ -585,6 +594,7 @@ class FireStoreMethods {
             username: (snap.data()! as dynamic)['username'],
             photoUrl: (snap.data()! as dynamic)['photoUrl'],
             scrapbookId: scrapbookId,
+            title: title,
             coverUrl: coverUrl,
             feedNum: feedNum + 1,
           );
@@ -610,6 +620,7 @@ class FireStoreMethods {
   removeNotification(
     String creatorId,
     String scrapbookId,
+    String uid,
     String type,
     BuildContext context,
     bool mounted,
@@ -618,7 +629,7 @@ class FireStoreMethods {
       CollectionReference collectionReference =
           _firestore.collection('feed').doc(creatorId).collection('feedItems');
       collectionReference
-          .where('uid', isEqualTo: _auth.currentUser!.uid)
+          .where('uid', isEqualTo: uid)
           .where('scrapbookId', isEqualTo: scrapbookId)
           .where('type', isEqualTo: type)
           .get()
@@ -698,5 +709,49 @@ class FireStoreMethods {
     await _firestore.collection('users').doc(_auth.currentUser!.uid).update({
       'reportedUsers': FieldValue.arrayUnion([userId])
     });
+  }
+
+  addCollaborator(
+    String uid,
+    String scrapbookId,
+    BuildContext context,
+    bool mounted,
+  ) async {
+    try {
+      DocumentSnapshot userSnap =
+          await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot postSnap =
+          await _firestore.collection('scrapbooks').doc(scrapbookId).get();
+      var collaborators = {};
+      collaborators = await _firestore
+          .collection('scrapbooks')
+          .doc(scrapbookId)
+          .get()
+          .then((value) => value['collaborators']);
+      if ((postSnap.data()! as dynamic)['group'] == false) {
+        await _firestore
+            .collection('scrapbooks')
+            .doc(scrapbookId)
+            .update({'group': true});
+      }
+      if (!collaborators
+          .containsKey((userSnap.data()! as dynamic)['username'])) {
+        collaborators[(userSnap.data()! as dynamic)['username']] = false;
+        _firestore
+            .collection("scrapbooks")
+            .doc(scrapbookId)
+            .update({"collaborators": collaborators});
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
+      if (!mounted) {
+        return;
+      }
+      CustomSnackBar.showSnackBar(context, match?.group(2));
+      Navigator.of(context).pop();
+    }
   }
 }

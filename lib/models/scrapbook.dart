@@ -11,6 +11,7 @@ class ScrapbookModel {
   final String coverUrl;
   final List posts;
   final bool group;
+  final int interestIndex;
   final String riddle;
   final String answer;
   final double latitude;
@@ -30,6 +31,7 @@ class ScrapbookModel {
     required this.coverUrl,
     required this.posts,
     required this.group,
+    required this.interestIndex,
     required this.riddle,
     required this.answer,
     required this.latitude,
@@ -50,6 +52,7 @@ class ScrapbookModel {
         "coverUrl": coverUrl,
         'posts': posts,
         'group': group,
+        'interestIndex': interestIndex,
         'riddle': riddle,
         'answer': answer,
         'latitude': latitude,

@@ -9,7 +9,6 @@ import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/scrapbook_views/create3.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_textbutton.dart';
-import 'package:scrap_real/widgets/card_widgets/custom_namecard.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_usercard.dart';
 import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab1.dart';
@@ -36,6 +35,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
   String _searchQuery = "";
   bool search = true;
   final TextEditingController _collaborator = TextEditingController();
+
   final Map<String, bool> _collaborators = {};
   final TextEditingController riddle = TextEditingController();
   final TextEditingController answer = TextEditingController();
