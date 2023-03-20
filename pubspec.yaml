@@ -63,6 +63,11 @@ dependencies:
   flutter_custom_clippers: ^2.1.0
   flutter_expandable_fab: ^1.7.1
   ar_flutter_plugin: ^0.7.3
+  gradient_floating_button: ^0.0.3
+  chat_gpt_sdk: 
+    git:
+      url: https://github.com/iampawan/Flutter-ChatGPT.git
+  velocity_x: ^3.6.0
 
 dev_dependencies:
   flutter_test:

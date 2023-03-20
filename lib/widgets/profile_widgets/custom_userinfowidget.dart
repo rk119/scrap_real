@@ -11,18 +11,12 @@ class CustomUserInfoWidget extends StatelessWidget {
     required this.username,
     this.photoUrl,
     required this.alt,
-    required this.isFollowing,
-    required this.isCurrentUser,
-    required this.onPressedFunc,
   }) : super(key: key);
 
   String name;
   String username;
   String? photoUrl;
   String alt;
-  bool isFollowing;
-  bool isCurrentUser;
-  Function()? onPressedFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +52,6 @@ class CustomUserInfoWidget extends StatelessWidget {
                 headerColor: const Color(0xff72768d),
               ),
               const SizedBox(height: 15),
-              isCurrentUser
-                  ? const SizedBox()
-                  : ElevatedButton(
-                      onPressed: onPressedFunc,
-                      child: Text(
-                        isFollowing ? "Unfollow" : "Follow",
-                      ),
-                    ),
             ],
           ),
         ),

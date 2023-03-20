@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/utils/custom_snackbar.dart';
 import 'package:scrap_real/utils/firestore_methods.dart';
+import 'package:scrap_real/views/main_views/chatGPTView.dart';
 import 'package:scrap_real/views/navigation.dart';
 import 'package:scrap_real/views/settings_views/user_settings.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
@@ -64,7 +65,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
         var data = scrapbookSnap.docs[i].data();
         if (data['visibility'] == 'Private' &&
             data['creatorUid'] != user.uid &&
-            !data['collaborators'].keys.contains(user.uid)) {
+            !data['collaborators'].keys.contains(user.uid) &&
+            data['type'] != 'Normal') {
           continue;
         } else {
           scrapbooksToShow.add(scrapbookSnap.docs[i]);
@@ -144,7 +146,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           !widget.implyLeading
-                              ? const SizedBox.shrink()
+                              ? IconButton(
+                                  icon: const Icon(Icons.chat_rounded),
+                                  color: const Color(0xff141B41),
+                                  iconSize: 35,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ChatGPTPage()),
+                                    );
+                                  },
+                                )
                               : CustomBackButton(
                                   buttonFunction: () {
                                     Navigator.pop(context);
@@ -160,6 +174,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         username: "@${userData['username']}",
                         photoUrl: userData['photoUrl'],
                         alt: "assets/images/profile.png",
+                      ),
+                      const SizedBox(height: 15),
+                      CustomUserProfileInfo(
+                        numOfPosts: postsLen.toString(),
+                        followers: followers.toString(),
+                        following: following.toString(),
+                        bioText: userData['bio'] ?? 'ye',
+                        cardColor:
+                            Provider.of<ThemeProvider>(context).themeMode ==
+                                    ThemeMode.dark
+                                ? const Color.fromARGB(255, 51, 49, 49)
+                                : Colors.white,
                         isFollowing: isFollowing,
                         isCurrentUser: isCurrentUser,
                         onPressedFunc: () async {
@@ -174,18 +200,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             }
                           });
                         },
-                      ),
-                      const SizedBox(height: 15),
-                      CustomUserProfileInfo(
-                        numOfPosts: postsLen.toString(),
-                        followers: followers.toString(),
-                        following: following.toString(),
-                        bioText: userData['bio'] ?? 'ye',
-                        cardColor:
-                            Provider.of<ThemeProvider>(context).themeMode ==
-                                    ThemeMode.dark
-                                ? const Color.fromARGB(255, 51, 49, 49)
-                                : Colors.white,
                       ),
                       const SizedBox(height: 26),
                       CustomSelectionTab3(
@@ -415,6 +429,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   scrapbookTag: data['tag'],
                   creatorId: data['creatorUid'],
                   visibility: data['visibility'],
+                  type: data['type'],
                   map: false,
                 );
               }

@@ -196,6 +196,7 @@ class _HomePageState extends State<HomePage> {
               : CombineLatestStream.list<QuerySnapshot>([
                   FirebaseFirestore.instance
                       .collection('scrapbooks')
+                      .where('type', isEqualTo: "Normal")
                       .where('interestIndex', whereIn: interests)
                       .snapshots()
                 ]),
@@ -268,6 +269,7 @@ class _HomePageState extends State<HomePage> {
                         scrapbookTag: data['tag'],
                         creatorId: data['creatorUid'],
                         scrapbookType: data['type'],
+                        visibility: data['visibility'],
                       ),
                       SizedBox(height: 10),
                     ],

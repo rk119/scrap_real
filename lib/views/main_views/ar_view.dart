@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/navigation.dart';
-import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
+import 'package:scrap_real/views/scrapbook_views/solve_riddle.dart';
 import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
@@ -27,7 +27,6 @@ class AugmentedRealityView extends StatefulWidget {
 class _AumentedgRealityViewState extends State<AugmentedRealityView> {
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
-  bool initialized = false;
   var scrapbookData = [];
   late Position currentPosition = Position(
     latitude: 0,
@@ -40,7 +39,6 @@ class _AumentedgRealityViewState extends State<AugmentedRealityView> {
     timestamp: DateTime.now(),
   );
   bool isLoading = true;
-  var nearbyScrapbooks = {};
 
   @override
   void initState() {
@@ -195,7 +193,7 @@ class _AumentedgRealityViewState extends State<AugmentedRealityView> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ScrapbookExpandedView(
+          builder: (context) => SecretScrapbook(
             scrapbookId: nodes[0],
           ),
         ),

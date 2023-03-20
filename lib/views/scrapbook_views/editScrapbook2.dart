@@ -56,7 +56,7 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                   Navigator.popUntil(
                       context, ModalRoute.withName('/scrapbookExpanded'));
                 }),
-                CustomHeader(headerText: "Create Scrapbook"),
+                CustomHeader(headerText: "Edit Scrapbook"),
                 const SizedBox(height: 15),
                 subheader("Tag"),
                 const SizedBox(height: 5),
@@ -89,9 +89,9 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                 CustomSelectionTab1(
                   selection: type,
                   selection1: "Normal",
-                  selecion2: "Challenge",
+                  selecion2: "Secret",
                   path1: "assets/images/normal.png",
-                  path2: "assets/images/challenge.png",
+                  path2: "assets/images/mystery-box.png",
                   func1: () {
                     if (type == false) {
                       setState(() {

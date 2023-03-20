@@ -75,6 +75,8 @@ class _ExplorePageState extends State<ExplorePage> {
           location.add(scrapData['coverUrl']);
           location.add(scrapData['tag']);
           location.add(scrapData['creatorUid']);
+          location.add(scrapData['visibility']);
+          location.add(scrapData['type']);
           scrapbookData.add(location);
         }
       }
@@ -384,6 +386,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             scrapbookTag: scrapbookData[index][5],
                             creatorId: scrapbookData[index][6],
                             visibility: scrapbookData[index][7],
+                            type: scrapbookData[index][8],
                             map: true,
                           ),
                           ClipPath(

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scrap_real/themes/theme_provider.dart';
 import 'package:scrap_real/views/scrapbook_views/scrapbook_expanded.dart';
+import 'package:scrap_real/views/scrapbook_views/solve_riddle.dart';
 
 class ScrapbookMiniSize extends StatefulWidget {
   final String scrapbookId;
@@ -14,6 +15,7 @@ class ScrapbookMiniSize extends StatefulWidget {
   String scrapbookTag;
   String creatorId;
   String visibility;
+  String type;
   bool map;
 
   ScrapbookMiniSize({
@@ -24,6 +26,7 @@ class ScrapbookMiniSize extends StatefulWidget {
     required this.scrapbookTag,
     required this.creatorId,
     required this.visibility,
+    required this.type,
     required this.map,
   }) : super(key: key);
   @override
@@ -65,15 +68,27 @@ class _ScrapbookMiniSize extends State<ScrapbookMiniSize> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ScrapbookExpandedView(
-              scrapbookId: widget.scrapbookId,
+        if (widget.type == 'Secret') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SecretScrapbook(
+                scrapbookId: widget.scrapbookId,
+              ),
+              settings: const RouteSettings(name: '/secretScrapbook'),
             ),
-            settings: const RouteSettings(name: '/scrapbookExpanded'),
-          ),
-        );
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ScrapbookExpandedView(
+                scrapbookId: widget.scrapbookId,
+              ),
+              settings: const RouteSettings(name: '/scrapbookExpanded'),
+            ),
+          );
+        }
       },
       child: Stack(
         alignment: Alignment.center,

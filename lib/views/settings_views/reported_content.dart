@@ -196,6 +196,7 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
                     scrapbookTag: data['tag'],
                     creatorId: data['creatorUid'],
                     scrapbookType: data['type'],
+                    visibility: data['visibility'],
                   ),
                   const SizedBox(height: 30),
                 ],

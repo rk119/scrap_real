@@ -12,16 +12,18 @@ class CustomScrapbookLarge extends StatefulWidget {
   final String scrapbookTag;
   final String scrapbookType;
   final String creatorId;
+  final String visibility;
 
-  const CustomScrapbookLarge({
-    Key? key,
-    required this.scrapbookId,
-    required this.title,
-    required this.coverImage,
-    required this.scrapbookTag,
-    required this.scrapbookType,
-    required this.creatorId,
-  }) : super(key: key);
+  const CustomScrapbookLarge(
+      {Key? key,
+      required this.scrapbookId,
+      required this.title,
+      required this.coverImage,
+      required this.scrapbookTag,
+      required this.scrapbookType,
+      required this.creatorId,
+      required this.visibility})
+      : super(key: key);
 
   @override
   State<CustomScrapbookLarge> createState() => _CustomScrapbookLarge();
@@ -43,6 +45,7 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
         .doc(widget.creatorId)
         .get()
         .then((value) {
+      if (!mounted) return;
       setState(() {
         photo = value.data()!['photoUrl'];
         username = value.data()!['username'];
@@ -169,6 +172,17 @@ class _CustomScrapbookLarge extends State<CustomScrapbookLarge> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          widget.visibility == 'Private'
+              ? const Positioned(
+                  bottom: 13,
+                  right: 11,
+                  child: Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                )
+              : const SizedBox.shrink(),
           Container(),
         ],
       ),

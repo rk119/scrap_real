@@ -516,7 +516,7 @@ class FireStoreMethods {
       'title': title,
       'caption': caption,
       'tag': tag! ? 'Factual' : 'Personal',
-      'type': type! ? 'Normal' : 'Challenge',
+      'type': type! ? 'Normal' : 'Secret',
       'visibility': visibility! ? 'Public' : 'Private',
     });
 

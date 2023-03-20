@@ -84,7 +84,7 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
                       CustomBackButton(buttonFunction: () {
                         Navigator.pop(context);
                       }),
-                      CustomHeader(headerText: "Create Scrapbook"),
+                      CustomHeader(headerText: "Edit Scrapbook"),
                       const SizedBox(height: 5),
                       buildCoverPage(),
                       const SizedBox(height: 7),

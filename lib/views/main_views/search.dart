@@ -125,8 +125,12 @@ class _SearchPageState extends State<SearchPage> {
           ? FirebaseFirestore.instance
               .collection('users')
               .where(FieldPath.documentId, whereNotIn: blockedUsers)
+              .where('uid', isNotEqualTo: user.uid)
               .snapshots()
-          : FirebaseFirestore.instance.collection('users').snapshots(),
+          : FirebaseFirestore.instance
+              .collection('users')
+              .where('uid', isNotEqualTo: user.uid)
+              .snapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return const Center(
@@ -194,7 +198,9 @@ class _SearchPageState extends State<SearchPage> {
       stream: CombineLatestStream.list<QuerySnapshot>([
         FirebaseFirestore.instance
             .collection('scrapbooks')
+            .where('type', isEqualTo: 'Normal')
             .where('visibility', isEqualTo: 'Public')
+            .where('creatorUid', isNotEqualTo: user.uid)
             .snapshots(),
         FirebaseFirestore.instance
             .collection('scrapbooks')
@@ -235,6 +241,7 @@ class _SearchPageState extends State<SearchPage> {
                           scrapbookTag: data['tag'],
                           creatorId: data['creatorUid'],
                           scrapbookType: data['type'],
+                          visibility: data['visibility'],
                         ),
                         SizedBox(height: 10),
                       ],
@@ -253,6 +260,7 @@ class _SearchPageState extends State<SearchPage> {
                           scrapbookTag: data['tag'],
                           creatorId: data['creatorUid'],
                           scrapbookType: data['type'],
+                          visibility: data['visibility'],
                         ),
                         SizedBox(height: 10),
                       ],
