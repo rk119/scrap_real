@@ -405,7 +405,7 @@ class _EditScrapbook4State extends State<EditScrapbook4> {
       widget.tag,
       widget.type,
       widget.visibility,
-      // widget.interestIndex,
+      widget.interestIndex,
       locationDisbaled,
       images,
       context,

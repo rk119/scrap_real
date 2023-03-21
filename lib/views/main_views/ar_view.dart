@@ -38,7 +38,10 @@ class _AumentedgRealityViewState extends State<AugmentedRealityView> {
     speedAccuracy: 0,
     timestamp: DateTime.now(),
   );
+  var nodes = [];
   bool isLoading = true;
+
+  ARLocationManager? arLocationManager;
 
   @override
   void initState() {
@@ -104,6 +107,7 @@ class _AumentedgRealityViewState extends State<AugmentedRealityView> {
           position: getPosition(
               scrapbookData[i][1], scrapbookData[i][2], scrapbookData[i][3]));
       await arObjectManager!.addNode(node);
+      nodes.add([scrapbookData[i][0], node]);
     }
   }
 
@@ -145,28 +149,33 @@ class _AumentedgRealityViewState extends State<AugmentedRealityView> {
             ),
           )
         : Scaffold(
-            body: Stack(
-              children: [
-                CustomBackButton(buttonFunction: () {
-                  arSessionManager!.dispose();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NavBar(
-                        currentIndex: 1,
-                      ),
-                    ),
-                  );
-                }),
-                Container(
-                  margin: const EdgeInsets.only(top: 50),
-                  child: ARView(
-                    onARViewCreated: _onARViewCreated,
-                    planeDetectionConfig:
-                        PlaneDetectionConfig.horizontalAndVertical,
+            body: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0, left: 15.0),
+                    child: CustomBackButton(buttonFunction: () {
+                      arSessionManager!.dispose();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavBar(
+                            currentIndex: 1,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.85,
+                    child: ARView(
+                      onARViewCreated: _onARViewCreated,
+                      planeDetectionConfig:
+                          PlaneDetectionConfig.horizontalAndVertical,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
   }

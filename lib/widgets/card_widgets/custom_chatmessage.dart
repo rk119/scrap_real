@@ -6,41 +6,49 @@ class ChatMessage extends StatelessWidget {
       {super.key,
       required this.text,
       required this.sender,
-      this.isImage = false});
+      required this.profileImg});
 
   final String text;
   final String sender;
-  final bool isImage;
+  final String profileImg;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(sender)
-            .text
-            .subtitle1(context)
-            .make()
-            .box
-            .color(sender == "user" ? Vx.red200 : Vx.green200)
-            .p16
-            .rounded
-            .alignCenter
-            .makeCentered(),
+        if (sender == "user")
+          CircleAvatar(
+            backgroundImage: NetworkImage(profileImg),
+          ).pOnly(right: 10)
+        else
+          Container(),
         Expanded(
-          child: isImage
-              ? AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.network(
-                    text,
-                    loadingBuilder: (context, child, loadingProgress) =>
-                        loadingProgress == null
-                            ? child
-                            : const CircularProgressIndicator.adaptive(),
-                  ),
-                )
-              : text.trim().text.bodyText1(context).make().px8(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (sender == "user")
+                "You".text.make()
+              else
+                "Chatbot".text.make(),
+              5.heightBox,
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: sender == "user" ? Colors.blue[100] : Colors.blue[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: text.text.make(),
+              ),
+            ],
+          ),
         ),
+        if (sender == "bot")
+          CircleAvatar(
+            backgroundImage: AssetImage(profileImg),
+          ).pOnly(left: 10)
+        else
+          Container(),
       ],
     ).py8();
   }

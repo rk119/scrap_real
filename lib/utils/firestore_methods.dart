@@ -495,6 +495,7 @@ class FireStoreMethods {
     bool? tag,
     bool? type,
     bool? visibility,
+    int? interestIndex,
     bool locationDisabled,
     List<dynamic> posts,
     BuildContext context,
@@ -518,6 +519,7 @@ class FireStoreMethods {
       'tag': tag! ? 'Factual' : 'Personal',
       'type': type! ? 'Normal' : 'Secret',
       'visibility': visibility! ? 'Public' : 'Private',
+      'interest': interestIndex,
     });
 
     if (locationDisabled) {

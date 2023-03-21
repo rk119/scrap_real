@@ -1,13 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:scrap_real/widgets/button_widgets/custom_backbutton.dart';
 import 'package:scrap_real/widgets/card_widgets/custom_chatmessage.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_header.dart';
+import 'package:scrap_real/widgets/text_widgets/custom_subheader.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../widgets/profile_widgets/threedots.dart';
 
 class ChatGPTPage extends StatefulWidget {
-  const ChatGPTPage({super.key});
+  final String? uid;
+  const ChatGPTPage({Key? key, this.uid}) : super(key: key);
 
   @override
   State<ChatGPTPage> createState() => _ChatGPTPageState();
@@ -15,55 +20,92 @@ class ChatGPTPage extends StatefulWidget {
 
 class _ChatGPTPageState extends State<ChatGPTPage> {
   final TextEditingController _controller = TextEditingController();
-  final List<ChatMessage> _messages = [];
+  final List<ChatMessage> messages = [];
   late OpenAI? chatGPT;
-  bool _isImageSearch = false;
-
-  bool _isTyping = false;
+  ChatCTResponse? mResponse;
+  var userData = {};
+  bool isTyping = false;
+  bool isLoading = true;
 
   @override
   void initState() {
     chatGPT = OpenAI.instance.build(
-        token: "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",
-        baseOption: HttpSetup(receiveTimeout: 60000));
+        token: "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",
+        baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 8)),
+        isLog: true);
+    getData();
+    setState(() {
+      isLoading = false;
+    });
     super.initState();
   }
 
   @override
   void dispose() {
-    chatGPT?.close();
-    chatGPT?.genImgClose();
     super.dispose();
   }
 
-  // Link for api - https://beta.openai.com/account/api-keys
+  void getData() async {
+    final userSnap = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.uid)
+        .get();
+
+    setState(() {
+      userData = userSnap.data()!;
+      isLoading = false;
+    });
+  }
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
     ChatMessage message = ChatMessage(
       text: _controller.text,
       sender: "user",
-      isImage: false,
+      profileImg: userData["photoUrl"],
     );
 
     setState(() {
-      _messages.insert(0, message);
-      _isTyping = true;
+      messages.insert(0, message);
+      isTyping = true;
     });
 
     _controller.clear();
+    _chatGpt3();
   }
 
-  void insertNewData(String response, {bool isImage = false}) {
+  void _chatGpt3() async {
+    try {
+      final request = ChatCompleteText(messages: [
+        Map.of({"role": "user", "content": messages[0].text}),
+      ], maxToken: 400, model: kChatGptTurbo0301Model);
+
+      final raw = await chatGPT!.onChatCompletion(request: request);
+
+      setState(() {
+        mResponse = raw;
+        print("${mResponse?.toJson()}");
+        insertNewData(
+            mResponse?.toJson()["choices"][0]["message"]["content"].toString());
+      });
+    } catch (e) {
+      setState(() {
+        isTyping = false;
+      });
+      print(e);
+    }
+  }
+
+  void insertNewData(String? response, {bool isImage = false}) {
     ChatMessage botMessage = ChatMessage(
-      text: response,
+      text: response.toString(),
       sender: "bot",
-      isImage: isImage,
+      profileImg: "assets/images/openAi.jpg",
     );
 
     setState(() {
-      _isTyping = false;
-      _messages.insert(0, botMessage);
+      isTyping = false;
+      messages.insert(0, botMessage);
     });
   }
 
@@ -74,16 +116,16 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
           child: TextField(
             controller: _controller,
             onSubmitted: (value) => _sendMessage(),
-            decoration: const InputDecoration.collapsed(
-                hintText: "Question/description"),
+            decoration:
+                const InputDecoration.collapsed(hintText: "Send a message"),
+            cursorColor: const Color(0xff918ef4),
           ),
         ),
         ButtonBar(
           children: [
             IconButton(
-              icon: const Icon(Icons.send),
+              icon: const Icon(Icons.send, color: Color(0xff918ef4)),
               onPressed: () {
-                _isImageSearch = false;
                 _sendMessage();
               },
             ),
@@ -95,32 +137,49 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text("ChatGPT")),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Flexible(
-                  child: ListView.builder(
-                reverse: true,
-                padding: Vx.m8,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _messages[index];
-                },
-              )),
-              if (_isTyping) const ThreeDots(),
-              const Divider(
-                height: 1.0,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: context.cardColor,
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 90,
+              leadingWidth: 60,
+              title: CustomHeader(headerText: "Chat with GPT-3"),
+              centerTitle: true,
+              elevation: 0.0,
+              backgroundColor: context.cardColor,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: CustomBackButton(
+                  buttonFunction: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                child: _buildTextComposer(),
-              )
-            ],
-          ),
-        ));
+              ),
+            ),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Flexible(
+                      child: ListView.builder(
+                    reverse: true,
+                    padding: Vx.m8,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return messages[index];
+                    },
+                  )),
+                  if (isTyping) const ThreeDots(),
+                  const Divider(
+                    height: 1.0,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: context.cardColor,
+                    ),
+                    child: _buildTextComposer(),
+                  )
+                ],
+              ),
+            ));
   }
 }

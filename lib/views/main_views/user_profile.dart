@@ -154,8 +154,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ChatGPTPage()),
+                                          builder: (context) => ChatGPTPage(
+                                              uid: userData['uid'])),
                                     );
                                   },
                                 )

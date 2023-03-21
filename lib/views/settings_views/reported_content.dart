@@ -49,6 +49,13 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    reportedScrapbooks.clear();
+    reportedUsers.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -103,10 +110,25 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
                           ),
                         ],
                       )
-                    : users && reportedUsers.isNotEmpty
-                        ? Container(
-                            child: _buildReportedUsers(),
-                          )
+                    : users
+                        ? reportedUsers.isNotEmpty
+                            ? Container(
+                                child: _buildReportedUsers(),
+                              )
+                            : Column(
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.3,
+                                  ),
+                                  CustomText(
+                                    text: "You haven't reported any users",
+                                    textSize: 20,
+                                    textAlignment: TextAlign.center,
+                                    textWeight: FontWeight.w300,
+                                  ),
+                                ],
+                              )
                         : reportedScrapbooks.isNotEmpty
                             ? Container(
                                 child: _buildReportedScrapbooks(),
@@ -118,9 +140,7 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
                                         0.3,
                                   ),
                                   CustomText(
-                                    text: users
-                                        ? "You haven't reported any users"
-                                        : "You haven't reported any scrapbooks",
+                                    text: "You haven't reported any scrapbooks",
                                     textSize: 20,
                                     textAlignment: TextAlign.center,
                                     textWeight: FontWeight.w300,
@@ -153,8 +173,8 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
               return Column(
                 children: [
                   CustomUserCard(
-                    username: data['username'],
-                    photoUrl: data['photoUrl'],
+                    username: data['username'] ?? '',
+                    photoUrl: data['photoUrl'] ?? '',
                     alt: 'assets/images/profile.png',
                     bottomPadding: 20,
                     onTapFunc: () {},
@@ -190,13 +210,13 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
               return Column(
                 children: [
                   CustomScrapbookLarge(
-                    scrapbookId: data['scrapbookId'],
-                    title: data['title'],
-                    coverImage: data['coverUrl'],
-                    scrapbookTag: data['tag'],
-                    creatorId: data['creatorUid'],
-                    scrapbookType: data['type'],
-                    visibility: data['visibility'],
+                    scrapbookId: data['scrapbookId'] ?? '',
+                    title: data['title'] ?? '',
+                    coverImage: data['coverUrl'] ?? '',
+                    scrapbookTag: data['tag'] ?? '',
+                    creatorId: data['creatorUid'] ?? '',
+                    scrapbookType: data['type'] ?? '',
+                    visibility: data['visibility'] ?? '',
                   ),
                   const SizedBox(height: 30),
                 ],
