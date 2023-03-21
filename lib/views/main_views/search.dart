@@ -14,6 +14,7 @@ import 'package:scrap_real/widgets/scrapbook_widgets/custom_scrapbooklarge.dart'
 import 'package:scrap_real/widgets/selection_widgets/custom_selectiontab3.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   bool users = true;
   bool search = true;
-  String _searchQuery = "";
+  TextEditingController _searchQuery = TextEditingController();
   var blockedUsers = [];
   final user = FirebaseAuth.instance.currentUser!;
   SpeechToText _speechToText = SpeechToText();
@@ -74,7 +75,7 @@ class _SearchPageState extends State<SearchPage> {
   void _onSpeechResult(SpeechRecognitionResult result) {
     print('result: ${result.recognizedWords}');
     setState(() {
-      _searchQuery = result.recognizedWords;
+      _searchQuery.text = result.recognizedWords;
     });
   }
 
@@ -113,7 +114,7 @@ class _SearchPageState extends State<SearchPage> {
                     // validator: validatorFunction,
                     onChanged: (val) {
                       setState(() {
-                        _searchQuery = val;
+                        _searchQuery.text = val;
                       });
                     },
                     decoration: InputDecoration(
@@ -164,7 +165,7 @@ class _SearchPageState extends State<SearchPage> {
                   },
                 ),
                 const SizedBox(height: 1),
-                _searchQuery == ""
+                _searchQuery.text == ""
                     ? Container()
                     : users
                         ? usersView()
@@ -208,7 +209,7 @@ class _SearchPageState extends State<SearchPage> {
                   var data = snapshots.data!.docs[index].data()
                       as Map<String, dynamic>;
 
-                  if (_searchQuery.isEmpty) {
+                  if (_searchQuery.text.isEmpty) {
                     return CustomUserCard(
                       photoUrl: data['photoUrl'],
                       alt: "assets/images/profile.png",
@@ -228,7 +229,7 @@ class _SearchPageState extends State<SearchPage> {
                   if (data['username']
                       .toString()
                       .toLowerCase()
-                      .startsWith(_searchQuery.toLowerCase())) {
+                      .startsWith(_searchQuery.text.toLowerCase())) {
                     return CustomUserCard(
                       photoUrl: data['photoUrl'],
                       alt: "assets/images/profile.png",
@@ -290,7 +291,7 @@ class _SearchPageState extends State<SearchPage> {
                 itemBuilder: (context, index) {
                   var data = documents[index].data() as Map<String, dynamic>;
 
-                  if (_searchQuery.isEmpty) {
+                  if (_searchQuery.text.isEmpty) {
                     return Column(
                       children: [
                         CustomScrapbookLarge(
@@ -309,7 +310,7 @@ class _SearchPageState extends State<SearchPage> {
                   if (data['title']
                       .toString()
                       .toLowerCase()
-                      .startsWith(_searchQuery.toLowerCase())) {
+                      .startsWith(_searchQuery.text.toLowerCase())) {
                     return Column(
                       children: [
                         CustomScrapbookLarge(
