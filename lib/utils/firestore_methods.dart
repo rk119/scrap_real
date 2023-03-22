@@ -312,6 +312,8 @@ class FireStoreMethods {
           return;
         }
         docUser.update({'username': username});
+        // ignore: use_build_context_synchronously
+        updateUname(oldUsername, username, mounted, context);
       }
       if (name.isNotEmpty) {
         docUser.update({'name': name});
@@ -322,6 +324,14 @@ class FireStoreMethods {
       if (pickedFile != null) {
         photoUrl = await StorageMethods().uploadProfilePic(pickedFile);
         docUser.update({'photoUrl': photoUrl});
+        // ignore: use_build_context_synchronously
+        updatepfp(
+          oldUsername,
+          username,
+          photoUrl,
+          mounted,
+          context,
+        );
       }
       if (!mounted) {
         return;
@@ -339,6 +349,119 @@ class FireStoreMethods {
     } catch (e) {
       // ignore: avoid_print
       print(e);
+    }
+  }
+
+  Future updateUname(
+    String oldUsername,
+    String username,
+    bool mounted,
+    BuildContext context,
+  ) async {
+    try {
+      CollectionReference collectionRefSb = _firestore.collection('scrapbooks');
+      QuerySnapshot sbSnapshot = await collectionRefSb.get();
+      for (DocumentSnapshot docSnapshot in sbSnapshot.docs) {
+        CollectionReference collectionReference = _firestore
+            .collection('comment')
+            .doc(docSnapshot.id)
+            .collection('comments');
+        await collectionReference
+            .where('username', isEqualTo: oldUsername)
+            .get()
+            .then((QuerySnapshot querySnapshot) async {
+          if (querySnapshot.docs.isNotEmpty) {
+            for (DocumentSnapshot element in querySnapshot.docs) {
+              element.reference.update({'username': username});
+            }
+          }
+        });
+      }
+      CollectionReference collectionRefUser = _firestore.collection('users');
+      QuerySnapshot userSnapshot = await collectionRefUser.get();
+      for (DocumentSnapshot docSnapshot in userSnapshot.docs) {
+        CollectionReference collectionReference = _firestore
+            .collection('feed')
+            .doc(docSnapshot.id)
+            .collection('feedItems');
+        await collectionReference
+            .where('username', isEqualTo: oldUsername)
+            .get()
+            .then((QuerySnapshot querySnapshot) async {
+          if (querySnapshot.docs.isNotEmpty) {
+            for (DocumentSnapshot element in querySnapshot.docs) {
+              element.reference.update({'username': username});
+            }
+          }
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
+      if (!mounted) {
+        return;
+      }
+      CustomSnackBar.showSnackBar(context, match?.group(2));
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future updatepfp(
+    String oldUsername,
+    String username,
+    String? photoUrl,
+    bool mounted,
+    BuildContext context,
+  ) async {
+    try {
+      CollectionReference collectionRefSb = _firestore.collection('scrapbooks');
+      QuerySnapshot sbSnapshot = await collectionRefSb.get();
+      for (DocumentSnapshot docSnapshot in sbSnapshot.docs) {
+        CollectionReference collectionReference = _firestore
+            .collection('comment')
+            .doc(docSnapshot.id)
+            .collection('comments');
+        await collectionReference
+            .where('username', whereIn: [oldUsername, username])
+            .get()
+            .then((QuerySnapshot querySnapshot) async {
+              if (querySnapshot.docs.isNotEmpty) {
+                for (DocumentSnapshot element in querySnapshot.docs) {
+                  element.reference.update({'photoUrl': photoUrl});
+                }
+              }
+            });
+      }
+      CollectionReference collectionRefUser = _firestore.collection('users');
+      QuerySnapshot userSnapshot = await collectionRefUser.get();
+      for (DocumentSnapshot docSnapshot in userSnapshot.docs) {
+        CollectionReference collectionReference = _firestore
+            .collection('feed')
+            .doc(docSnapshot.id)
+            .collection('feedItems');
+        await collectionReference
+            .where('username', whereIn: [oldUsername, username])
+            .get()
+            .then((QuerySnapshot querySnapshot) async {
+              if (querySnapshot.docs.isNotEmpty) {
+                for (DocumentSnapshot element in querySnapshot.docs) {
+                  element.reference.update({'photoUrl': photoUrl});
+                }
+              }
+            });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      final regex = RegExp(r'^\[(.)\]\s(.)$');
+      final match = regex.firstMatch(e.toString());
+      if (!mounted) {
+        return;
+      }
+      CustomSnackBar.showSnackBar(context, match?.group(2));
+      Navigator.of(context).pop();
     }
   }
 
@@ -383,8 +506,9 @@ class FireStoreMethods {
         final commentModel = CommentModel(
           creatorUid: _auth.currentUser!.uid,
           commentId: docComment.id,
-          uid: (snapUser.data()! as dynamic)['uid'],
+          username: (snapUser.data()! as dynamic)['username'],
           comment: comment,
+          photoUrl: (snapUser.data()! as dynamic)['photoUrl'],
           commentNum: commentNum + 1,
         );
         final json = commentModel.toJson();
@@ -440,20 +564,20 @@ class FireStoreMethods {
   }
 
   void deleteScrapbook(String scrapbookId, BuildContext context) async {
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (context) => const Center(
-    //     child: CircularProgressIndicator(
-    //       color: Color(0xff918ef4),
-    //     ),
-    //   ),
-    // );
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xff918ef4),
+        ),
+      ),
+    );
     final scrapbookData = await FirebaseFirestore.instance
         .collection('scrapbooks')
         .doc(scrapbookId)
         .get()
-        .then((value) => value.data()!);
+        .then((value) => value.data() as Map<String, dynamic>);
 
     await FirebaseFirestore.instance
         .collection('scrapbooks')
@@ -471,6 +595,22 @@ class FireStoreMethods {
       }
     });
 
+    final userSnap = await FirebaseFirestore.instance.collection('users').get();
+
+    for (DocumentSnapshot ds in userSnap.docs) {
+      Map<String, dynamic> data = ds.data() as Map<String, dynamic>;
+      if (data['savedPosts'].contains(scrapbookId)) {
+        await FirebaseFirestore.instance.collection('users').doc(ds.id).update({
+          'savedPosts': FieldValue.arrayRemove([scrapbookId])
+        });
+      }
+      if (data['reportedPosts'].contains(scrapbookId)) {
+        await FirebaseFirestore.instance.collection('users').doc(ds.id).update({
+          'reportedPosts': FieldValue.arrayRemove([scrapbookId])
+        });
+      }
+    }
+
     final cover = scrapbookData['coverUrl'];
     cover != "" ? StorageMethods().deleteFromScrapbook(cover) : null;
 
@@ -484,7 +624,7 @@ class FireStoreMethods {
     // ignore: use_build_context_synchronously
     CustomSnackBar.snackBarAlert(context, "Scrapbook deleted!");
     // ignore: use_build_context_synchronously
-    Navigator.of(context).pop();
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   editScrapbook(
@@ -496,6 +636,8 @@ class FireStoreMethods {
     bool? type,
     bool? visibility,
     int? interestIndex,
+    String riddle,
+    String answer,
     bool locationDisabled,
     List<dynamic> posts,
     BuildContext context,
@@ -519,7 +661,9 @@ class FireStoreMethods {
       'tag': tag! ? 'Factual' : 'Personal',
       'type': type! ? 'Normal' : 'Secret',
       'visibility': visibility! ? 'Public' : 'Private',
-      'interest': interestIndex,
+      'riddle': riddle,
+      'answer': answer,
+      'interestIndex': interestIndex,
     });
 
     if (locationDisabled) {

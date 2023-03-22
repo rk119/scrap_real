@@ -37,6 +37,20 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
   late bool visibility =
       widget.scrapbookData['visibility'] == "Public" ? true : false;
 
+  final TextEditingController riddle = TextEditingController();
+  final TextEditingController answer = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() {
+    riddle.text = widget.scrapbookData['riddle'] ?? "";
+    answer.text = widget.scrapbookData['answer'] ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,31 +121,156 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                     }
                   },
                   insets1: const EdgeInsets.fromLTRB(20, 7, 22, 7),
-                  insets2: const EdgeInsets.fromLTRB(13, 7, 13, 7),
+                  insets2: const EdgeInsets.fromLTRB(23, 7, 23, 7),
                 ),
                 const SizedBox(height: 20),
-                subheader("Visibility"),
+                type == true ? subheader("Visibility") : const SizedBox(),
                 const SizedBox(height: 10),
-                CustomSelectionTab2(
-                  selection: visibility,
-                  selection1: "Public",
-                  selecion2: "Private",
-                  func1: () {
-                    if (visibility == false) {
-                      setState(() {
-                        visibility = true;
-                      });
-                    }
-                  },
-                  func2: () {
-                    if (visibility == true) {
-                      setState(() {
-                        visibility = false;
-                      });
-                    }
-                  },
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.35),
+                type == true
+                    ? CustomSelectionTab2(
+                        selection: visibility,
+                        selection1: "Public",
+                        selecion2: "Private",
+                        func1: () {
+                          if (visibility == false) {
+                            setState(() {
+                              visibility = true;
+                            });
+                          }
+                        },
+                        func2: () {
+                          if (visibility == true) {
+                            setState(() {
+                              visibility = false;
+                            });
+                          }
+                        },
+                      )
+                    : const SizedBox(),
+                type == false
+                    ? Column(
+                        children: [
+                          subheader("Enter your secret code"),
+                          const SizedBox(height: 10),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.black
+                                  : const Color(0xfffdfbfb),
+                              borderRadius: BorderRadius.circular(6),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  blurRadius: 2,
+                                  offset: Offset(1, 2),
+                                )
+                              ],
+                            ),
+                            height: 50,
+                            child: Wrap(
+                              children: [
+                                Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: 310,
+                                      child: TextFormField(
+                                        controller: riddle,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        keyboardType: TextInputType.name,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Please enter a riddle";
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          hintText: "Riddle",
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5,
+                                            color: const Color.fromARGB(
+                                                255, 193, 193, 193),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.black
+                                  : const Color(0xfffdfbfb),
+                              borderRadius: BorderRadius.circular(6),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  blurRadius: 2,
+                                  offset: Offset(1, 2),
+                                )
+                              ],
+                            ),
+                            height: 50,
+                            child: Wrap(
+                              children: [
+                                Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: 310,
+                                      child: TextFormField(
+                                        controller: answer,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        keyboardType: TextInputType.name,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Please enter the answer";
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          hintText: "Secret answer",
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5,
+                                            color: const Color.fromARGB(
+                                                255, 193, 193, 193),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
+                type == true
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.35)
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.20),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: () {
@@ -147,6 +286,8 @@ class _EditScrapbook2State extends State<EditScrapbook2> {
                           visibility: visibility,
                           scrapbookData: widget.scrapbookData,
                           scrapbookId: widget.scrapbookId,
+                          riddle: riddle.text.trim(),
+                          answer: answer.text.trim().toLowerCase(),
                         ),
                       ),
                     );

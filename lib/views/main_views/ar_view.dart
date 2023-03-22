@@ -60,8 +60,8 @@ class _AumentedgRealityViewState extends State<AugmentedRealityView> {
 
   @override
   void dispose() {
-    super.dispose();
     arSessionManager!.dispose();
+    super.dispose();
   }
 
   getData() async {

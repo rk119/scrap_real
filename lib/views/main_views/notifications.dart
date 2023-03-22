@@ -96,8 +96,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
             padding: EdgeInsets.zero,
             itemCount: snapshots.data!.docs.length,
             itemBuilder: (context, index) {
-              var data =
-                  snapshots.data!.docs[index].data() as Map<String, dynamic>;
+              QueryDocumentSnapshot documentSnapshot =
+                  snapshots.data!.docs[index];
+              var data = documentSnapshot.data() as Map<String, dynamic>;
               String notifText = "";
               if (data['type'] == 'follow') {
                 // notifText = '@${data['username']} ${notifMsg[0]}';
@@ -119,17 +120,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 // notifText = '${notifMsg[5]} "${data['title']}"';
                 notifText = notifMsg[5];
               }
-              return CustomNotifCard(
-                photoUrl: data['photoUrl'],
-                postImageUrl: data['coverUrl'],
-                alt: "assets/images/profile.png",
-                type: data['type'],
-                notifText: notifText,
-                scrapbookId: data['scrapbookId'],
-                uid: data['uid'],
-                username: data['username'],
-                title: data['title'],
-                mounted: mounted,
+              return Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  margin: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xffe74c3c),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+                onDismissed: (direction) {
+                  setState(() {
+                    documentSnapshot.reference.delete();
+                  });
+                },
+                child: CustomNotifCard(
+                  photoUrl: data['photoUrl'],
+                  postImageUrl: data['coverUrl'],
+                  alt: "assets/images/profile.png",
+                  type: data['type'],
+                  notifText: notifText,
+                  scrapbookId: data['scrapbookId'],
+                  uid: data['uid'],
+                  username: data['username'],
+                  title: data['title'],
+                  mounted: mounted,
+                ),
               );
             },
           );

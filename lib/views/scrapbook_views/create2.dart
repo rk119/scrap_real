@@ -56,15 +56,6 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
     super.dispose();
   }
 
-  // Future<Map<String, dynamic>?> getCurrentUID() {
-  //   var data = FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get()
-  //       .then((value) => value.data());
-  //   return data;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,27 +135,29 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                   insets2: const EdgeInsets.fromLTRB(23, 7, 23, 7),
                 ),
                 const SizedBox(height: 20),
-                subheader("Visibility"),
+                type == true ? subheader("Visibility") : const SizedBox(),
                 const SizedBox(height: 10),
-                CustomSelectionTab2(
-                  selection: visibility,
-                  selection1: "Public",
-                  selecion2: "Private",
-                  func1: () {
-                    if (visibility == false) {
-                      setState(() {
-                        visibility = true;
-                      });
-                    }
-                  },
-                  func2: () {
-                    if (visibility == true) {
-                      setState(() {
-                        visibility = false;
-                      });
-                    }
-                  },
-                ),
+                type == true
+                    ? CustomSelectionTab2(
+                        selection: visibility,
+                        selection1: "Public",
+                        selecion2: "Private",
+                        func1: () {
+                          if (visibility == false) {
+                            setState(() {
+                              visibility = true;
+                            });
+                          }
+                        },
+                        func2: () {
+                          if (visibility == true) {
+                            setState(() {
+                              visibility = false;
+                            });
+                          }
+                        },
+                      )
+                    : const SizedBox(),
                 const SizedBox(height: 20),
                 type == true
                     ? Column(
@@ -296,7 +289,9 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                           ),
                         ],
                       ),
-                const SizedBox(height: 90),
+                type == true
+                    ? const SizedBox(height: 30)
+                    : const SizedBox(height: 150),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: () {
@@ -313,7 +308,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                           collaborators: _collaborators,
                           group: _collaborators.isNotEmpty,
                           riddle: riddle.text.trim(),
-                          answer: answer.text.trim(),
+                          answer: answer.text.trim().toLowerCase(),
                         ),
                       ),
                     );

@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:flutter_svg/svg.dart';
+
 import 'globals.dart' as globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,6 +58,12 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant ScrapbookExpandedView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    getData();
+  }
+
   getData() async {
     try {
       var scrapbookSnap = await FirebaseFirestore.instance
@@ -81,9 +89,6 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
           .get();
 
       userData = userSnap.data()!;
-      // followers = userSnap.data()!['followers'].length;
-      // following = userSnap.data()!['following'].length;
-      // isFollowing = userSnap.data()!['followers'].contains(user.uid);
       isLiked = scrapbookData['likes'].contains(user.uid);
       numLikes = scrapbookData['likes'].length;
 
@@ -295,7 +300,6 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                 buttonTextColor: Colors.white,
                 buttonBorderRadius: BorderRadius.circular(35),
                 buttonFunction: () {
-                  Navigator.of(context).pop();
                   FireStoreMethods()
                       .deleteScrapbook(widget.scrapbookId, context);
                 },
@@ -382,36 +386,61 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                       SizedBox(
                           height: MediaQuery.of(context).size.height * 0.02),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Colors.white,
-                              border: Border.all(
-                                color: userData['photoUrl'] != ''
-                                    ? Colors.black
-                                    : Colors.white,
-                                width: 1,
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(10),
+                                height: 45,
+                                width: 45,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: userData['photoUrl'] != ''
+                                        ? Colors.black
+                                        : Colors.white,
+                                    width: 1,
+                                  ),
+                                  image: DecorationImage(
+                                    image: userData['photoUrl'] == ''
+                                        ? const AssetImage(
+                                                'assets/images/profile.png')
+                                            as ImageProvider
+                                        : NetworkImage(userData['photoUrl']),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                              image: DecorationImage(
-                                image: userData['photoUrl'] == ''
-                                    ? const AssetImage(
-                                            'assets/images/profile.png')
-                                        as ImageProvider
-                                    : NetworkImage(userData['photoUrl']),
-                                fit: BoxFit.cover,
+                              Text(
+                                userData['username'],
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  color: Provider.of<ThemeProvider>(context)
+                                              .themeMode ==
+                                          ThemeMode.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                          Text(
-                            userData['username'],
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: SvgPicture.asset(
+                              scrapbookData['interestIndex'] == 0
+                                  ? 'assets/creativity.svg'
+                                  : scrapbookData['interestIndex'] == 1
+                                      ? 'assets/travel.svg'
+                                      : scrapbookData['interestIndex'] == 2
+                                          ? 'assets/history.svg'
+                                          : scrapbookData['interestIndex'] == 3
+                                              ? 'assets/motivation.svg'
+                                              : '',
+                              height: 35,
+                              width: 35,
                             ),
                           ),
                         ],
@@ -440,7 +469,11 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             numLikes.toString(),
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              color: Colors.black,
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -448,7 +481,11 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             numLikes != 1 ? " likes" : " like",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              color: Colors.black,
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -456,7 +493,11 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             " • ",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              color: Colors.black,
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -464,7 +505,11 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             globals.numComments.toString(),
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              color: Colors.black,
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -472,7 +517,11 @@ class _ScrapbookExpandedViewState extends State<ScrapbookExpandedView> {
                             globals.numComments != 1 ? " comments" : " comment",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              color: Colors.black,
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

@@ -148,7 +148,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           !widget.implyLeading
                               ? IconButton(
                                   icon: const Icon(Icons.chat_rounded),
-                                  color: const Color(0xff141B41),
+                                  color: Provider.of<ThemeProvider>(context)
+                                              .themeMode ==
+                                          ThemeMode.dark
+                                      ? Colors.white
+                                      : const Color(0xff141B41),
                                   iconSize: 35,
                                   onPressed: () {
                                     Navigator.push(

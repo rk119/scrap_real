@@ -116,7 +116,7 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
                                 ? Colors.white
                                 : const Color(0xff141B41),
                       ),
-                      const SizedBox(height: 44),
+                      const SizedBox(height: 20),
                       CustomTextButton(
                         buttonBorderRadius: BorderRadius.circular(30),
                         buttonFunction: () {

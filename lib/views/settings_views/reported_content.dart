@@ -179,7 +179,6 @@ class _ReportedScrapbooksPageState extends State<ReportedScrapbooksPage> {
                     bottomPadding: 20,
                     onTapFunc: () {},
                   ),
-                  const SizedBox(height: 30),
                 ],
               );
             },

@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Icon(
               Icons.home_outlined,
-              color: value == "Home" ? Color(0xFF918EF4) : Colors.black,
+              color: value == "Home" ? Color(0xFF918EF4) : Colors.grey,
             ),
             SizedBox(width: 10),
             Text("Home"),
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Icon(
               Icons.group_outlined,
-              color: value == "Groups" ? Color(0xFF918EF4) : Colors.black,
+              color: value == "Groups" ? Color(0xFF918EF4) : Colors.grey,
             ),
             SizedBox(width: 10),
             Text("Groups"),
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Icon(
               Icons.star_border_outlined,
-              color: value == "Recommended" ? Color(0xFF918EF4) : Colors.black,
+              color: value == "Recommended" ? Color(0xFF918EF4) : Colors.grey,
             ),
             SizedBox(width: 10),
             Text("Recommended"),
@@ -118,24 +118,30 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: DropdownButton<dynamic>(
-                        dropdownColor:
-                            Provider.of<ThemeProvider>(context).themeMode ==
-                                    ThemeMode.dark
-                                ? Colors.grey[850]
-                                : Color(0xFFFAFAFA),
-                        borderRadius: BorderRadius.circular(10),
-                        onChanged: (value) => setState(() {
-                          _value = value;
-                        }),
-                        iconSize: 25,
-                        value: _value,
-                        isExpanded: true,
-                        items: dropDown(_value),
-                        style: const TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 1),
-                          fontSize: 16,
-                        ),
-                      ),
+                          dropdownColor:
+                              Provider.of<ThemeProvider>(context).themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.grey[850]
+                                  : Color(0xFFFAFAFA),
+                          borderRadius: BorderRadius.circular(10),
+                          onChanged: (value) => setState(() {
+                                _value = value;
+                              }),
+                          iconSize: 25,
+                          value: _value,
+                          isExpanded: true,
+                          items: dropDown(_value),
+                          style:
+                              Provider.of<ThemeProvider>(context).themeMode ==
+                                      ThemeMode.dark
+                                  ? const TextStyle(
+                                      color: Color.fromRGBO(255, 255, 255, 1),
+                                      fontSize: 16,
+                                    )
+                                  : const TextStyle(
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                      fontSize: 16,
+                                    )),
                     ),
                     SizedBox(width: 10),
                     TextButton(

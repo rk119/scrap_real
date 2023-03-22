@@ -111,10 +111,10 @@ class _SearchPageState extends State<SearchPage> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: TextFormField(
-                    // validator: validatorFunction,
-                    onChanged: (val) {
+                    controller: _searchQuery,
+                    onChanged: (value) {
                       setState(() {
-                        _searchQuery.text = val;
+                        search = true;
                       });
                     },
                     decoration: InputDecoration(
@@ -258,14 +258,14 @@ class _SearchPageState extends State<SearchPage> {
       stream: CombineLatestStream.list<QuerySnapshot>([
         FirebaseFirestore.instance
             .collection('scrapbooks')
+            .where('creatorUid', isNotEqualTo: user.uid)
             .where('type', isEqualTo: 'Normal')
             .where('visibility', isEqualTo: 'Public')
-            .where('creatorUid', isNotEqualTo: user.uid)
             .snapshots(),
         FirebaseFirestore.instance
             .collection('scrapbooks')
-            .where('visibility', isEqualTo: 'Private')
             .where('creatorUid', isEqualTo: user.uid)
+            .where('visibility', isEqualTo: 'Private')
             .snapshots(),
       ]),
       builder: (context, snapshots) {

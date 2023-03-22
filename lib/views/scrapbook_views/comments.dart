@@ -30,8 +30,8 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
   //String photoUrl = FireStoreMethods().getCurrentUserPfp() as String;
   String photoUrl = "";
   String alt = "assets/images/profile.png";
-  String commenterPfp = "";
-  String commenterUname = "";
+  // String commenterPfp = "";
+  // String commenterUname = "";
 
   @override
   void initState() {
@@ -52,19 +52,19 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
     }
   }
 
-  void getPfpAndUname(String uid) async {
-    try {
-      DocumentSnapshot snap =
-          await _firestore.collection('users').doc(uid).get();
-      setState(() {
-        commenterPfp = (snap.data()! as dynamic)['photoUrl'];
-        commenterUname = (snap.data()! as dynamic)['username'];
-      });
-    } catch (err) {
-      // ignore: avoid_print
-      print(err.toString());
-    }
-  }
+  // void getPfpAndUname(String uid) async {
+  //   try {
+  //     DocumentSnapshot snap =
+  //         await _firestore.collection('users').doc(uid).get();
+  //     setState(() {
+  //       commenterPfp = (snap.data()! as dynamic)['photoUrl'];
+  //       commenterUname = (snap.data()! as dynamic)['username'];
+  //     });
+  //   } catch (err) {
+  //     // ignore: avoid_print
+  //     print(err.toString());
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -198,11 +198,11 @@ class _ScrapbookCommentsPageState extends State<ScrapbookCommentsPage> {
             var data =
                 snapshots.data!.docs[index].data() as Map<String, dynamic>;
 
-            getPfpAndUname(data['uid']);
+            // getPfpAndUname(data['uid']);
             return CustomCommentCard(
-              photoUrl: commenterPfp,
+              photoUrl: data['photoUrl'],
               alt: "assets/images/profile.png",
-              username: commenterUname,
+              username: data['username'],
               comment: data['comment'],
               bottomPadding: 5,
             );

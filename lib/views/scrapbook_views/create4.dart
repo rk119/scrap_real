@@ -48,7 +48,7 @@ class CreateScrapbookPage4 extends StatefulWidget {
 class _CreateScrapbookPage4State extends State<CreateScrapbookPage4> {
   List<File?> images = List.filled(12, null);
   int pageNumber = 0;
-  late bool _isLocationEnabled = false;
+  late bool _isLocationEnabled = widget.type == true ? false : true;
   final List<String> likes = [];
 
   @override
@@ -96,7 +96,21 @@ class _CreateScrapbookPage4State extends State<CreateScrapbookPage4> {
                 const SizedBox(height: 40),
                 addLeftAndRightButtonsforPages(),
                 const SizedBox(height: 40),
-                locationToggle(),
+                widget.type == true
+                    ? locationToggle()
+                    : Text(
+                        "Location is Enabled",
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color:
+                              Provider.of<ThemeProvider>(context).themeMode ==
+                                      ThemeMode.dark
+                                  ? const Color(0xffd1e1ff)
+                                  : const Color(0xff141b41),
+                        ),
+                      ),
                 const SizedBox(height: 60),
                 CustomTextButton(
                   buttonBorderRadius: BorderRadius.circular(30),

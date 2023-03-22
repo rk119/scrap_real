@@ -21,6 +21,8 @@ class EditScrapbook4 extends StatefulWidget {
   final bool? type;
   final bool? visibility;
   final int? interestIndex;
+  final String riddle;
+  final String answer;
   final Map<dynamic, dynamic> scrapbookData;
   final String scrapbookId;
 
@@ -34,7 +36,9 @@ class EditScrapbook4 extends StatefulWidget {
       required this.visibility,
       required this.scrapbookData,
       required this.scrapbookId,
-      required this.interestIndex})
+      required this.interestIndex,
+      required this.riddle,
+      required this.answer})
       : super(key: key);
 
   @override
@@ -95,7 +99,21 @@ class _EditScrapbook4State extends State<EditScrapbook4> {
                 widget.scrapbookData['creatorUid'] ==
                             FirebaseAuth.instance.currentUser!.uid &&
                         prevIsLocationEnabled
-                    ? locationToggle()
+                    ? widget.type == false
+                        ? Text(
+                            "Location is Enabled",
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              color: Provider.of<ThemeProvider>(context)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? const Color(0xffd1e1ff)
+                                  : const Color(0xff141b41),
+                            ),
+                          )
+                        : locationToggle()
                     : const SizedBox(),
                 const SizedBox(height: 60),
                 CustomTextButton(
@@ -406,6 +424,8 @@ class _EditScrapbook4State extends State<EditScrapbook4> {
       widget.type,
       widget.visibility,
       widget.interestIndex,
+      widget.riddle,
+      widget.answer,
       locationDisbaled,
       images,
       context,
@@ -414,6 +434,6 @@ class _EditScrapbook4State extends State<EditScrapbook4> {
     // ignore: use_build_context_synchronously
     CustomSnackBar.snackBarAlert(context, "Scrapbook edited!");
     // ignore: use_build_context_synchronously
-    Navigator.popUntil(context, ModalRoute.withName('/scrapbookExpanded'));
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 }

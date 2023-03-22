@@ -143,7 +143,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
             appBar: AppBar(
               toolbarHeight: 90,
               leadingWidth: 60,
-              title: CustomHeader(headerText: "Chat with GPT-3"),
+              title: CustomHeader(headerText: "Chat"),
               centerTitle: true,
               elevation: 0.0,
               backgroundColor: context.cardColor,

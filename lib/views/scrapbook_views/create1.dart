@@ -143,11 +143,18 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                       height: 205,
                       fit: BoxFit.cover,
                     )
-                  : Image.asset(
-                      "assets/images/addCover.jpg",
+                  : Container(
+                      height: 200,
                       width: 350,
-                      height: 205,
-                    ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Icon(
+                        Icons.add_a_photo,
+                        color: Colors.grey,
+                        size: 50,
+                      )),
             ),
           ],
         ),

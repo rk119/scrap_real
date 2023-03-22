@@ -115,6 +115,12 @@ class _ScrapbookCollaboratorsState extends State<ScrapbookContributorsPage> {
                                   .collection("scrapbooks")
                                   .doc(widget.scrapbookId)
                                   .update({"collaborators": collaborators});
+                              FirebaseFirestore.instance
+                                  .collection("scrapbooks")
+                                  .doc(widget.scrapbookId)
+                                  .update({
+                                "group": collaborators.isEmpty ? false : true
+                              });
                             });
                             Navigator.pop(context);
                           },
