@@ -30,7 +30,7 @@ class _ChatGPTPageState extends State<ChatGPTPage> {
   @override
   void initState() {
     chatGPT = OpenAI.instance.build(
-        token: "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",
+        token: "Your Token",
         baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 8)),
         isLog: true);
     getData();

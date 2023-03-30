@@ -113,6 +113,7 @@ class _CreateScrapbookPage4State extends State<CreateScrapbookPage4> {
                       ),
                 const SizedBox(height: 60),
                 CustomTextButton(
+                  key: const Key('createScrapbookButton'),
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: createScrapbook,
                   buttonText: "Create",

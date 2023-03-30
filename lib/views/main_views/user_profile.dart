@@ -243,6 +243,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget settingsMenu(Color iconColor) {
     return IconButton(
+      key: const Key('settingsMenu'),
       icon: const Icon(Icons.settings),
       color: iconColor,
       iconSize: 35,
@@ -257,6 +258,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget optionsMenu(Color iconColor) {
     return TextButton(
+      key: const Key('optionsMenu'),
       onPressed: () {
         showDialog(
           context: context,
@@ -283,6 +285,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 child: const Text("Cancel"),
                               ),
                               TextButton(
+                                key: const Key('blockUserButton'),
                                 onPressed: () {
                                   FirebaseFirestore.instance
                                       .collection('users')
@@ -323,6 +326,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     "Please provide a reason for reporting this user"),
                                 const SizedBox(height: 10),
                                 TextField(
+                                  key: const Key('reportUserReason'),
                                   controller: reportController,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
@@ -339,6 +343,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 child: const Text("Cancel"),
                               ),
                               TextButton(
+                                key: const Key('reportUserButton'),
                                 onPressed: () {
                                   FireStoreMethods().reportUser(userData['uid'],
                                       reportController.text, context);

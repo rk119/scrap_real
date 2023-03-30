@@ -293,6 +293,7 @@ class _CreateScrapbookPage2State extends State<CreateScrapbookPage2> {
                     ? const SizedBox(height: 30)
                     : const SizedBox(height: 150),
                 CustomTextButton(
+                  key: const Key('nextScrapbookOption2'),
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: () {
                     Navigator.push(

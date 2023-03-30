@@ -112,6 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 20),
                       CustomNameCard(
+                        key: const Key('editUsername'),
                         textName: "Username",
                         hintingText: "Enter Username",
                         textController: _username,
@@ -131,11 +132,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 30),
                       CustomBioCard(
+                        key: const Key('editBio'),
                         textController: _bio,
                         textColor: const Color(0xffa09f9f),
                       ),
                       const SizedBox(height: 30),
                       CustomTextButton(
+                        key: const Key('saveEditButton'),
                         buttonBorderRadius: BorderRadius.circular(35),
                         buttonFunction: updateProfile,
                         buttonText: "Save",

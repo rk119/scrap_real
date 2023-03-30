@@ -40,7 +40,7 @@ class _ExplorePageState extends State<ExplorePage> {
   bool tapped = false;
   bool isListVisible = true;
   // var apiKey = DotEnv().env['API_KEY'];
-  var apiKey = 'AIzaSyAPDpwLsPSi4QpbyZZR0Ze8fgKNTPk3srk';
+  var apiKey = 'Your API key';
 
   setCustomMarkerIcon() async {
     markerIcon = await BitmapDescriptor.fromAssetImage(

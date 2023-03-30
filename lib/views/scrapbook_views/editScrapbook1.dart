@@ -107,6 +107,7 @@ class _EditScrapbook1State extends State<EditScrapbook1> {
                       ),
                       const SizedBox(height: 28),
                       CustomBioCard(
+                        key: const Key("editScrapbookCaption"),
                         textController: _caption,
                         cardText: "Caption",
                         cardHintText: "Enter your caption",

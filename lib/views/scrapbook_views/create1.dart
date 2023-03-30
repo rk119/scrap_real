@@ -50,6 +50,7 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                 const SizedBox(height: 7),
                 const SizedBox(height: 10),
                 CustomNameCard(
+                  key: const Key("scrapbookTitle"),
                   textName: "Title",
                   hintingText: "Enter Name",
                   textController: _title,
@@ -66,6 +67,7 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                 ),
                 const SizedBox(height: 28),
                 CustomBioCard(
+                  key: const Key('scrapbookCaption'),
                   textController: _caption,
                   cardText: "Caption",
                   cardHintText: "Enter your caption",
@@ -76,6 +78,7 @@ class _CreateScrapbookPage1State extends State<CreateScrapbookPage1> {
                 ),
                 const SizedBox(height: 44),
                 CustomTextButton(
+                  key: const Key('nextScrapbookOption1'),
                   buttonBorderRadius: BorderRadius.circular(30),
                   buttonFunction: () {
                     if (_title.text.isEmpty) {

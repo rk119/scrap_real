@@ -102,6 +102,7 @@ class _SearchPageState extends State<SearchPage> {
                 }),
                 SizedBox(height: 20),
                 Container(
+                  key: const Key('searchBar'),
                   height: 50,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -185,11 +186,11 @@ class _SearchPageState extends State<SearchPage> {
           ? FirebaseFirestore.instance
               .collection('users')
               .where(FieldPath.documentId, whereNotIn: blockedUsers)
-              .where('uid', isNotEqualTo: user.uid)
+              // .where('uid', isNotEqualTo: user.uid)
               .snapshots()
           : FirebaseFirestore.instance
               .collection('users')
-              .where('uid', isNotEqualTo: user.uid)
+              // .where('uid', isNotEqualTo: user.uid)
               .snapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
@@ -227,9 +228,10 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   }
                   if (data['username']
-                      .toString()
-                      .toLowerCase()
-                      .startsWith(_searchQuery.text.toLowerCase())) {
+                          .toString()
+                          .toLowerCase()
+                          .startsWith(_searchQuery.text.toLowerCase()) &&
+                      data['uid'] != user.uid) {
                     return CustomUserCard(
                       photoUrl: data['photoUrl'],
                       alt: "assets/images/profile.png",

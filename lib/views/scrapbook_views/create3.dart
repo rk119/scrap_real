@@ -204,6 +204,7 @@ class _CreateScrapbookPage3State extends State<CreateScrapbookPage3> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                   CustomTextButton(
+                    key: const Key('nextScrapbookOption3'),
                     buttonBorderRadius: BorderRadius.circular(30),
                     buttonFunction: () {
                       if (interestIndex != -1) {

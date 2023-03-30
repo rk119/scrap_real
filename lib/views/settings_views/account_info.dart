@@ -98,6 +98,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                   child: Column(
                     children: [
                       CustomPasswordFormField(
+                        key: const Key('oldPasswordField'),
                         textController: _oldpass,
                         headingText: "Old Password",
                         validatorFunction: (value) =>
@@ -117,6 +118,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                       ),
                       const SizedBox(height: 30),
                       CustomPasswordFormField(
+                        key: const Key('newPasswordField'),
                         textController: _pass1,
                         headingText: "New Password",
                         validatorFunction: (value) =>
@@ -136,6 +138,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                       ),
                       const SizedBox(height: 30),
                       CustomPasswordFormField(
+                        key: const Key('confirmPasswordField'),
                         textController: _pass2,
                         headingText: "Confirm New Password",
                         validatorFunction: (value) =>

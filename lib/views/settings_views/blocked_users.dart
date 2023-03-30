@@ -179,6 +179,7 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
                               });
                             },
                             child: Container(
+                              key: const Key('removeBlockedUserButton'),
                               padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Colors.red,

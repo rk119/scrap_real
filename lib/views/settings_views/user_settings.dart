@@ -50,6 +50,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 CustomHeader(headerText: "Settings"),
                 const SizedBox(height: 30),
                 CustomMenuItem(
+                  key: const Key('editProfileButton'),
                   svgPath: "assets/edit_profile.svg",
                   text: "Edit Profile",
                   buttonFunction: () {
@@ -98,6 +99,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
                 const SizedBox(height: 5),
                 CustomMenuItem(
+                  key: const Key('accountInfoButton'),
                   svgPath: "assets/account_info.svg",
                   text: "Account Information",
                   buttonFunction: () {
@@ -110,6 +112,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
                 const SizedBox(height: 5),
                 CustomMenuItem(
+                  key: const Key('reportedContentButton'),
                   svgPath: "assets/reported_content.svg",
                   text: "Reported Content",
                   buttonFunction: () {
@@ -122,6 +125,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
                 const SizedBox(height: 5),
                 CustomMenuItem(
+                  key: const Key('blockedUserButton'),
                   svgPath: "assets/blocked_users.svg",
                   text: "Blocked Users",
                   buttonFunction: () {
@@ -161,6 +165,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
                 const SizedBox(height: 5),
                 CustomMenuItemColored(
+                  key: const Key('logoutButton'),
                   svgPath: "assets/logout.svg",
                   text: "Log out",
                   color: const Color(0xffbc2d21),
@@ -191,6 +196,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                               );
                             },
                             child: const Text("Log out",
+                                key: Key('logoutButton2'),
                                 style: TextStyle(color: Color(0xffbc2d21))),
                           ),
                         ],
